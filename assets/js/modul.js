@@ -356,6 +356,11 @@
     main.appendChild(sektion("goer-det-selv", 4, "Gør det selv", oevelse(m)));
     main.appendChild(sektion("verificer", 5, "Verificér", verifikation(m)));
     if (m.live) main.appendChild(sektion("live", "live", m.live.titel || "Dine egne data", live(m)));
+    if (m.dashboard) {
+      var dh = el("div", { id: "dashboard" });
+      main.appendChild(sektion("dine-tal", "tal", m.dashboard.titel || "Dine tal", [m.dashboard.intro ? p(m.dashboard.intro, "brod") : null, dh]));
+      if (window.Dashboard) window.Dashboard.start(dh, kursus); else dh.appendChild(p("Dashboardet kunne ikke indlæses. Åbn dashboard.html i stedet.", "pladsholder"));
+    }
     main.appendChild(sektion("tjek-forstaaelse", 6, "Tjek forståelse", quiz(m)));
     main.appendChild(sektion("kilder", 7, "Kilder", kilder(m)));
     main.appendChild(sektion("fremdrift", 8, "Fremdrift", fremdrift(m, kursus)));

@@ -14,6 +14,10 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 | 2026-09-06 | 08 | Session 1 til del 2 med STATUS.md, ny session fortsætter fra filen | 212 s + 180 s | 14 og 17 | 5 min | 12 min | ja |
 | 2026-09-06 | 09 | Aktivér workflow, rød kørsel, ret, grøn kørsel og Pages-deploy | CI: 25 s + 49 s, agent cirka 40 s | | 7 min | 10 min, plus Cloudflare Pages cirka 5 min som Mortens egen del | ja |
 | 2026-09-06 | 10 | /takstopdatering 5 to gange med skill, subagent, hook og MCP | 78 s + 70 s | 8 og 9 | 5 min | 8 min | ja |
+| 2026-09-06 | 11 | Kandidatopgave 3 på tdc-simulator, branch agentkursus, via claude -p | 89 s | 6 | 10 min skrivning og verifikation | 12 min | ja |
+| 2026-09-06 | 12 | Skriveøvelse, lærred med fem felter og tre bremseklodser | ingen agent | | 15 min | 15 min | ja, ved grænsen |
+| 2026-09-06 | 13 | Læs dashboardet, git-kommando, definér én måling | ingen agent | | 10 min | 10 min | ja |
+| 2026-09-06 | 14 | Destillat-script plus én atomar agent | 1 s + 49 s | 2 | 8 min | 9 min | ja |
 
 ## Noter
 
@@ -31,3 +35,6 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 * Modul 09: Pages-miljøet i sandboxen har custom branch policy. Branchen arbejde/modul-09 er tilføjet som tilladt deploy-branch, og workflow-triggeren omfatter den. Min testbranch er slettet igen.
 * Modul 10: byte for byte samme takster.json i to kørsler. Hooken kørte (logfilen /tmp/fragtvaegt-hook.log opdateret), men stille, fordi exit 0 ikke giver output.
 * Startbranches 04 til 10 og 14 fik den korrekte tynde CLAUDE.md, så den bevidst mangelfulde fil kun findes i modul 02 (og på main).
+* Modul 11: første prøvekørsel hang, fordi prompten bad agenten starte en http.server som bevis, og serveren aldrig returnerer. Prompten er rettet til grep og forklaring. Anden kørsel: 89 s, 6 turns, main urørt.
+* Modul 12 er ren skriveøvelse og ligger ved grænsen på 15 minutter. Skemaet har otte rækker, og siden siger, at lærredet skal være udfyldt, ikke perfekt.
+* Modul 14: destillatet kører på 1 sekund uden modelkald. Den atomare agent takst-tester alene: 49 s, 2 turns, 0,18 dollar. Modul 10 til sammenligning: 70 til 78 s, 8 til 9 turns, 0,30 til 0,51 dollar.

@@ -51,5 +51,6 @@ Se `indhold/moduler/01.json` som reference. Blokke i `hvorfor`, `kernen`, `oevel
 * Fase 4: seks scriptede simulationer i `assets/js/simulationer/`. Færdig 2026-09-06.
 * Fase 5: modul 07 til 10 med indhold, øvelser og simulationer. Færdig 2026-09-06.
 * Fase 6: Worker `agentkursus-api` bygget og testet lokalt, live.js læser `workerUrl` fra kursus.json, dashboard.html bygget. Færdig fra min side 2026-09-06. Mortens del: `wrangler login`, `wrangler secret put GITHUB_TOKEN`, `wrangler deploy`, sæt `workerUrl`, og kobl kurset på Cloudflare Pages. Se `worker/README.md`.
-* Fase 7: modul 11 til 14 mod tdc-simulator. Ikke begyndt.
+* Fase 7: modul 11 til 14. Færdig 2026-09-06. tdc-simulator har branchen `agentkursus` med CLAUDE.md og AGENTKURSUS.md; main er urørt. Sandboxen har `kursus/destillat/`.
+* Fase 8: pre-flight-siden, eksport og import af fremdrift, linktjek, tilgængelighed, tidsmåling, sidste gennemskrivning. Ikke begyndt.
 * Fase 1 til 8: se projektplanen. Efter hver fase: stop, vis resultatet, vent på grønt lys.

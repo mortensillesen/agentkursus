@@ -1,0 +1,152 @@
+{
+  "id": "13",
+  "del": 4,
+  "titel": "Observability og livscyklus",
+  "undertitel": "Kunne svare på, om agenterne virker over tid. Logning, omkostning, fejlrater, og hvornår en opsætning skal pensioneres.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Læse dine egne tal fra de to dage og finde det modul, der kostede flest forsøg.",
+    "Vælge én måling, du ville overvåge i drift, og sige hvad den skal udløse.",
+    "Kende de kilder til tal, værktøjet selv giver: sessioner, transkripter, kommandoer og telemetri."
+  ],
+  "hvorfor": [
+    "En opsætning, der virkede i går, virker ikke nødvendigvis om tre måneder. Modellen opdateres, repoet vokser, opgaverne skifter. Uden tal opdager du det ved en klage, ikke ved en graf.",
+    "Modulet lader dig læse dine egne tal først. Så ved du, hvad en måling er, før du vælger en til drift."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "Hvor tallene kommer fra" },
+    { "type": "tabel", "hoved": ["Kilde", "Hvad den giver", "Hvornår"], "raekker": [
+      ["`/usage` i sessionen", "Tokens, omkostning, varighed, kodeændringer for den aktuelle session, og på abonnement en fordeling på skills, subagenter og MCP-servere", "Mens du arbejder"],
+      ["`--output-format json` med `claude -p`", "Turns, varighed, omkostning og resultat per kørsel, som du så i modul 03 og 07", "Scripts og pipelines"],
+      ["Transkripterne i `~/.claude/projects/`", "Hver besked, hvert tool call, hvert resultat, som JSONL. `/export` giver en læsbar udgave", "Bagefter"],
+      ["OpenTelemetry", "Målinger som sessioner, omkostning, tokens, commits og pull requests, og hændelser som prompts, tool-resultater, API-fejl og tilladelsesbeslutninger, sendt til din egen overvågning", "Drift, på tværs af folk"],
+      ["Repoet selv", "Commits per branch, røde og grønne kørsler i CI. Det er det, dashboardet nedenfor viser", "Altid, og uafhængigt af værktøjet"]
+    ]},
+    "OpenTelemetry slås til med miljøvariablen `CLAUDE_CODE_ENABLE_TELEMETRY=1`. Dokumentationen nævner målingerne `claude_code.cost.usage`, `claude_code.token.usage`, `claude_code.commit.count` og `claude_code.pull_request.count`, og hændelser som `claude_code.api_error` og `claude_code.tool_decision`. Det er den eneste kilde, der giver tal per person i næsten realtid på tværs af maskiner.",
+    { "type": "h3", "tekst": "Fire målinger, der siger noget" },
+    { "type": "liste", "punkter": [
+      "Forsøg per opgave: hvor mange kørsler, commits eller turns kostede en opgave, sammenlignet med sidste måned. Stiger tallet, er noget ændret: opgaven, repoet eller modellen.",
+      "Andel røde kørsler i CI efter agentens push. Det er porten fra modul 09 som graf. Én rød er læring, en stigende andel er et problem.",
+      "Omkostning per løst opgave, ikke per dag. Dagstal stiger, når folk bruger værktøjet mere. Det er godt. Prisen per opgave skal falde eller ligge fast.",
+      "Andel opgaver, der blev afvist eller løst uden indgriben, jf. modul 04 og 11. Det er kompetencemålingen."
+    ]},
+    { "type": "h3", "tekst": "Hvornår en opsætning skal pensioneres" },
+    "En skill, en hook eller en subagent er kode, der skal vedligeholdes. Dokumentationen siger det samme om CLAUDE.md: behandl den som kode, gennemgå den når noget går galt, beskær den, og test ændringer ved at se om adfærden faktisk skifter. Tre tegn på, at noget skal pensioneres: den bruges ikke (ingen kørsler i en måned), den koster mere end den sparer (forsøg per opgave stiger med den slået til), eller den er blevet til et script (modul 14).",
+    { "type": "note", "tekst": "Dashboardet nedenfor viser dine egne tal: fremdrift, minutter og quiz fra din browser, og commits og kørsler per modul fra dit sandbox-repo, hvis live-koblingen er sat op. Uden live-kobling viser repo-kolonnerne eksempeldata og siger det." }
+  ],
+  "sidebar": {
+    "titel": "Tal er ikke tillid",
+    "afsnit": [
+      "Dokumentationen gør en pointe af, at omkostningstallene i `/usage` er lokale skøn til listepris, og at den autoritative kilde er fakturaen. Det samme gælder alle tal i dette modul: de peger på, hvor du skal kigge, ikke på hvad du skal konkludere. En stigning i forsøg per opgave er et spørgsmål, ikke et svar."
+    ]
+  },
+  "simulation": {
+    "id": "maalinger-over-tid",
+    "beskrivelse": "Fire målinger over tolv uger. Slå ændringer til: en ny model, et repo der vokser, en skill der ikke vedligeholdes. Se hvilken måling der reagerer først.",
+    "maksMinutter": 3
+  },
+  "dashboard": {
+    "titel": "Dine tal",
+    "intro": "Fremdrift, minutter og quiz er fra din browser. Commits og kørsler per modul kommer fra dit sandbox-repo gennem kursets Worker."
+  },
+  "startbranch": null,
+  "nulstilKommando": null,
+  "oevelse": {
+    "forventetMinutter": 12,
+    "intro": [
+      "Læs dine egne tal, find modulet med flest forsøg, skriv hvorfor, og definér én måling til drift."
+    ],
+    "trin": [
+      { "tekst": "Læs dashboardet i sektionen Dine tal ovenfor. Find det modul, hvor du brugte flest forsøg: flest minutter over estimatet, flest commits, eller flest røde kørsler. Er tallene fra repoet eksempeldata, så brug minutter og quiz." },
+      { "tekst": "Suppler med værktøjets egne tal. Kør kommandoen i sandbox-mappen, og se antal commits per arbejdsbranch. Det er det samme tal som dashboardets commit-kolonne, hentet lokalt.", "kommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && for b in $(git branch -r --list 'origin/arbejde/*' | sed 's| *origin/||'); do n=${b#arbejde/modul-}; echo \"$b: $(git rev-list --count origin/start/modul-$n..origin/$b) commits\"; done" },
+      { "tekst": "Skriv modulet og årsagen i skemaet. Årsagen skal være én af: briefingen var for vag, kriteriet var uafgørligt, værktøjet manglede noget, eller jeg misforstod opgaven. Eller din egen, hvis ingen passer." },
+      { "tekst": "Definér én måling, du ville overvåge, hvis opsætningen fra modul 10 kørte i drift hver uge. Skriv hvad den måler, hvor tallet kommer fra, og hvilken værdi der skal udløse, at du kigger." }
+    ],
+    "skema": {
+      "titel": "Flest forsøg, og én måling",
+      "kolonner": [
+        { "id": "hvad", "label": "Hvad", "type": "select", "valg": ["modul med flest forsøg", "måling til drift"] },
+        { "id": "tekst", "label": "Modul og årsag, eller målingens navn og kilde", "type": "text", "pladsholder": "fx modul 07, kriteriet var uafgørligt" },
+        { "id": "udloeser", "label": "Hvad der udløser, at du kigger", "type": "text", "pladsholder": "fx over 20 procent røde kørsler i en uge" }
+      ],
+      "minRaekker": 2,
+      "krav": { "kolonne": "tekst", "ikkeTom": true, "min": 2, "label": "udfyldt tekst" }
+    }
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når dashboardet viser dine tal, og målingen er noteret med udløser.",
+    "kriterier": [
+      "Dashboardet viser rigtige tal fra dit forløb: fremdrift og minutter er ikke nul. Repo-kolonnerne er live, hvis Workeren er sat op, ellers står der, at de er eksempeldata.",
+      "Skemaet har et modul med en årsag, og en måling med kilde og udløser.",
+      "Kommandoen viser mindst én arbejdsbranch med et antal commits."
+    ],
+    "kommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git branch -r --list 'origin/arbejde/*' | wc -l",
+    "forventetOutput": "et tal større end 0, ét per modul du har pushet en arbejdsbranch for.",
+    "hvisDetFejler": "Er tallet 0, har du ikke pushet nogen arbejdsbranch, og det er helt normalt: kun modul 09 beder om push. Dashboardets repo-kolonner er så tomme, og du bruger minutter og quiz i stedet. Det er stadig dine tal."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvilken kilde giver tal per person i næsten realtid på tværs af maskiner?",
+      "svar": [
+        "/usage",
+        "OpenTelemetry-eksport",
+        "Transkripterne i ~/.claude/projects/"
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "/usage viser den aktuelle session på din maskine.",
+        "Sådan beskriver dokumentationen det: den eneste mulighed, der streamer tokens og omkostning per bruger til din egen overvågning.",
+        "Transkripterne ligger lokalt og læses bagefter, ikke på tværs."
+      ]
+    },
+    {
+      "spoergsmaal": "Omkostningen per dag stiger. Hvad er den rigtige reaktion?",
+      "svar": [
+        "Skær i brugen med det samme.",
+        "Se på omkostning per løst opgave. Stiger den ikke, bruger folk bare værktøjet mere.",
+        "Skift til en billigere model for alle."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Dagstal alene siger ikke, om noget er galt.",
+        "Prisen per opgave er målingen, der adskiller mere brug fra dårligere brug.",
+        "Modelvalg er et værktøj, men først når du ved, hvad tallet betyder."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvornår skal en skill pensioneres?",
+      "svar": [
+        "Efter et halvt år, uanset hvad.",
+        "Når den ikke bruges, når forsøg per opgave stiger med den slået til, eller når den er blevet til et script.",
+        "Aldrig. Den skader ikke."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Tid er ikke kriteriet. Tallene er.",
+        "De tre tegn fra modulet. Det tredje er modul 14.",
+        "Den koster kontekst og vedligehold, og dokumentationen siger det samme om CLAUDE.md: beskær."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvad er omkostningstallet i /usage ifølge dokumentationen?",
+      "svar": [
+        "Det præcise beløb på fakturaen.",
+        "Et lokalt skøn til listepris. Fakturaen er den autoritative kilde.",
+        "Et tal, der kun gælder for API-brugere og er tomt for abonnenter."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Dokumentationen siger direkte, at det er et skøn.",
+        "Beregnet lokalt ud fra tokens, medmindre organisationen har sat sine egne takster.",
+        "Abonnenter ser også tallet, men det er ikke relevant for deres regning."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Monitoring", "url": "https://code.claude.com/docs/en/monitoring-usage", "note": "OpenTelemetry, CLAUDE_CODE_ENABLE_TELEMETRY, målinger og hændelser", "hentet": "2026-09-06" },
+    { "titel": "Manage costs effectively", "url": "https://code.claude.com/docs/en/costs", "note": "/usage som lokalt skøn, fordeling på skills og servere, OpenTelemetry som eneste realtidskilde per bruger, pilotgruppe og baseline", "hentet": "2026-09-06" },
+    { "titel": "Manage sessions", "url": "https://code.claude.com/docs/en/sessions", "note": "Transkripter som JSONL i ~/.claude/projects/, /export, claude -p med JSON-output til scripts", "hentet": "2026-09-06" },
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Behandl CLAUDE.md som kode: gennemgå, beskær, test om adfærden skifter", "hentet": "2026-09-06" }
+  ]
+}
