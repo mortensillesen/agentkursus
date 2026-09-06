@@ -153,3 +153,47 @@ footer .inder { max-width: var(--maks); margin: 0 auto; padding: 1rem; display: 
   pre, blockquote, aside, fieldset, .kort { break-inside: avoid; }
   .kopi pre { padding-right: 1rem; }
 }
+
+/* Simulationer */
+.sim { background: var(--flade); border: 1px solid var(--linje); border-radius: var(--radius); padding: 1rem 1.2rem; margin: 1rem 0; }
+.sim .raekke { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .6rem 0; }
+.sim .faser { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; padding: 0; margin: 0 0 .8rem; }
+.sim .faser li { padding: .25rem .7rem; border-radius: 999px; border: 1px solid var(--linje); font-size: .85rem; color: var(--daempet); background: var(--bg); }
+.sim .faser li.aktiv { background: var(--accent); color: var(--flade); border-color: var(--accent); font-weight: 600; }
+.sim .faser li.fejl { background: var(--fejl-bg); color: var(--fejl); border-color: var(--fejl); }
+.sim .trinkort { border-left: 4px solid var(--accent); background: var(--bg); padding: .6rem .9rem; border-radius: 0 var(--radius) var(--radius) 0; min-height: 5.5rem; }
+.sim .trinkort.fejl { border-left-color: var(--fejl); }
+.sim .trinkort.ok { border-left-color: var(--ok); }
+.sim .trinkort .etiket { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--daempet); }
+.sim .trinkort p { margin: .2rem 0 .5rem; }
+.sim .trinkort pre { margin: .3rem 0; font-size: .82rem; }
+.sim .taeller { color: var(--daempet); font-size: .9rem; margin-left: auto; }
+.sim .kolonner { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+.sim .kolonne { border: 1px solid var(--linje); border-radius: var(--radius); padding: .7rem .9rem; background: var(--bg); }
+.sim .kolonne h4 { margin: 0 0 .5rem; font-size: 1rem; }
+.sim .kolonne ol { padding-left: 1.2rem; margin: 0; }
+.sim .kolonne li { font-size: .92rem; margin-bottom: .3rem; max-width: none; }
+.sim .kolonne li.skjult { display: none; }
+.sim .kolonne li.fejl { color: var(--fejl); font-weight: 600; }
+.sim .kolonne li.ok { color: var(--ok); font-weight: 600; }
+.sim .maaler { height: 1.4rem; background: var(--kode-bg); border: 1px solid var(--linje); border-radius: 999px; overflow: hidden; display: flex; margin: .6rem 0; }
+.sim .maaler > span { display: block; height: 100%; }
+.sim .maaler .fyld { background: var(--accent); transition: width .3s; }
+.sim .maaler .fyld.advarsel { background: #8a6100; }
+.sim .maaler .fyld.fuld { background: var(--fejl); }
+.sim .lag { list-style: none; padding: 0; margin: 0 0 1rem; }
+.sim .lag li { display: flex; gap: .7rem; align-items: baseline; padding: .4rem .6rem; border: 1px solid var(--linje); border-radius: var(--radius); margin-bottom: .35rem; background: var(--bg); max-width: none; }
+.sim .lag li.fra { opacity: .55; text-decoration: line-through; }
+.sim .lag input { transform: scale(1.15); }
+.sim .handlinger { list-style: none; padding: 0; margin: 0; }
+.sim .handlinger li { padding: .35rem .6rem; border-bottom: 1px solid var(--linje); max-width: none; display: flex; gap: .6rem; flex-wrap: wrap; }
+.sim .handlinger li.mistet { color: var(--fejl); }
+.sim .handlinger li.mistet::before { content: "✕"; font-weight: 700; }
+.sim .handlinger li.ok::before { content: "✓"; color: var(--ok); font-weight: 700; }
+.sim .handlinger .aarsag { color: var(--daempet); font-size: .88rem; }
+.sim .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.sim .chips button { font-size: .85rem; padding: .3rem .6rem; }
+.sim .note-lille { color: var(--daempet); font-size: .88rem; margin: .4rem 0 0; }
+.sim .sammenlign { margin-top: 1rem; }
+.sim table td, .sim table th { font-size: .9rem; }
+@media print { .sim button { display: none; } .sim .kolonne li.skjult { display: list-item; } }

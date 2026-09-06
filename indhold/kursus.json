@@ -1,7 +1,7 @@
 {
   "titel": "Agent Engineering",
   "undertitel": "Interaktivt træningsforløb i 14 moduler over to dage",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "sidstVerificeret": "2026-09-06",
   "fremdriftNoegle": "agentkursus.fremdrift.v1",
   "dage": [
@@ -171,5 +171,12 @@
       "status": "planlagt"
     }
   ],
-  "simulationerBygget": []
+  "simulationerBygget": [
+    "agentisk-loekke",
+    "harness-lag",
+    "kontekst-beholder",
+    "briefing-side-om-side",
+    "forbindelse-eller-indsat",
+    "port-til-fra"
+  ]
 }
