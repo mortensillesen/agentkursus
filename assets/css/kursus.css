@@ -73,7 +73,10 @@ th { font-weight: 600; background: var(--flade); }
 .kopi button { position: absolute; top: .5rem; right: .5rem; }
 button, .knap { font: inherit; font-size: .9rem; font-weight: 600; color: var(--flade); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--radius); padding: .35rem .8rem; cursor: pointer; }
 button:hover { background: #173c6c; }
-button.sekundaer { color: var(--accent); background: var(--flade); }
+button.sekundaer, .knap.sekundaer { color: var(--accent); background: var(--flade); }
+label.knap { display: inline-block; cursor: pointer; }
+#import-fil { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+#import-fil:focus-visible + button, label.knap:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
 button.sekundaer:hover { background: var(--accent-bg); }
 button:disabled { opacity: .55; cursor: default; }
 

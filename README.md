@@ -2,6 +2,10 @@
 
 Selvstudiekursus i agent engineering: 14 moduler over to dage, med læsestof, scriptede simulationer, øvelser mod et sandbox-repo og quiz. Statisk site uden build-step, så det virker om to år uden vedligehold.
 
+## Status
+
+Version 1.0.0, 2026-09-06. Alle 14 moduler er live, hver øvelse er kørt og tidtaget, og live-koblingen er deployet. Pre-flight-siden og `preflight.sh` tjekker installation og adgang dagen før.
+
 ## Kør lokalt
 
 Siderne henter indhold med fetch og virker ikke fra `file://`. Start en lokal server fra repoets rod:

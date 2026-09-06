@@ -52,5 +52,11 @@ Se `indhold/moduler/01.json` som reference. Blokke i `hvorfor`, `kernen`, `oevel
 * Fase 5: modul 07 til 10 med indhold, øvelser og simulationer. Færdig 2026-09-06.
 * Fase 6: Worker `agentkursus-api` bygget og testet lokalt, live.js læser `workerUrl` fra kursus.json, dashboard.html bygget. Deployet 2026-09-06 på https://agentkursus-api.loginalias.workers.dev og sat som `workerUrl`. Mangler fra Morten: `wrangler secret put GITHUB_TOKEN` (valgfrit, hæver rate limit) og Cloudflare Pages for kurset. Se `worker/README.md`.
 * Fase 7: modul 11 til 14. Færdig 2026-09-06. tdc-simulator har branchen `agentkursus` med CLAUDE.md og AGENTKURSUS.md; main er urørt. Sandboxen har `kursus/destillat/`.
-* Fase 8: pre-flight-siden, eksport og import af fremdrift, linktjek, tilgængelighed, tidsmåling, sidste gennemskrivning. Ikke begyndt.
+* Fase 8: pre-flight-side og preflight.sh, eksport og import af fremdrift, linktjek-workflow, tilgængelighedstjek, målte tider på forsiden, gennemskrivning. Færdig 2026-09-06. Kurset er version 1.0.0.
+
+## Vedligehold efter aflevering
+
+* Linktjek kører ved hvert push og hver mandag. Rødt betyder et dødt link i `indhold/`.
+* Tidsmålinger og noter ligger i `noter/tidsmaaling.md`, som ikke deployes.
+* Nye moduler: kopiér en modulmappe, skriv en JSON efter `indhold/moduler/01.json`, sæt status til klar i `kursus.json`.
 * Fase 1 til 8: se projektplanen. Efter hver fase: stop, vis resultatet, vent på grønt lys.

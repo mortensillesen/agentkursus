@@ -40,12 +40,12 @@ npx wrangler secret put GITHUB_TOKEN
 npx wrangler deploy
 ```
 
-Wrangler skriver adressen, fx `https://agentkursus-api.<dit-subdomæne>.workers.dev`.
+Wrangler skriver adressen. Kursets Worker ligger på `https://agentkursus-api.loginalias.workers.dev`.
 
 5. Tjek.
 
 ```bash
-curl https://agentkursus-api.<dit-subdomæne>.workers.dev/health
+curl https://agentkursus-api.loginalias.workers.dev/health
 ```
 
 Svaret skal indeholde `"token": true`.

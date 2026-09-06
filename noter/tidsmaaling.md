@@ -38,3 +38,7 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 * Modul 11: første prøvekørsel hang, fordi prompten bad agenten starte en http.server som bevis, og serveren aldrig returnerer. Prompten er rettet til grep og forklaring. Anden kørsel: 89 s, 6 turns, main urørt.
 * Modul 12 er ren skriveøvelse og ligger ved grænsen på 15 minutter. Skemaet har otte rækker, og siden siger, at lærredet skal være udfyldt, ikke perfekt.
 * Modul 14: destillatet kører på 1 sekund uden modelkald. Den atomare agent takst-tester alene: 49 s, 2 turns, 0,18 dollar. Modul 10 til sammenligning: 70 til 78 s, 8 til 9 turns, 0,30 til 0,51 dollar.
+
+## Samlet
+
+Alle 14 øvelser er kørt og tidtaget 2026-09-06. Ingen over 15 minutter. Modul 12 ligger på grænsen som ren skriveøvelse. Samlet målt øvelsestid: cirka 135 minutter, mod cirka 210 minutter afsat (14 gange 15). De målte tider står i kursus.json under maalt og vises på forsiden.
