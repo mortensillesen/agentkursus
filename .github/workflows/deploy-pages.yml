@@ -28,7 +28,7 @@ jobs:
       - name: Saml site (uden _arkiv, worker og .github)
         run: |
           mkdir -p _site
-          rsync -a --exclude '.git' --exclude '_arkiv' --exclude 'worker' --exclude '.github' --exclude '_site' ./ _site/
+          rsync -a --exclude '.git' --exclude '_arkiv' --exclude 'worker' --exclude '.github' --exclude 'noter' --exclude '_site' ./ _site/
           ls -la _site
       - name: Setup Pages
         uses: actions/configure-pages@v6

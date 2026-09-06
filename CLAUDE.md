@@ -40,5 +40,6 @@ Claude bygger kurset. Morten tager kurset. Opsætning, repos, deploys, workflows
 ## Fasestatus
 
 * Fase 0: repo, struktur, GitHub Pages. Færdig 2026-09-06. Repoet er offentligt, fordi GitHub Free ikke giver Pages på private repos (API-svar 422 ved forsøget). Sitet er offentligt på internettet uanset repo-synlighed.
-* Fase 1: sandbox-repoet. Ikke begyndt.
+* Fase 1: sandbox-repoet `fragtvaegt-sandbox`. Færdig 2026-09-06. Tre øvelser tidtaget, se `noter/tidsmaaling.md`.
+* Fase 2: designsystem, modulskabelon, modul 01 og 02. Ikke begyndt.
 * Fase 1 til 8: se projektplanen. Efter hver fase: stop, vis resultatet, vent på grønt lys.
