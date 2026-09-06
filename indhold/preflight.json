@@ -3,22 +3,82 @@
   "intro": "Cirka 30 minutter. Køres dagen før dag 1. Kun installation og adgang: intet af det her er en del af kurset. Går noget galt, skal det løses i dag, ikke i morgen.",
   "sidstVerificeret": "2026-09-06",
   "script": {
-    "intro": "Det hurtigste er scriptet. Det tjekker alle punkterne nedenfor på én gang, skriver OK eller FEJL per punkt med en rettelse, og kloner de to repos, hvis de mangler. Læs det først, det er 60 linjer, og det ændrer intet andet.",
+    "intro": "Det hurtigste er scriptet. Det tjekker alle punkterne nedenfor på én gang, skriver OK eller FEJL per punkt med en rettelse, og kloner de to repos, hvis de mangler. Første kommando henter det og viser det i less, så du kan læse det. Det er 60 linjer og ændrer intet andet. Tryk q, når du har læst, og kør derefter anden kommando.",
     "hent": "cd ~/Desktop && curl -fsSL -o preflight.sh https://mortensillesen.github.io/agentkursus/preflight.sh && less preflight.sh",
     "koer": "sh ~/Desktop/preflight.sh",
     "efter": "Står der \"Du er klar til dag 1\", så sæt kryds i alle punkter nedenfor og luk siden. Står der FEJL, så følg rettelsen ved punktet, og kør scriptet igen. Punkterne nedenfor er de samme tjek, ét ad gangen, hvis du hellere vil gøre det i hånden."
   },
   "punkter": [
-    { "id": "claude", "titel": "Claude Code er installeret og logget ind", "kommando": "claude --version && claude -p \"Svar kun med ordet OK\"", "forventet": "et versionsnummer, og derefter ordet OK.", "hvisFejl": "Findes kommandoen ikke: installer efter code.claude.com/docs/en/overview og åbn en ny terminal. Svarer den ikke OK: kør claude alene, log ind i browseren, og prøv igen." },
-    { "id": "git", "titel": "Git virker", "kommando": "git --version", "forventet": "git version 2.x", "hvisFejl": "Kør xcode-select --install og accepter." },
-    { "id": "gh", "titel": "GitHub-adgang fra terminalen", "kommando": "gh auth status", "forventet": "Logged in to github.com account mortensillesen.", "hvisFejl": "Installer gh (brew install gh) og kør gh auth login. Vælg GitHub.com, HTTPS, og log ind i browseren." },
-    { "id": "python", "titel": "Python 3.9 eller nyere med pytest", "kommando": "python3 --version && python3 -c \"import pytest; print('pytest', pytest.__version__)\"", "forventet": "Python 3.9 eller højere, og en pytest-version.", "hvisFejl": "Mangler python3: xcode-select --install. Mangler pytest: python3 -m pip install pytest." },
-    { "id": "sandbox", "titel": "Sandbox-repoet er klonet med alle startbranches", "kommando": "cd ~/Desktop/\"CLAUDE CODE\" && (test -d fragtvaegt-sandbox || git clone https://github.com/mortensillesen/fragtvaegt-sandbox.git) && cd fragtvaegt-sandbox && git ls-remote --heads origin | grep -c start/modul-", "forventet": "tallet 11.", "hvisFejl": "Mindre end 11: kør git fetch origin i mappen. Kan ikke klone: tjek gh auth status og netværk." },
-    { "id": "tests", "titel": "Testene i sandboxen kører", "kommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && python3 -m pytest -q 2>&1 | tail -1", "forventet": "1 failed, 10 passed. Den ene fejl er indbygget med vilje.", "hvisFejl": "Andre fejl end én: læs outputtet. Typisk mangler pytest, se punktet ovenfor." },
-    { "id": "mcp", "titel": "Takstserveren (MCP) svarer", "kommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && printf '%s\\n' '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"0\"}}}' | python3 kursus/mcp/takstserver.py", "forventet": "én JSON-linje med \"serverInfo\" og \"takstserver\".", "hvisFejl": "Fejler python3 her, fejler den også i modul 05. Læs fejlen, den står i terminalen." },
-    { "id": "tdc", "titel": "Dit projekt er klonet med branchen agentkursus", "kommando": "cd ~/Desktop/\"CLAUDE CODE\" && (test -d tdc-simulator || git clone https://github.com/mortensillesen/tdc-simulator.git) && cd tdc-simulator && git ls-remote --heads origin | grep -c agentkursus", "forventet": "tallet 1.", "hvisFejl": "Tallet 0 betyder, at branchen mangler. Den skulle være lagt der af kurset. Sig det, før dag 2." },
-    { "id": "cloudflare", "titel": "Adgang til Cloudflare-dashboardet", "kommando": "open https://dash.cloudflare.com", "forventet": "du er logget ind og kan se Workers & Pages i menuen.", "hvisFejl": "Log ind, eller nulstil kodeordet i dag. Bruges kun i modul 09 og til kursets Worker." },
-    { "id": "worker", "titel": "Kursets Worker svarer (valgfrit)", "kommando": "curl -s https://agentkursus-api.loginalias.workers.dev/health", "forventet": "en JSON-linje med \"ok\":true.", "hvisFejl": "Kurset virker uden. Live-data vises som eksempler, og intet blokeres." }
+    {
+      "id": "claude",
+      "titel": "Claude Code er installeret og logget ind",
+      "kommando": "claude --version && claude -p \"Svar kun med ordet OK\"",
+      "forventet": "et versionsnummer, og derefter ordet OK.",
+      "hvisFejl": "Findes kommandoen ikke: installer efter code.claude.com/docs/en/overview og åbn en ny terminal. Svarer den ikke OK: kør claude alene, log ind i browseren, og prøv igen."
+    },
+    {
+      "id": "git",
+      "titel": "Git virker",
+      "kommando": "git --version",
+      "forventet": "git version 2.x",
+      "hvisFejl": "Kør xcode-select --install og accepter."
+    },
+    {
+      "id": "gh",
+      "titel": "GitHub-adgang fra terminalen",
+      "kommando": "gh auth status",
+      "forventet": "Logged in to github.com account mortensillesen.",
+      "hvisFejl": "Installer gh (brew install gh) og kør gh auth login. Vælg GitHub.com, HTTPS, og log ind i browseren."
+    },
+    {
+      "id": "python",
+      "titel": "Python 3.9 eller nyere med pytest",
+      "kommando": "python3 --version && python3 -c \"import pytest; print('pytest', pytest.__version__)\"",
+      "forventet": "Python 3.9 eller højere, og en pytest-version.",
+      "hvisFejl": "Mangler python3: xcode-select --install. Mangler pytest: python3 -m pip install pytest."
+    },
+    {
+      "id": "sandbox",
+      "titel": "Sandbox-repoet er klonet med alle startbranches",
+      "kommando": "cd ~/Desktop/\"CLAUDE CODE\" && (test -d fragtvaegt-sandbox || git clone https://github.com/mortensillesen/fragtvaegt-sandbox.git) && cd fragtvaegt-sandbox && git ls-remote --heads origin | grep -c start/modul-",
+      "forventet": "tallet 11.",
+      "hvisFejl": "Mindre end 11: kør git fetch origin i mappen. Kan ikke klone: tjek gh auth status og netværk."
+    },
+    {
+      "id": "tests",
+      "titel": "Testene i sandboxen kører",
+      "kommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && python3 -m pytest -q 2>&1 | tail -1",
+      "forventet": "1 failed, 10 passed. Den ene fejl er indbygget med vilje.",
+      "hvisFejl": "Andre fejl end én: læs outputtet. Typisk mangler pytest, se punktet ovenfor."
+    },
+    {
+      "id": "mcp",
+      "titel": "Takstserveren (MCP) svarer",
+      "kommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && printf '%s\\n' '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"0\"}}}' | python3 kursus/mcp/takstserver.py",
+      "forventet": "én JSON-linje med \"serverInfo\" og \"takstserver\".",
+      "hvisFejl": "Fejler python3 her, fejler den også i modul 05. Læs fejlen, den står i terminalen."
+    },
+    {
+      "id": "tdc",
+      "titel": "Dit projekt er klonet med branchen agentkursus",
+      "kommando": "cd ~/Desktop/\"CLAUDE CODE\" && (test -d tdc-simulator || git clone https://github.com/mortensillesen/tdc-simulator.git) && cd tdc-simulator && git ls-remote --heads origin | grep -c agentkursus",
+      "forventet": "tallet 1.",
+      "hvisFejl": "Tallet 0 betyder, at branchen mangler. Den skulle være lagt der af kurset. Sig det, før dag 2."
+    },
+    {
+      "id": "cloudflare",
+      "titel": "Adgang til Cloudflare-dashboardet",
+      "kommando": "open https://dash.cloudflare.com",
+      "forventet": "du er logget ind og kan se Workers & Pages i menuen.",
+      "hvisFejl": "Log ind, eller nulstil kodeordet i dag. Bruges kun i modul 09 og til kursets Worker."
+    },
+    {
+      "id": "worker",
+      "titel": "Kursets Worker svarer (valgfrit)",
+      "kommando": "curl -s https://agentkursus-api.loginalias.workers.dev/health",
+      "forventet": "en JSON-linje med \"ok\":true.",
+      "hvisFejl": "Kurset virker uden. Live-data vises som eksempler, og intet blokeres."
+    }
   ],
   "tid": {
     "intro": "Tidsestimaterne på hvert modul er målt, ikke skønnet. Kurset har selv kørt hver øvelse mod en frisk klon og taget tid. Agenttiden er væggeur fra prompt til svar. Resten er et skøn for dine egne trin, som du kan efterprøve i dashboardet."
