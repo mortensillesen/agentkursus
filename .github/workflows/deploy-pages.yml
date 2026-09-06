@@ -1,0 +1,41 @@
+# Deployer kursussitet til GitHub Pages ved push til main.
+# Baseret paa actions/starter-workflows/pages/static.yml. Verificeret 2026-09-06.
+name: Deploy til GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Saml site (uden _arkiv, worker og .github)
+        run: |
+          mkdir -p _site
+          rsync -a --exclude '.git' --exclude '_arkiv' --exclude 'worker' --exclude '.github' --exclude '_site' ./ _site/
+          ls -la _site
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - name: Deploy til GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
