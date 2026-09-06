@@ -37,9 +37,14 @@ Claude bygger kurset. Morten tager kurset. Opsætning, repos, deploys, workflows
 * Sandbox til øvelserne: `mortensillesen/fragtvaegt-sandbox` (Python 3.9, pytest, fragtpligtig vægt). Startbranch per modul: `start/modul-NN`.
 * Mortens rigtige projekt til modul 11 til 14: `mortensillesen/tdc-simulator`, kun på branchen `agentkursus`. Aldrig main.
 
+## Indholdsmodel
+
+Se `indhold/moduler/01.json` som reference. Blokke i `hvorfor`, `kernen`, `oevelse.intro` og `oevelse.efter` er enten en streng (afsnit) eller `{type: h3|liste|citat|kode|note|advarsel|tabel}`. Inline-kode med backticks. `simulationerBygget` i `kursus.json` styrer, hvilke simulationsscripts der indlæses. Skemaer, quiz og fremdrift gemmes under `agentkursus.fremdrift.v1`.
+
 ## Fasestatus
 
 * Fase 0: repo, struktur, GitHub Pages. Færdig 2026-09-06. Repoet er offentligt, fordi GitHub Free ikke giver Pages på private repos (API-svar 422 ved forsøget). Sitet er offentligt på internettet uanset repo-synlighed.
 * Fase 1: sandbox-repoet `fragtvaegt-sandbox`. Færdig 2026-09-06. Tre øvelser tidtaget, se `noter/tidsmaaling.md`.
-* Fase 2: designsystem, modulskabelon, modul 01 og 02. Ikke begyndt.
+* Fase 2: designsystem, modulskabelon, modul 01 og 02 som referencekvalitet. Færdig 2026-09-06.
+* Fase 3: modul 03 til 06. Ikke begyndt.
 * Fase 1 til 8: se projektplanen. Efter hver fase: stop, vis resultatet, vent på grønt lys.

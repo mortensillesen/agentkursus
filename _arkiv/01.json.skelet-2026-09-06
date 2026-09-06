@@ -1,0 +1,55 @@
+{
+  "id": "01",
+  "del": 1,
+  "titel": "Den agentiske løkke",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Beskrive løkken: mål, kontekst, handling, observation, vurdering, gentag.",
+    "Pege på hvor løkken bryder sammen i praksis."
+  ],
+  "hvorfor": [
+    "Pladsholder. Tre til fem linjer om det konkrete problem skrives i Fase 2.",
+    "Denne side er et skelet, som viser modulskabelonens otte sektioner, og at teksten kommer fra en JSON-fil."
+  ],
+  "kernen": [
+    "Pladsholder for læsestof, maksimalt 600 ord. Skrives i Fase 2.",
+    "Sidebar: forskellen på autocomplete og uddelegering kommer her."
+  ],
+  "simulation": {
+    "id": "agentisk-loekke",
+    "beskrivelse": "Klikbar løkke, hvor hvert trin viser hvad agenten ser og gør. Bygges i Fase 4.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-01",
+  "nulstilKommando": "git fetch origin && git checkout -B arbejde/modul-01 origin/start/modul-01",
+  "oevelse": {
+    "forventetMinutter": 15,
+    "trin": [
+      { "tekst": "Pladsholder for trin 1. Skrives i Fase 2.", "prompt": null },
+      { "tekst": "Pladsholder for trin 2 med en kopierbar prompt.", "prompt": "Pladsholder-prompt. Erstattes i Fase 2." }
+    ]
+  },
+  "verifikation": {
+    "kriterier": [
+      "Skemaet har mindst tre observationstrin fra dit eget transkript."
+    ],
+    "kommando": null,
+    "forventetOutput": null
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Pladsholder-spørgsmål. Hvilket trin i løkken kommer efter handling?",
+      "svar": ["Mål", "Observation", "Gentag"],
+      "korrekt": 1,
+      "forklaring": [
+        "Målet sættes før løkken begynder, ikke efter en handling.",
+        "Rigtigt. Efter en handling ser agenten på resultatet, før den vurderer.",
+        "Gentag kommer først efter vurderingen, ikke direkte efter handlingen."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Building effective agents (Anthropic)", "url": "https://www.anthropic.com/engineering/building-effective-agents", "hentet": "2026-09-06" }
+  ]
+}

@@ -1,0 +1,38 @@
+/* Agentkursus: minimal base. Det egentlige designsystem kommer i Fase 2. */
+:root {
+  --tekst: #1a1a1a;
+  --baggrund: #ffffff;
+  --daempet: #555;
+  --linje: #d9d9d9;
+  --accent: #0b5cad;
+  --maks-bredde: 46rem;
+}
+* { box-sizing: border-box; }
+html { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.55; color: var(--tekst); background: var(--baggrund); }
+body { margin: 0; padding: 1.5rem 1rem 4rem; max-width: var(--maks-bredde); margin-inline: auto; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+h1 { font-size: 1.8rem; line-height: 1.2; margin: 0 0 .25rem; }
+h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; padding-top: 1rem; border-top: 1px solid var(--linje); }
+h3 { font-size: 1.05rem; margin: 1.25rem 0 .25rem; }
+p, li { max-width: 65ch; }
+pre { background: #f4f4f4; padding: .75rem 1rem; overflow-x: auto; border-radius: 4px; font-size: .9rem; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.meta { color: var(--daempet); font-size: .95rem; margin: 0 0 1.5rem; }
+.brod { margin: 0 0 .75rem; }
+.note { border-left: 3px solid var(--accent); padding: .5rem .75rem; background: #f4f8fc; margin: 1rem 0; }
+.pladsholder { color: var(--daempet); font-style: italic; }
+nav.top { font-size: .95rem; margin-bottom: 1rem; }
+.del { margin-top: 1.5rem; }
+.modulliste { list-style: none; padding: 0; margin: .5rem 0 0; }
+.modulliste li { display: flex; gap: .75rem; padding: .4rem 0; border-bottom: 1px solid var(--linje); }
+.modulliste .id { font-variant-numeric: tabular-nums; color: var(--daempet); min-width: 2rem; }
+.modulliste .tid { margin-left: auto; color: var(--daempet); white-space: nowrap; }
+.modulliste .planlagt { color: var(--daempet); }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linje); color: var(--daempet); font-size: .9rem; }
+@media print {
+  body { padding: 0; max-width: none; }
+  nav.top, .kun-skaerm { display: none; }
+  a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; }
+}

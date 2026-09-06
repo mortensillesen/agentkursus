@@ -1,34 +1,175 @@
 {
   "titel": "Agent Engineering",
   "undertitel": "Interaktivt træningsforløb i 14 moduler over to dage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "sidstVerificeret": "2026-09-06",
   "fremdriftNoegle": "agentkursus.fremdrift.v1",
   "dage": [
-    { "nr": 1, "titel": "Dag 1", "moduler": ["01", "02", "03", "04", "05", "06"], "effektiveTimer": 4 },
-    { "nr": 2, "titel": "Dag 2", "moduler": ["07", "08", "09", "10", "11", "12", "13", "14"], "effektiveTimer": 5 }
+    {
+      "nr": 1,
+      "titel": "Dag 1",
+      "moduler": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06"
+      ],
+      "effektiveTimer": 4
+    },
+    {
+      "nr": 2,
+      "titel": "Dag 2",
+      "moduler": [
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14"
+      ],
+      "effektiveTimer": 5
+    }
   ],
   "dagNote": "Dag 2 er tungere end dag 1. Vil du have dagene til at veje ens, så tag modul 07 på dag 1.",
   "dele": [
-    { "nr": 1, "titel": "Fundament", "dag": 1 },
-    { "nr": 2, "titel": "Kernefærdigheder", "dag": 1 },
-    { "nr": 3, "titel": "Avancerede mønstre", "dag": 2 },
-    { "nr": 4, "titel": "Organisation og skala", "dag": 2 }
+    {
+      "nr": 1,
+      "titel": "Fundament",
+      "dag": 1
+    },
+    {
+      "nr": 2,
+      "titel": "Kernefærdigheder",
+      "dag": 1
+    },
+    {
+      "nr": 3,
+      "titel": "Avancerede mønstre",
+      "dag": 2
+    },
+    {
+      "nr": 4,
+      "titel": "Organisation og skala",
+      "dag": 2
+    }
   ],
   "moduler": [
-    { "id": "01", "slug": "01-den-agentiske-loekke", "titel": "Den agentiske løkke", "del": 1, "tidsestimat": 25, "status": "skelet" },
-    { "id": "02", "slug": "02-opsaetning-af-miljoe", "titel": "Opsætning af miljø", "del": 1, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "03", "slug": "03-kontekst-engineering", "titel": "Kontekst-engineering", "del": 2, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "04", "slug": "04-effektiv-prompting", "titel": "Effektiv prompting til agenter", "del": 2, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "05", "slug": "05-vaerktoejer-mcp-forbindelser", "titel": "Værktøjer, MCP og forbindelser", "del": 2, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "06", "slug": "06-verifikation-og-kvalitetsporte", "titel": "Verifikation og kvalitetsporte", "del": 2, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "07", "slug": "07-subagenter-og-parallelitet", "titel": "Subagenter og parallelitet", "del": 3, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "08", "slug": "08-langtkoerende-agenter-og-hukommelse", "titel": "Langtkørende agenter og hukommelse", "del": 3, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "09", "slug": "09-produktions-workflows", "titel": "Produktions-workflows", "del": 3, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "10", "slug": "10-byg-dit-eget-agent-system", "titel": "Byg dit eget agent-system", "del": 3, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "11", "slug": "11-fra-forretningskontekst-til-opgaver", "titel": "Fra forretningskontekst til agent-opgaver", "del": 4, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "12", "slug": "12-enterprise-adoption", "titel": "Enterprise-adoption", "del": 4, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "13", "slug": "13-observability-og-livscyklus", "titel": "Observability og livscyklus", "del": 4, "tidsestimat": 25, "status": "planlagt" },
-    { "id": "14", "slug": "14-atomare-agenter", "titel": "Atomare agenter og software-distillation", "del": 4, "tidsestimat": 25, "status": "planlagt" }
-  ]
+    {
+      "id": "01",
+      "slug": "01-den-agentiske-loekke",
+      "titel": "Den agentiske løkke",
+      "del": 1,
+      "tidsestimat": 25,
+      "status": "klar"
+    },
+    {
+      "id": "02",
+      "slug": "02-opsaetning-af-miljoe",
+      "titel": "Opsætning af miljø",
+      "del": 1,
+      "tidsestimat": 25,
+      "status": "klar"
+    },
+    {
+      "id": "03",
+      "slug": "03-kontekst-engineering",
+      "titel": "Kontekst-engineering",
+      "del": 2,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "04",
+      "slug": "04-effektiv-prompting",
+      "titel": "Effektiv prompting til agenter",
+      "del": 2,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "05",
+      "slug": "05-vaerktoejer-mcp-forbindelser",
+      "titel": "Værktøjer, MCP og forbindelser",
+      "del": 2,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "06",
+      "slug": "06-verifikation-og-kvalitetsporte",
+      "titel": "Verifikation og kvalitetsporte",
+      "del": 2,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "07",
+      "slug": "07-subagenter-og-parallelitet",
+      "titel": "Subagenter og parallelitet",
+      "del": 3,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "08",
+      "slug": "08-langtkoerende-agenter-og-hukommelse",
+      "titel": "Langtkørende agenter og hukommelse",
+      "del": 3,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "09",
+      "slug": "09-produktions-workflows",
+      "titel": "Produktions-workflows",
+      "del": 3,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "10",
+      "slug": "10-byg-dit-eget-agent-system",
+      "titel": "Byg dit eget agent-system",
+      "del": 3,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "11",
+      "slug": "11-fra-forretningskontekst-til-opgaver",
+      "titel": "Fra forretningskontekst til agent-opgaver",
+      "del": 4,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "12",
+      "slug": "12-enterprise-adoption",
+      "titel": "Enterprise-adoption",
+      "del": 4,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "13",
+      "slug": "13-observability-og-livscyklus",
+      "titel": "Observability og livscyklus",
+      "del": 4,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    },
+    {
+      "id": "14",
+      "slug": "14-atomare-agenter",
+      "titel": "Atomare agenter og software-distillation",
+      "del": 4,
+      "tidsestimat": 25,
+      "status": "planlagt"
+    }
+  ],
+  "simulationerBygget": []
 }

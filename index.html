@@ -8,10 +8,16 @@
   <link rel="stylesheet" href="assets/css/kursus.css">
 </head>
 <body>
-  <main>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+  <header class="top"><div class="inder">
+    <a class="kursus" href="./">Agentkursus</a>
+    <a href="preflight.html">Pre-flight</a>
+    <div class="fremdrift-linje"><span class="fremdrift-tekst">0 af 14 gennemført</span><div class="bar" aria-hidden="true"><span></span></div></div>
+  </div></header>
+  <main id="indhold">
     <p class="pladsholder">Indlæser kursus ...</p>
   </main>
-  <footer><span class="verificeret">Sidst verificeret: ...</span></footer>
+  <footer><div class="inder"><span class="verificeret">Sidst verificeret: ...</span><span>Fremdrift gemmes kun i din browser.</span></div></footer>
   <script src="assets/js/fremdrift.js"></script>
   <script>
   (function () {
@@ -23,34 +29,44 @@
         else if (k === "class") e.className = attrs[k];
         else e.setAttribute(k, attrs[k]);
       });
-      (born || []).forEach(function (b) { if (b) e.appendChild(b); });
+      (born || []).forEach(function (b) { if (b) e.appendChild(typeof b === "string" ? document.createTextNode(b) : b); });
       return e;
     }
     function render(k) {
       var main = document.querySelector("main");
       main.textContent = "";
+      var fremdrift = window.Fremdrift ? window.Fremdrift.laes() : { moduler: {} };
+      var gennemfoert = k.moduler.filter(function (m) { return fremdrift.moduler[m.id] && fremdrift.moduler[m.id].gennemfoert; });
+      var minutter = k.moduler.reduce(function (s, m) { var f = fremdrift.moduler[m.id]; return s + ((f && f.forbrugtMinutter) || 0); }, 0);
+      var total = k.moduler.reduce(function (s, m) { return s + m.tidsestimat; }, 0);
+
       main.appendChild(el("h1", { text: k.titel }));
       main.appendChild(el("p", { class: "meta", text: k.undertitel }));
+      main.appendChild(el("p", { class: "brod", text: "Du bygger intet. Kursussitet, sandbox-repoet og alle komponenter er sat op på forhånd. Hvert modul har læsestof, en simulation, en øvelse mod sandbox-repoet, verifikation og en quiz. Kør pre-flight dagen før, og tag modulerne i rækkefølge." }));
 
-      var total = k.moduler.reduce(function (s, m) { return s + m.tidsestimat; }, 0);
-      main.appendChild(el("p", { class: "brod", text: "14 moduler, cirka " + Math.round(total / 60 * 10) / 10 + " timers ren modultid. " + k.dage.map(function (d) { return d.titel + ": modul " + d.moduler[0] + " til " + d.moduler[d.moduler.length - 1] + ", cirka " + d.effektiveTimer + " effektive timer."; }).join(" ") }));
-      main.appendChild(el("p", { class: "note", text: k.dagNote }));
+      main.appendChild(el("div", { class: "kort-raekke" }, [
+        el("div", { class: "kort" }, [el("div", { class: "tal", text: gennemfoert.length + " af " + k.moduler.length }), el("div", { class: "tekst", text: "moduler gennemført" })]),
+        el("div", { class: "kort" }, [el("div", { class: "tal", text: String(minutter) }), el("div", { class: "tekst", text: "minutter brugt indtil nu" })]),
+        el("div", { class: "kort" }, [el("div", { class: "tal", text: (Math.round(total / 6) / 10).toString().replace(".", ",") + " t" }), el("div", { class: "tekst", text: "ren modultid i alt" })])
+      ]));
 
-      main.appendChild(el("p", { class: "kun-skaerm" }, [el("a", { href: "preflight.html", text: "Pre-flight: kør tjeklisten dagen før" })]));
+      main.appendChild(el("p", { class: "brod", text: k.dage.map(function (d) { return d.titel + ": modul " + d.moduler[0] + " til " + d.moduler[d.moduler.length - 1] + ", cirka " + d.effektiveTimer + " effektive timer med pauser og det, der går galt."; }).join(" ") }));
+      main.appendChild(el("div", { class: "note", text: k.dagNote }));
 
-      var fremdrift = window.Fremdrift ? window.Fremdrift.laes() : { moduler: {} };
+      var bar = document.querySelector(".top .bar > span"); if (bar) bar.style.width = Math.round(100 * gennemfoert.length / k.moduler.length) + "%";
+      var ft = document.querySelector(".top .fremdrift-tekst"); if (ft) ft.textContent = gennemfoert.length + " af " + k.moduler.length + " gennemført";
+
       k.dele.forEach(function (d) {
-        var sek = el("section", { class: "del" }, [el("h2", { text: "Del " + d.nr + ": " + d.titel + " (dag " + d.dag + ")" })]);
+        var sek = el("section", { class: "del" }, [el("h2", null, [el("span", { class: "nr", text: "Del " + d.nr }), el("span", { text: d.titel + ", dag " + d.dag })])]);
         var ul = el("ul", { class: "modulliste" });
         k.moduler.filter(function (m) { return m.del === d.nr; }).forEach(function (m) {
           var f = fremdrift.moduler[m.id];
-          var titelEl = m.status === "planlagt"
-            ? el("span", { class: "planlagt", text: m.titel + " (kommer)" })
-            : el("a", { href: "moduler/" + m.slug + "/", text: m.titel });
+          var titelEl = m.status === "planlagt" ? el("span", { class: "planlagt", text: m.titel + " (kommer)" }) : el("a", { href: "moduler/" + m.slug + "/", text: m.titel });
           ul.appendChild(el("li", null, [
             el("span", { class: "id", text: m.id }),
             titelEl,
-            el("span", { class: "tid", text: (f && f.gennemfoert ? "gennemført, " : "") + m.tidsestimat + " min" })
+            f && f.gennemfoert ? el("span", { class: "flueben", text: "✓", "aria-label": "gennemført" }) : null,
+            el("span", { class: "tid", text: (f && f.forbrugtMinutter ? f.forbrugtMinutter + " min brugt, " : "") + m.tidsestimat + " min" })
           ]));
         });
         sek.appendChild(ul);
@@ -58,8 +74,8 @@
       });
 
       main.appendChild(el("section", { id: "fremdrift" }, [
-        el("h2", { text: "Fremdrift" }),
-        el("p", { class: "pladsholder", text: "Fremdriftsviser med eksport og import kommer i Fase 8. Data gemmes kun i din browser under nøglen " + k.fremdriftNoegle + "." })
+        el("h2", null, [el("span", { class: "nr", text: "Data" }), el("span", { text: "Fremdrift" })]),
+        el("p", { class: "brod", text: "Fremdrift, skemaer og quizresultater gemmes kun i din browser under nøglen " + k.fremdriftNoegle + ". Eksport og import kommer på denne side, så du kan flytte det mellem browsere." })
       ]));
 
       var fod = document.querySelector("footer .verificeret");
