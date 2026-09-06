@@ -346,7 +346,7 @@
     main.appendChild(el("h1", { text: m.titel }));
     main.appendChild(el("p", { class: "meta" }, [el("b", { text: "Cirka " + m.tidsestimat + " minutter. " }), el("span", { text: m.undertitel || "" })]));
     if (m.laeringsmaal && m.laeringsmaal.length) {
-      main.appendChild(el("div", { class: "laeringsmaal" }, [el("h3", { text: "Efter modulet kan du" }), el("ul", null, m.laeringsmaal.map(function (t) { var li = el("li"); li.appendChild(inline(t)); return li; }))]));
+      main.appendChild(el("div", { class: "laeringsmaal" }, [el("h2", { class: "boks-h", text: "Efter modulet kan du" }), el("ul", null, m.laeringsmaal.map(function (t) { var li = el("li"); li.appendChild(inline(t)); return li; }))]));
     }
     main.appendChild(sektion("hvorfor", 1, "Hvorfor", blokke(m.hvorfor)));
     var kernen = blokke(m.kernen);

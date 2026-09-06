@@ -47,7 +47,7 @@ li { margin-bottom: .35rem; }
 .meta { color: var(--daempet); font-size: .95rem; margin-bottom: 1.25rem; }
 .meta b { color: var(--ink); font-weight: 600; }
 .laeringsmaal { background: var(--flade); border: 1px solid var(--linje); border-radius: var(--radius); padding: .9rem 1.1rem .4rem; margin: 1rem 0 0; }
-.laeringsmaal h3 { margin: 0 0 .4rem; font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; color: var(--daempet); }
+.laeringsmaal h2.boks-h { margin: 0 0 .4rem; padding: 0; border: 0; font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; color: var(--daempet); display: block; }
 
 /* Blokke */
 pre { background: var(--kode-bg); border: 1px solid var(--linje); border-radius: var(--radius); padding: .75rem 1rem; overflow-x: auto; font-size: .88rem; line-height: 1.5; margin: 0 0 1rem; }

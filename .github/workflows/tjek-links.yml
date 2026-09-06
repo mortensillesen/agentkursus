@@ -1,10 +1,11 @@
-# Tjekker alle links i kursets indhold ved hvert push og hver mandag.
+# Tjekker alle links i kursets indhold, naar deployet er faerdigt, og hver mandag.
 # Baseret paa lycheeverse/lychee-action README, verificeret 2026-09-06.
 name: Tjek links
 
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: ["Deploy til GitHub Pages"]
+    types: [completed]
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
