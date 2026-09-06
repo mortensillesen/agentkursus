@@ -116,9 +116,36 @@
       if (t.note) li.appendChild(el("div", { class: "note" }, [p(t.note)]));
       return li;
     })));
+    if (oe.tjekliste) born.push(tjekliste(m.id, oe.tjekliste));
     if (oe.skema) born.push(skema(m.id, oe.skema));
     if (oe.efter) born = born.concat(blokke(oe.efter));
     return born;
+  }
+
+  /* Tjekliste: afkrydsninger gemt i fremdrift under moduler[id].tjekliste */
+  function tjekliste(id, def) {
+    var wrap = el("div", { class: "tjekliste kort" });
+    if (def.titel) wrap.appendChild(el("h3", { text: def.titel }));
+    var gemt = modulData(id).tjekliste || [];
+    var status = el("div", { class: "status", role: "status" });
+    function opdater() {
+      var v = Array.prototype.map.call(wrap.querySelectorAll("input[type=checkbox]"), function (c) { return c.checked; });
+      gemModul(id, { tjekliste: v });
+      var n = v.filter(Boolean).length;
+      status.className = "status " + (n === v.length ? "ok" : "mangler");
+      status.textContent = n + " af " + v.length + " punkter dækket.";
+    }
+    def.punkter.forEach(function (t, i) {
+      var inp = el("input", { type: "checkbox", id: "tj-" + id + "-" + i });
+      inp.checked = !!gemt[i];
+      inp.addEventListener("change", opdater);
+      wrap.appendChild(el("label", { class: "tjek", for: "tj-" + id + "-" + i }, [inp, t]));
+    });
+    wrap.appendChild(status);
+    var n = gemt.filter(Boolean).length;
+    status.className = "status " + (n === def.punkter.length ? "ok" : "mangler");
+    status.textContent = n + " af " + def.punkter.length + " punkter dækket.";
+    return wrap;
   }
 
   /* Skema: et lille regneark, gemt i fremdrift under moduler[id].skema */
@@ -147,7 +174,7 @@
     function tjek(data) {
       var krav = def.krav;
       if (!krav) return;
-      var n = data.filter(function (r) { return (r[krav.kolonne] || "") === krav.vaerdi; }).length;
+      var n = data.filter(function (r) { var v = (r[krav.kolonne] || "").trim(); return krav.ikkeTom ? v !== "" : v === krav.vaerdi; }).length;
       var ok = n >= krav.min;
       status.className = "status " + (ok ? "ok" : "mangler");
       status.textContent = (ok ? "Opfyldt: " : "Mangler: ") + n + " af mindst " + krav.min + " rækker med " + krav.label + ".";

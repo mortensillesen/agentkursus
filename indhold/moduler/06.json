@@ -1,0 +1,139 @@
+{
+  "id": "06",
+  "del": 2,
+  "titel": "Verifikation og kvalitetsporte",
+  "undertitel": "Agenten skal kunne bevise sit arbejde. Tests, linters, typetjek og build som porte.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Forklare hvorfor en agent uden verifikation producerer selvsikkert forkert kode.",
+    "Skelne mellem et tjek i prompten, en port i git og en port i CI, og vide hvad hver fanger.",
+    "Sætte en pre-commit-port op og se den afvise en commit."
+  ],
+  "hvorfor": [
+    "Agenten stopper, når arbejdet ser færdigt ud. Uden et tjek, den selv kan køre, er det det eneste signal, den har. Resultatet er kode, der ser rigtig ud, forklares overbevisende, og er forkert. Det er samme fejltype som en selvsikker model i en chat, bare dyrere, fordi den er skrevet ind i dit repo.",
+    "Løsningen er ikke at læse mere igennem selv. Det er at give løkken en port, som siger ja eller nej uden dig."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "Et tjek lukker løkken" },
+    { "type": "citat", "tekst": "Give Claude a check it can run: tests, a build, a screenshot to compare. It's the difference between a session you watch and one you walk away from.", "kilde": "Claude Code docs, Best practices", "url": "https://code.claude.com/docs/en/best-practices" },
+    "Tjekket er alt, der giver et signal, agenten kan læse i samtalen: en testsuite, en exit-kode fra et build, en linter, et script der sammenligner output med et facit. Med tjekket gør agenten arbejdet, kører tjekket, læser resultatet og prøver igen, indtil det består. Uden tjekket er du selv løkken, og hver fejl venter på, at du opdager den.",
+    { "type": "h3", "tekst": "Fire niveauer af port" },
+    { "type": "tabel", "hoved": ["Niveau", "Hvordan", "Hvad den fanger"], "raekker": [
+      ["I prompten", "\"Kør testene, og ret indtil de består\"", "Fejl i den aktuelle opgave, hvis agenten husker det"],
+      ["I git", "En pre-commit hook, der kører testene", "Alt, der forsøger at blive committet, uanset hvem der committer"],
+      ["I harnessen", "En Claude Code hook, fx `PostToolUse` efter hver redigering, eller en `Stop` hook der ikke lader turen slutte før tjekket består", "Fejl, mens de opstår, uden at vente på commit"],
+      ["I CI", "En workflow, der kører tests før deploy", "Alt, der forsøger at nå produktion. Modul 09"]
+    ]},
+    "Niveauerne udelukker ikke hinanden. Prompten er billigst og glemmes lettest. Porten i git er deterministisk: den kører, uanset hvad agenten beslutter, og det er hele forskellen på råd og håndhævelse fra modul 02. Dokumentationen beskriver samme trappe med en femte mulighed: en anden agent, der forsøger at modbevise resultatet, så den, der byggede, ikke også er den, der bedømmer.",
+    { "type": "h3", "tekst": "Bevis, ikke påstand" },
+    "Bed agenten vise testoutputtet, kommandoen og det, den fik tilbage. Det er hurtigere at læse bevis end at gentage verifikationen selv, og det virker for sessioner, du ikke så. Dokumentationen kalder det modsatte for trust-then-verify-gabet: en plausibel implementering, der ikke håndterer kanttilfældene. Rettelsen er altid den samme: kan du ikke verificere det, så send det ikke.",
+    { "type": "h3", "tekst": "Porten er kun så god som testene" },
+    "En grøn suite beviser kun det, den tester. Sandbox-repoet har tre indbyggede fejl, og testene fanger én af dem. Det er ikke et argument mod porte. Det er et argument for at behandle testdækning som en del af briefingen: bed om en fejlende test først, så porten lærer at fange det, du netop har rettet.",
+    { "type": "note", "tekst": "Git-hooken i dette modul aktiveres med `git config core.hooksPath kursus/hooks`. Indstillingen ligger i din lokale `.git/config`, ikke i repoet, så den følger ikke med en klon. Det er derfor, CI-porten i modul 09 findes." }
+  ],
+  "sidebar": {
+    "titel": "Hvorfor kun én fejl fanges",
+    "afsnit": [
+      "Testene i sandboxen dækker fly og vej med ét kolli. De dækker ikke soe, faste tillæg, flere kolli eller afrunding af priser. De to fejl, testene ikke ser, ligger præcis der. Én af dem har du allerede mødt i modul 04. Den sidste kommer i modul 07, hvor du udvider testdækningen i fire uafhængige dele."
+    ]
+  },
+  "simulation": {
+    "id": "port-til-fra",
+    "beskrivelse": "To kørsler side om side, med og uden port. I den ene slipper en commit igennem med en fejl. I den anden afvises den, og agenten retter selv.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-06",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-06 origin/start/modul-06 && git checkout -- . && git config --unset core.hooksPath; true",
+  "oevelse": {
+    "forventetMinutter": 12,
+    "intro": [
+      "To dele. Først lader du agenten finde den fejl, testene fanger, uden at du beskriver den. Derefter aktiverer du porten og beder agenten committe noget, der fejler, for at se porten afvise den og agenten rette sig selv."
+    ],
+    "trin": [
+      { "tekst": "Stil repoet om til startpunktet, start Claude Code, og giv den første opgave. Beskriv ikke fejlen. Det er pointen, at testene gør det.", "kommando": "claude", "prompt": "Kør testene i dette repo. Find årsagen til det, der fejler, ret fejlen i koden (ikke i testen), og kør testene igen. Forklar i to linjer, hvad fejlen var." },
+      { "tekst": "Læs forklaringen. Passer den med det, testen hedder? Commit rettelsen selv, så din log viser, hvem der gjorde hvad.", "kommando": "git commit -am \"Ret afrunding for fly\"" },
+      { "tekst": "Aktivér porten. Hooken ligger i `kursus/hooks/pre-commit` og kører testene. Kommandoen fortæller git, at hooks ligger i den mappe.", "kommando": "git config core.hooksPath kursus/hooks" },
+      { "tekst": "Giv agenten den anden opgave i samme session. Den beder om en ændring, der bryder en test, og om at committe den. Grib ikke ind.", "prompt": "Ændr afrund_vaegt i fragtvaegt/beregner.py, så vej runder ned i stedet for op, og tilføj en linje i funktionens docstring, der forklarer afrundingen for vej. Commit med beskeden \"Rund vej ned\". Hvis committen afvises, så genopret oprundingen for vej, behold docstring-linjen men ret dens tekst, så den passer, og commit igen med beskeden \"Behold oprunding for vej\"." },
+      { "tekst": "Find hookens output i transkriptet. Der skal stå, at tests fejlede og committen blev afvist, og derefter at tests bestod og committen blev tilladt." }
+    ],
+    "efter": [
+      { "type": "note", "tekst": "Kursets egen kørsel: første del tog 33 sekunder og rettede `math.floor` til `math.ceil`. Anden del tog 48 sekunder, committen blev afvist én gang, og agenten committede derefter \"Behold oprunding for vej\" med docstring-linjen." }
+    ]
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når loggen viser den rigtige historie, og suiten er grøn.",
+    "kriterier": [
+      "Loggen viser \"Behold oprunding for vej\" øverst og \"Ret afrunding for fly\" under. Der findes ingen commit med \"Rund vej ned\".",
+      "Transkriptet viser hookens afvisning: \"pre-commit: tests fejlede, commit afvist\".",
+      "Alle tests består."
+    ],
+    "kommando": "git log --oneline -3 && python3 -m pytest -q 2>&1 | tail -1",
+    "forventetOutput": "de to commits øverst, ingen \"Rund vej ned\", og en sidste linje med 11 passed.",
+    "hvisDetFejler": "Findes \"Rund vej ned\" i loggen, kørte hooken ikke. Tjek `git config core.hooksPath`, og at `kursus/hooks/pre-commit` er eksekverbar. Mangler \"Behold oprunding for vej\", så genoprettede agenten koden uden at beholde docstring-linjen, og der var intet at committe. Det er også et resultat: porten virkede, agenten fulgte ikke hele instruktionen."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvad er forskellen på en linje i CLAUDE.md om at køre tests og en pre-commit hook, der kører dem?",
+      "svar": [
+        "Ingen. Begge sikrer, at testene kører.",
+        "Linjen er et råd, agenten kan glemme. Hooken kører uanset, hvad agenten beslutter.",
+        "Hooken er langsommere, ellers er de ens."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "CLAUDE.md er kontekst. Hooken er håndhævelse. Det er skellet fra modul 02.",
+        "Deterministisk mod rådgivende. Det er dokumentationens egen formulering om hooks.",
+        "Hastighed er ikke forskellen. Garantien er."
+      ]
+    },
+    {
+      "spoergsmaal": "Testsuiten er grøn. Hvad har du bevis for?",
+      "svar": [
+        "At koden er korrekt.",
+        "At koden opfører sig rigtigt i de tilfælde, testene dækker. Intet om resten.",
+        "At agenten ikke har lavet fejl."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Sandboxen har tre fejl og en grøn suite, når den ene er rettet. Korrekthed er mere end grønt.",
+        "En port er kun så god som testene bag den. Derfor hører testdækning til i briefingen.",
+        "Agenten kan have lavet fejl i alt, testene ikke ser."
+      ]
+    },
+    {
+      "spoergsmaal": "Agenten skriver \"Alle tests består nu\" uden at vise output. Hvad gør du?",
+      "svar": [
+        "Tror på det. Agenten kørte jo testene.",
+        "Beder om beviset: kommandoen og outputtet. Eller kører den selv.",
+        "Beder den skrive flere tests."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Påstand er ikke bevis. Det er trust-then-verify-gabet.",
+        "Bevis er hurtigere at læse end at gentage arbejdet, og det er det, briefingen skulle have bedt om.",
+        "Flere tests hjælper ikke, hvis du ikke ser resultatet af dem."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvorfor følger git-hooken fra dette modul ikke med, når en kollega kloner repoet?",
+      "svar": [
+        "Fordi hooks kun virker på macOS.",
+        "Fordi core.hooksPath ligger i den lokale .git/config, som ikke er en del af repoet.",
+        "Fordi git sletter hooks ved klon."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Hooks er shell-scripts og virker overalt, hvor git kører.",
+        "Indstillingen er lokal. Hookfilen ligger i repoet, men aktiveringen gør ikke. Derfor er CI-porten i modul 09 den, der gælder for alle.",
+        "Git sletter intet. Den læser bare ikke indstillingen, før nogen sætter den."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Give Claude a way to verify its work, de fire måder at gate på, bevis frem for påstand, trust-then-verify-gabet, hooks som deterministiske", "hentet": "2026-09-06" },
+    { "titel": "Hooks reference", "url": "https://code.claude.com/docs/en/hooks", "note": "PostToolUse og Stop som hændelser, exit-koder, hvor hooks konfigureres", "hentet": "2026-09-06" },
+    { "titel": "How Claude remembers your project", "url": "https://code.claude.com/docs/en/memory", "note": "CLAUDE.md er kontekst, ikke håndhævelse. Brug en hook til at blokere", "hentet": "2026-09-06" },
+    { "titel": "git-config: core.hooksPath", "url": "https://git-scm.com/docs/git-config#Documentation/git-config.txt-corehooksPath", "note": "Git leder efter hooks i den angivne mappe i stedet for .git/hooks. Verificeret i git 2.50 med git help config", "hentet": "2026-09-06" }
+  ]
+}

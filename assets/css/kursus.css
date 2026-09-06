@@ -91,6 +91,11 @@ button:disabled { opacity: .55; cursor: default; }
 .status.ok { color: var(--ok); background: var(--ok-bg); }
 .status.mangler { color: var(--fejl); background: var(--fejl-bg); }
 
+/* Tjekliste */
+.tjekliste { margin: 1rem 0; }
+.tjekliste label.tjek { display: block; padding: .3rem 0; }
+.tjekliste input[type="checkbox"] { margin-right: .5rem; transform: scale(1.15); }
+
 /* Quiz */
 .quiz fieldset { border: 1px solid var(--linje); border-radius: var(--radius); padding: .8rem 1rem; margin: 0 0 1rem; background: var(--flade); }
 .quiz legend { font-weight: 600; padding: 0 .3rem; }
