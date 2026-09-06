@@ -1,7 +1,7 @@
 {
   "titel": "Agent Engineering",
   "undertitel": "Interaktivt træningsforløb i 14 moduler over to dage",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "sidstVerificeret": "2026-09-06",
   "fremdriftNoegle": "agentkursus.fremdrift.v1",
   "dage": [
@@ -182,5 +182,11 @@
     "to-sessioner",
     "pipeline-porte",
     "system-diagram"
-  ]
+  ],
+  "workerUrl": "",
+  "urls": {
+    "githubPages": "https://mortensillesen.github.io/agentkursus/",
+    "cloudflarePages": "https://agentkursus.pages.dev/",
+    "sandboxPages": "https://mortensillesen.github.io/fragtvaegt-sandbox/"
+  }
 }

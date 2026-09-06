@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "agentkursus-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-30",
+  "workers_dev": true,
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "vars": {
+    // Kun laeseadgang, kun disse repos, kun disse origins. Tokenet er en secret: wrangler secret put GITHUB_TOKEN
+    "OWNER": "mortensillesen",
+    "REPOS": "fragtvaegt-sandbox,tdc-simulator",
+    "ALLOWED_ORIGINS": "https://mortensillesen.github.io,https://agentkursus.pages.dev",
+    "CACHE_SEKUNDER": "300"
+  }
+}

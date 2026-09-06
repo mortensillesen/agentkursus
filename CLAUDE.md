@@ -12,7 +12,8 @@ Claude bygger kurset. Morten tager kurset. Opsætning, repos, deploys, workflows
 * Alt tekstindhold ligger i `indhold/` som JSON. Tekst hårdkodes aldrig i HTML.
 * Én HTML-fil per modul i `moduler/<slug>/index.html`. Ingen single-page app, ingen router.
 * Lokal kørsel: `python3 -m http.server` fra repoets rod. Siderne henter JSON med fetch og virker ikke fra `file://`.
-* Deploy: push til `main` udløser `.github/workflows/deploy-pages.yml`. `_arkiv/`, `worker/` og `.github/` deployes ikke.
+* Deploy: push til `main` udløser `.github/workflows/deploy-pages.yml`. `_arkiv/`, `worker/`, `noter/` og `.github/` deployes ikke.
+* Live-kobling: `worker/` er en Cloudflare Worker. Adressen står i `indhold/kursus.json` som `workerUrl`. Tom streng betyder slået fra, og alt falder tilbage på statiske eksempler.
 
 ## Sprog
 
@@ -49,5 +50,6 @@ Se `indhold/moduler/01.json` som reference. Blokke i `hvorfor`, `kernen`, `oevel
 * Fase 3: modul 03 til 06 med indhold og øvelser. Færdig 2026-09-06. Dag 1 kan gennemføres.
 * Fase 4: seks scriptede simulationer i `assets/js/simulationer/`. Færdig 2026-09-06.
 * Fase 5: modul 07 til 10 med indhold, øvelser og simulationer. Færdig 2026-09-06.
-* Fase 6: Worker, live-kobling, Cloudflare Pages og dashboardet til modul 13. Ikke begyndt.
+* Fase 6: Worker `agentkursus-api` bygget og testet lokalt, live.js læser `workerUrl` fra kursus.json, dashboard.html bygget. Færdig fra min side 2026-09-06. Mortens del: `wrangler login`, `wrangler secret put GITHUB_TOKEN`, `wrangler deploy`, sæt `workerUrl`, og kobl kurset på Cloudflare Pages. Se `worker/README.md`.
+* Fase 7: modul 11 til 14 mod tdc-simulator. Ikke begyndt.
 * Fase 1 til 8: se projektplanen. Efter hver fase: stop, vis resultatet, vent på grønt lys.

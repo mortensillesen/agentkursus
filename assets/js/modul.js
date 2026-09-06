@@ -321,12 +321,17 @@
     function vis(poster, erFallback) {
       liste.textContent = "";
       (poster || []).forEach(function (c) {
-        liste.appendChild(el("li", null, [el("span", { class: "sha", text: c.sha }), el("span", { text: c.besked }), el("span", { class: "dato", text: c.dato })]));
+        var mærke = c.konklusion ? el("span", { class: "sha " + (c.konklusion === "success" ? "ok" : c.konklusion === "failure" ? "fejl" : ""), text: c.konklusion }) : el("span", { class: "sha", text: c.sha });
+        var tekst = c.url ? el("a", { href: c.url, text: c.besked, rel: "noopener" }) : el("span", { text: c.besked });
+        liste.appendChild(el("li", null, [mærke, tekst, el("span", { class: "dato", text: c.dato })]));
       });
       note.textContent = erFallback ? (L.fallbackNote || "Eksempeldata. Live-koblingen er ikke aktiv, og det blokerer ikke noget.") : (L.liveNote || "Hentet live fra dit repo.");
     }
     vis(L.fallback, true);
-    if (window.Live) window.Live.hent(L.endpoint).then(function (r) { if (r.ok && Array.isArray(r.data)) vis(r.data, false); });
+    if (window.Live) window.Live.hent(L.endpoint).then(function (r) {
+      if (r.ok && Array.isArray(r.data) && r.data.length) vis(r.data, false);
+      else if (r.ok && Array.isArray(r.data)) note.textContent = "Live-koblingen svarer, men der er ingen data på din branch endnu. Eksempeldata vises, indtil du har lavet øvelsen.";
+    });
     return [wrap];
   }
 

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Agentkursus</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/css/kursus.css">
+</head>
+<body>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+  <header class="top"><div class="inder">
+    <a class="kursus" href="./">Agentkursus</a>
+    <a href="preflight.html">Pre-flight</a>
+    <a href="dashboard.html">Dashboard</a>
+    <div class="fremdrift-linje"><span class="fremdrift-tekst">0 af 14 gennemført</span><div class="bar" aria-hidden="true"><span></span></div></div>
+  </div></header>
+  <main id="indhold">
+    <h1>Dashboard</h1>
+    <p class="meta">Dine egne tal fra de to dage. Bruges i modul 13.</p>
+    <div id="dashboard"><p class="pladsholder">Indlæser ...</p></div>
+  </main>
+  <footer><div class="inder"><span class="verificeret">Sidst verificeret: 2026-09-06</span><span>Fremdrift gemmes kun i din browser.</span></div></footer>
+  <script src="assets/js/fremdrift.js"></script>
+  <script src="assets/js/live.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script>
+  fetch("indhold/kursus.json").then(function (r) { return r.json(); }).then(function (k) {
+    window.KURSUS = k;
+    var f = window.Fremdrift ? window.Fremdrift.laes() : { moduler: {} };
+    var n = k.moduler.filter(function (m) { return f.moduler[m.id] && f.moduler[m.id].gennemfoert; }).length;
+    var bar = document.querySelector(".top .bar > span"); if (bar) bar.style.width = Math.round(100 * n / k.moduler.length) + "%";
+    var t = document.querySelector(".top .fremdrift-tekst"); if (t) t.textContent = n + " af " + k.moduler.length + " gennemført";
+    var holder = document.getElementById("dashboard"); holder.textContent = "";
+    window.Dashboard.start(holder, k);
+  }).catch(function (e) { document.getElementById("dashboard").textContent = "Kunne ikke hente kursus.json (" + e.message + ")."; });
+  </script>
+</body>
+</html>

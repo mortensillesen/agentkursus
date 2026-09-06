@@ -32,6 +32,22 @@ _arkiv/                    udrangerede filer, aldrig slettet
 
 ## Deploy
 
-Push til `main` deployer til GitHub Pages via `.github/workflows/deploy-pages.yml`. Cloudflare Pages kobles på senere.
+Push til `main` deployer til GitHub Pages via `.github/workflows/deploy-pages.yml`.
 
 * GitHub Pages: https://mortensillesen.github.io/agentkursus/
+* Cloudflare Pages: https://agentkursus.pages.dev/ (når koblet på, se nedenfor)
+
+### Cloudflare Pages, Mortens trin (cirka 5 minutter)
+
+Trinnene følger Cloudflares dokumentation for git-integration (developers.cloudflare.com/pages/get-started/git-integration, hentet 2026-09-06).
+
+1. Log ind på dash.cloudflare.com. Gå til Workers & Pages, vælg Create application, Pages, Connect to Git.
+2. Vælg repoet `agentkursus`. Project name: `agentkursus`. Production branch: `main`.
+3. Framework preset: None. Build command: `sh cf-byg.sh`. Build output directory: `_site`.
+4. Vælg Save and Deploy. Adressen bliver `https://agentkursus.pages.dev`. Hvert push til `main` deployer igen.
+
+`cf-byg.sh` kopierer de samme mapper, som GitHub-workflowen deployer, så begge sites er ens.
+
+## Live-kobling
+
+`worker/` indeholder Cloudflare Workeren `agentkursus-api`. Opsætning og Mortens trin står i `worker/README.md`. Adressen sættes i `indhold/kursus.json` som `workerUrl`.
