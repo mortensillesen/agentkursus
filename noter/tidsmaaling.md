@@ -10,6 +10,10 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 | 2026-09-06 | 04 | Omskriv svag briefing efter tjekliste, kør én gang (fejl C) | 71 s | 11 | 9 min | 11 min | ja |
 | 2026-09-06 | 05 | Aktivér takstserver, tilføj zone 5 via MCP | 52 s | se log | 4 min | 5 min | ja |
 | 2026-09-06 | 06 | Find fejlen testene fanger, aktivér hook, se commit afvist, grøn commit | 33 s + 48 s | 7 | 6 min | 8 min | ja |
+| 2026-09-06 | 07 | Fire testfiler sekventielt og med fire subagenter via claude -p | 137 s + 173 s | 16 og 16 | 6 min | 11 min | ja |
+| 2026-09-06 | 08 | Session 1 til del 2 med STATUS.md, ny session fortsætter fra filen | 212 s + 180 s | 14 og 17 | 5 min | 12 min | ja |
+| 2026-09-06 | 09 | Aktivér workflow, rød kørsel, ret, grøn kørsel og Pages-deploy | CI: 25 s + 49 s, agent cirka 40 s | | 7 min | 10 min, plus Cloudflare Pages cirka 5 min som Mortens egen del | ja |
+| 2026-09-06 | 10 | /takstopdatering 5 to gange med skill, subagent, hook og MCP | 78 s + 70 s | 8 og 9 | 5 min | 8 min | ja |
 
 ## Noter
 
@@ -22,3 +26,8 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 * Modul 05: den relative sti `kursus/mcp/takstserver.py` i `.mcp.json` virker, når Claude startes fra repoets rod. Transkriptet viser `liste_zoner` én gang og `hent_takst` to gange. Zone 5 blev tilføjet for fly og soe, ikke vej. Korrekt.
 * Modul 06, prompt 2: hooken afviste committen som planlagt. Agenten rettede koden tilbage, men da det gav nul diff, var der intet at committe. Prompten i Fase 3 skal bede om en ændring, der overlever (fx en docstring), så der bliver en grøn commit efter den røde.
 * Modul 02: agenten committede kun testfilen. Mortens egne rettelser i CLAUDE.md lå stadig ukommitterede. Modulsiden skal bede ham committe dem selv først, så `git log` viser hans commit.
+* Modul 07: sekventiel 137 s, 20 bestået, 2 fejlet (fandt fejl B). Parallel 173 s, dobbelt pris, 23 bestået, 1 fejlet (fandt ikke fejl B). Modulet siger det åbent.
+* Modul 08: session 2 læste STATUS.md som første handling, spurgte ikke, gentog intet, fandt fejl A og noterede den under Beslutninger i stedet for at rette.
+* Modul 09: Pages-miljøet i sandboxen har custom branch policy. Branchen arbejde/modul-09 er tilføjet som tilladt deploy-branch, og workflow-triggeren omfatter den. Min testbranch er slettet igen.
+* Modul 10: byte for byte samme takster.json i to kørsler. Hooken kørte (logfilen /tmp/fragtvaegt-hook.log opdateret), men stille, fordi exit 0 ikke giver output.
+* Startbranches 04 til 10 og 14 fik den korrekte tynde CLAUDE.md, så den bevidst mangelfulde fil kun findes i modul 02 (og på main).

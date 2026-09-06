@@ -48,5 +48,6 @@ Se `indhold/moduler/01.json` som reference. Blokke i `hvorfor`, `kernen`, `oevel
 * Fase 2: designsystem, modulskabelon, modul 01 og 02 som referencekvalitet. Færdig 2026-09-06.
 * Fase 3: modul 03 til 06 med indhold og øvelser. Færdig 2026-09-06. Dag 1 kan gennemføres.
 * Fase 4: seks scriptede simulationer i `assets/js/simulationer/`. Færdig 2026-09-06.
-* Fase 5: modul 07 til 10 med indhold, øvelser og simulationer. Ikke begyndt.
+* Fase 5: modul 07 til 10 med indhold, øvelser og simulationer. Færdig 2026-09-06.
+* Fase 6: Worker, live-kobling, Cloudflare Pages og dashboardet til modul 13. Ikke begyndt.
 * Fase 1 til 8: se projektplanen. Efter hver fase: stop, vis resultatet, vent på grønt lys.

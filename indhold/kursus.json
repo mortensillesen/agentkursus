@@ -1,7 +1,7 @@
 {
   "titel": "Agent Engineering",
   "undertitel": "Interaktivt træningsforløb i 14 moduler over to dage",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "sidstVerificeret": "2026-09-06",
   "fremdriftNoegle": "agentkursus.fremdrift.v1",
   "dage": [
@@ -112,7 +112,7 @@
       "titel": "Subagenter og parallelitet",
       "del": 3,
       "tidsestimat": 25,
-      "status": "planlagt"
+      "status": "klar"
     },
     {
       "id": "08",
@@ -120,7 +120,7 @@
       "titel": "Langtkørende agenter og hukommelse",
       "del": 3,
       "tidsestimat": 25,
-      "status": "planlagt"
+      "status": "klar"
     },
     {
       "id": "09",
@@ -128,7 +128,7 @@
       "titel": "Produktions-workflows",
       "del": 3,
       "tidsestimat": 25,
-      "status": "planlagt"
+      "status": "klar"
     },
     {
       "id": "10",
@@ -136,7 +136,7 @@
       "titel": "Byg dit eget agent-system",
       "del": 3,
       "tidsestimat": 25,
-      "status": "planlagt"
+      "status": "klar"
     },
     {
       "id": "11",
@@ -177,6 +177,10 @@
     "kontekst-beholder",
     "briefing-side-om-side",
     "forbindelse-eller-indsat",
-    "port-til-fra"
+    "port-til-fra",
+    "fire-spor",
+    "to-sessioner",
+    "pipeline-porte",
+    "system-diagram"
   ]
 }

@@ -1,0 +1,153 @@
+{
+  "id": "07",
+  "del": 3,
+  "titel": "Subagenter og parallelitet",
+  "undertitel": "Hvornår uddelegering betaler sig, og hvordan man deler en opgave, så delene ikke kolliderer.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Forklare hvad en subagent er, og hvad den koster i tokens og koordination.",
+    "Dele en opgave i dele, der ikke rører de samme filer.",
+    "Måle om parallelitet betalte sig, i stedet for at antage det."
+  ],
+  "hvorfor": [
+    "Parallelitet lyder som gratis fart. Det er det ikke. Fire agenter, der arbejder samtidig, bruger fire gange så mange tokens, og de kan skrive oven i hinanden. Til gengæld holder de deres research ude af dit kontekstvindue, og nogle opgaver bliver reelt hurtigere.",
+    "Modulet giver dig to tal fra dit eget repo: hvor lang tid opgaven tager sekventielt, og hvor lang tid den tager parallelt. Derefter kan du selv afgøre, hvornår det betaler sig."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "Hvad en subagent er" },
+    "En subagent er en agent, som hovedagenten starter til én afgrænset opgave. Den kører i sit eget kontekstvindue med sin egen systemprompt og sine egne værktøjer, og den sender et resumé tilbage. Det, den læste og prøvede undervejs, bliver i dens vindue. Det er hele gevinsten: research i tyve filer koster dit vindue ét resumé, ikke tyve filer.",
+    "Du definerer en subagent som en markdown-fil i `.claude/agents/` med frontmatter: `name`, `description`, `tools` og eventuelt `model`. Beskrivelsen afgør, hvornår hovedagenten vælger den. Du kan også bede om den direkte: \"brug fire subagenter parallelt, én per del\".",
+    { "type": "h3", "tekst": "Hvornår det betaler sig" },
+    { "type": "citat", "tekst": "Multi-agent systems excel at valuable tasks that involve heavy parallelization, information that exceeds single context windows, and interfacing with numerous complex tools.", "kilde": "Anthropic, How we built our multi-agent research system, 2025-06-13", "url": "https://www.anthropic.com/engineering/multi-agent-research-system" },
+    "Samme artikel siger, hvornår det ikke gør: når alle agenter skal dele den samme kontekst, eller når der er mange afhængigheder mellem delene. Og den giver prisen: agenter bruger cirka fire gange så mange tokens som en chat, og multi-agent-systemer cirka femten gange. Parallelitet er en investering, ikke en optimering.",
+    { "type": "tabel", "hoved": ["Opgaven", "Parallelt?", "Hvorfor"], "raekker": [
+      ["Fire testfiler, der ikke rører hinanden", "Ja", "Uafhængige dele, hver sin fil, kort resumé tilbage"],
+      ["Research: hvordan håndteres tokens i tre moduler", "Ja", "Læsning fylder, resuméet er lille"],
+      ["Ret en fejl, og tilpas de tests, der afhænger af den", "Nej", "Delene afhænger af hinanden og af samme fil"],
+      ["Refaktorér én funktion", "Nej", "Én fil, én kontekst. Overhead uden gevinst"]
+    ]},
+    { "type": "h3", "tekst": "Sådan deler du, så det ikke kolliderer" },
+    { "type": "liste", "nummereret": true, "punkter": [
+      "Én fil per del. To agenter, der redigerer samme fil, overskriver hinanden. Simulationen viser det.",
+      "Hver del får et mål, et outputformat og en grænse. Anthropic: hver subagent har brug for et mål, et outputformat, vejledning om værktøjer og klare grænser. Uden det dublerer de arbejde eller efterlader huller.",
+      "Én samler til sidst. Hovedagenten kører hele suiten, når alle er færdige. Ingen subagent bedømmer helheden.",
+      "Brug worktrees til større ting. Til parallelle sessioner på hver sin branch giver git worktrees hver session sin egen mappe, så redigeringer ikke støder sammen."
+    ]},
+    { "type": "note", "tekst": "Kursets egen måling af netop denne øvelse: sekventielt 137 sekunder og 20 bestået, 2 fejlet. Parallelt 173 sekunder, dobbelt pris, og 23 bestået, 1 fejlet. Parallel var langsommere og dyrere, og den fandt ikke den fejl, den sekventielle fandt, fordi subagenten skrev en mildere test. Det er grunden til, at du måler selv." }
+  ],
+  "sidebar": {
+    "titel": "Skriver og anmelder",
+    "afsnit": [
+      "Den mest nyttige brug af to agenter er ikke fart, men frisk kontekst. Dokumentationen beskriver et mønster med en skriver og en anmelder: én session bygger, en anden med tom kontekst anmelder diffen mod kriterierne. Anmelderen er ikke farvet af den kode, den lige har skrevet. Samme idé ligger bag verifikations-subagenten i modul 06 og subagenten takst-tester i modul 10."
+    ]
+  },
+  "simulation": {
+    "id": "fire-spor",
+    "beskrivelse": "En opgave delt på fire spor med tidsakse. Slå kollisionen til, og se hvad der sker, når to spor rører samme fil.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-07",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-07 origin/start/modul-07 && git checkout -- . && git clean -fq tests",
+  "oevelse": {
+    "forventetMinutter": 14,
+    "intro": [
+      "Samme opgave køres to gange: først sekventielt, så med fire subagenter. Begge gange med `claude -p`, så du får sekunder og turns ud som tal. Opgaven er fire uafhængige testfiler, én per hul i dækningen."
+    ],
+    "trin": [
+      { "tekst": "Stil repoet om til startpunktet, og kør den sekventielle version. Den tager to til tre minutter.", "kommando": "claude -p \"Testdækningen mangler fire ting. Skriv fire nye testfiler, én per del, i denne rækkefølge, og kør hele suiten til sidst. 1) tests/test_soe.py: volumenvægt og fragtpligtig vægt for soe. 2) tests/test_flere_kolli.py: fragtpligtig vægt for en forsendelse med to forskellige kolli efter reglen i README. 3) tests/test_tillaeg.py: fast tillæg og to procent-tillæg sammen. 4) tests/test_cli.py: parse_kolli og main med --tillaeg. Ret ikke koden i fragtvaegt/, selv hvis en test afslører en fejl. Rapportér antal bestået og fejlet til sidst.\" --output-format json --allowedTools \"Read,Edit,Write,Grep,Glob,Bash(python3 *)\" > /tmp/koersel-sekventiel.json && python3 -c \"import json; d=json.load(open('/tmp/koersel-sekventiel.json')); print('sekunder:', round(d['duration_ms']/1000), ' turns:', d['num_turns']); print(d['result'][:500])\"" },
+      { "tekst": "Notér sekunder, turns og antal bestået og fejlet i skemaet. Se også på, hvilken test der fejlede." },
+      { "tekst": "Nulstil til startpunktet igen med kommandoen øverst. Den fjerner de fire nye filer." },
+      { "tekst": "Kør den parallelle version. Forskellen i prompten er én sætning: fire subagenter, én per del, hver skriver kun sin egen fil.", "kommando": "claude -p \"Testdækningen mangler fire ting. Brug fire subagenter parallelt, én per del. Hver subagent skriver kun sin egen fil og rører ingen andre filer. 1) tests/test_soe.py: volumenvægt og fragtpligtig vægt for soe. 2) tests/test_flere_kolli.py: fragtpligtig vægt for en forsendelse med to forskellige kolli efter reglen i README. 3) tests/test_tillaeg.py: fast tillæg og to procent-tillæg sammen. 4) tests/test_cli.py: parse_kolli og main med --tillaeg. Ret ikke koden i fragtvaegt/, selv hvis en test afslører en fejl. Når alle fire er færdige, kør hele suiten selv og rapportér antal bestået og fejlet.\" --output-format json --allowedTools \"Read,Edit,Write,Grep,Glob,Agent,Bash(python3 *)\" > /tmp/koersel-parallel.json && python3 -c \"import json; d=json.load(open('/tmp/koersel-parallel.json')); print('sekunder:', round(d['duration_ms']/1000), ' turns:', d['num_turns']); print(d['result'][:500])\"" },
+      { "tekst": "Notér tallene i anden række. Skriv én linje om, hvad der blev bedre, og én om, hvad der blev værre. Kig især på, om de to kørsler fandt de samme fejl." }
+    ],
+    "skema": {
+      "titel": "Sekventielt mod parallelt",
+      "kolonner": [
+        { "id": "variant", "label": "Variant", "type": "select", "valg": ["sekventiel", "parallel"] },
+        { "id": "sekunder", "label": "Sekunder", "type": "text", "pladsholder": "fx 137" },
+        { "id": "turns", "label": "Turns", "type": "text", "pladsholder": "fx 16" },
+        { "id": "tests", "label": "Bestået / fejlet", "type": "text", "pladsholder": "fx 20 / 2" },
+        { "id": "note", "label": "Bedre eller værre", "type": "text", "pladsholder": "fx hurtigere, men fandt ikke fejlen i flere kolli" }
+      ],
+      "minRaekker": 2,
+      "krav": { "kolonne": "sekunder", "ikkeTom": true, "min": 2, "label": "et tal i Sekunder" }
+    }
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når begge rækker er udfyldt, og de fire filer findes efter sidste kørsel.",
+    "kriterier": [
+      "To tider og to antal turns er noteret.",
+      "Der står en linje om, hvad der blev bedre, og en om, hvad der blev værre.",
+      "De fire testfiler findes, og suiten kører."
+    ],
+    "kommando": "ls tests/test_soe.py tests/test_flere_kolli.py tests/test_tillaeg.py tests/test_cli.py && python3 -m pytest -q 2>&1 | tail -1",
+    "forventetOutput": "de fire filnavne, og en sidste linje med mindst 20 bestået. Antallet af fejlede afhænger af, hvor skarpt testene blev skrevet. To er ikke forkert.",
+    "hvisDetFejler": "Fejler den parallelle kørsel med en besked om Agent-værktøjet, så tjek at `Agent` står i `--allowedTools`. Skriver to subagenter i samme fil, har du fundet præcis den kollision, simulationen handler om. Notér det som \"værre\"."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvad er den vigtigste gevinst ved en subagent ifølge dokumentationen?",
+      "svar": [
+        "Den er hurtigere end hovedagenten.",
+        "Den arbejder i sit eget kontekstvindue, så research og tool-output holdes ude af dit.",
+        "Den bruger færre tokens."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Hastighed er ikke garanteret. Kursets egen måling viste det modsatte.",
+        "Kontekstisolering er nøglen: du får et resumé, ikke alle de filer, den læste.",
+        "Den bruger flere tokens i alt. Gevinsten er, hvor de bruges, ikke hvor mange."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvornår advarer Anthropic mod multi-agent-opsætninger?",
+      "svar": [
+        "Når opgaven er stor.",
+        "Når alle agenter skal dele samme kontekst, eller delene afhænger af hinanden.",
+        "Når der er mange værktøjer."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Store, parallelle opgaver er netop der, de trives.",
+        "Det er artiklens egne ord: fælles kontekst og mange afhængigheder er der, de fejler.",
+        "Mange komplekse værktøjer nævnes som en styrke, ikke en svaghed."
+      ]
+    },
+    {
+      "spoergsmaal": "To subagenter skal begge tilføje tests til test_pris.py. Hvad går galt?",
+      "svar": [
+        "Intet. Git slår ændringerne sammen.",
+        "De overskriver hinanden. Én fil per del er reglen.",
+        "Den ene venter automatisk på den anden."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Git er ikke involveret, mens de skriver. Den sidste, der skriver, vinder.",
+        "Samme fil er den klassiske kollision. Del opgaven, så hver del har sin egen fil.",
+        "Der er ingen automatisk lås. Grænserne skal stå i briefingen."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvor mange gange flere tokens bruger et multi-agent-system end en chat ifølge Anthropics data?",
+      "svar": [
+        "Cirka det samme.",
+        "Cirka fire gange.",
+        "Cirka femten gange."
+      ],
+      "korrekt": 2,
+      "forklaring": [
+        "Alene en enkelt agent bruger cirka fire gange så meget som en chat.",
+        "Fire gange er tallet for én agent. Multi-agent ligger højere.",
+        "Femten gange er artiklens tal. Det er derfor, parallelitet skal måles, ikke antages."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "How we built our multi-agent research system", "url": "https://www.anthropic.com/engineering/multi-agent-research-system", "note": "Anthropic, 2025-06-13. Hvornår multi-agent betaler sig, tokenforbrug 4x og 15x, krav til opgavebeskrivelser, dubleret arbejde", "hentet": "2026-09-06" },
+    { "titel": "Create custom subagents", "url": "https://code.claude.com/docs/en/sub-agents", "note": ".claude/agents/, frontmatter, eget kontekstvindue, invokation", "hentet": "2026-09-06" },
+    { "titel": "Extend Claude Code", "url": "https://code.claude.com/docs/en/features-overview", "note": "Subagent mod skill, kontekstomkostning per feature, hvornår en subagent er det rigtige valg", "hentet": "2026-09-06" },
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Subagenter til research, parallelle sessioner, worktrees, skriver og anmelder", "hentet": "2026-09-06" },
+    { "titel": "Run Claude Code programmatically", "url": "https://code.claude.com/docs/en/headless", "note": "claude -p med --output-format json og --allowedTools", "hentet": "2026-09-06" }
+  ]
+}
