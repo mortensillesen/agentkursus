@@ -1,7 +1,7 @@
 {
   "titel": "Agent Engineering",
   "undertitel": "Interaktivt træningsforløb i 14 moduler over to dage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "sidstVerificeret": "2026-09-06",
   "fremdriftNoegle": "agentkursus.fremdrift.v1",
   "dage": [
@@ -35,6 +35,31 @@
     }
   ],
   "dagNote": "Dag 2 er tungere end dag 1. Vil du have dagene til at veje ens, så tag modul 07 på dag 1.",
+  "forside": {
+    "intro": "Du skriver ikke kode i dette kursus, og du skal ikke lære det. Du lærer at bestille arbejde hos Claude Code, følge med i, hvad agenten gør, og bedømme resultatet ud fra bevis. Kursussitet, sandbox-repoet og alle komponenter er sat op på forhånd. Hvert modul har de samme otte sektioner: hvorfor, kernen, en scriptet simulation, en øvelse mod et rigtigt repo, verifikation med én kommando, en quiz med forklaringer, kilder med dato, og fremdrift.",
+    "trin": [
+      {
+        "link": "preflight.html",
+        "linkTekst": "Kør pre-flight dagen før.",
+        "tekst": " Cirka 30 minutter, kun installation og adgang. Du skal ikke forstå kommandoerne, bare køre dem og læse svaret."
+      },
+      {
+        "tekst": "Tag modulerne i rækkefølge. Hvert modul starter med en kommando, der stiller sandbox-repoet om til modulets startpunkt, så en mislykket øvelse aldrig blokerer den næste."
+      },
+      {
+        "tekst": "Alt, der ligner kode i et transkript, må du læse hen over. Det, du skal se, er løkken, bestillingen, porten og beviset. Hvert modul åbner med et billede fra spedition, før det tekniske."
+      },
+      {
+        "tekst": "Markér modulet gennemført nederst på siden, og notér din tid. Forsiden og dashboardet samler tallene."
+      },
+      {
+        "link": "dashboard.html",
+        "linkTekst": "Læs dine egne tal i dashboardet",
+        "tekst": " undervejs og i modul 13."
+      }
+    ],
+    "fremdriftTekst": "Fremdrift, skemaer og quizresultater gemmes kun i din browser under nøglen {noegle}. Browseren kan slette dem uden varsel, så eksportér ved dagens slutning. Import fletter filens moduler ind over det, der ligger her."
+  },
   "dele": [
     {
       "nr": 1,
@@ -66,8 +91,8 @@
       "tidsestimat": 25,
       "status": "klar",
       "maalt": {
-        "agent": "39 s",
-        "samlet": 10
+        "agent": "85 s",
+        "samlet": 11
       }
     },
     {

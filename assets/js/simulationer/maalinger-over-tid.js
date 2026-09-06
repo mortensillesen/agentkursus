@@ -18,8 +18,8 @@
   ];
   var HAEND = [
     { id: "model", navn: "Ny model i uge 5", effekt: function (m, u) { if (u < 5) return 1; return m.id === "forsoeg" ? 0.8 : m.id === "pris" ? 0.85 : 1; } },
-    { id: "repo", navn: "Repoet vokser fra uge 3", effekt: function (m, u) { if (u < 3) return 1; var f = 1 + (u - 3) * 0.06; return m.id === "forsoeg" || m.id === "pris" ? f : m.id === "dag" ? f * 1.1 : 1; } },
-    { id: "skill", navn: "Skill ikke vedligeholdt fra uge 6", effekt: function (m, u) { if (u < 6) return 1; return m.id === "roede" ? 1 + (u - 6) * 0.35 : m.id === "forsoeg" ? 1 + (u - 6) * 0.12 : 1; } },
+    { id: "repo", navn: "Projektet vokser fra uge 3", effekt: function (m, u) { if (u < 3) return 1; var f = 1 + (u - 3) * 0.06; return m.id === "forsoeg" || m.id === "pris" ? f : m.id === "dag" ? f * 1.1 : 1; } },
+    { id: "skill", navn: "Skill, der ikke vedligeholdes, fra uge 6", effekt: function (m, u) { if (u < 6) return 1; return m.id === "roede" ? 1 + (u - 6) * 0.35 : m.id === "forsoeg" ? 1 + (u - 6) * 0.12 : 1; } },
     { id: "brug", navn: "Dobbelt så mange brugere fra uge 8", effekt: function (m, u) { if (u < 8) return 1; return m.id === "dag" ? 2 : 1; } }
   ];
   var til = {};
@@ -52,10 +52,10 @@
     return el("li", null, [inp, el("label", { for: "haend-" + h.id, text: h.navn })]);
   }));
   holder.appendChild(el("div", { class: "sim" }, [
-    el("p", { text: "Slå hændelser til, og se hvilken måling der reagerer først. Røde celler afviger mindst 20 procent fra udgangspunktet." }),
+    el("p", { text: "Slå hændelser til, og se hvilken måling der reagerer først. En rød celle afviger mindst 20 procent fra udgangspunktet." }),
     valg,
     el("div", { class: "tabel-wrap" }, [tabel]),
-    el("p", { class: "note-lille", text: "Tallene er illustrative. Pointen er den sidste kolonne: omkostning per dag reagerer på flere brugere, som er godt, mens forsøg per opgave og røde kørsler reagerer på det, der er galt." })
+    el("p", { class: "note-lille", text: "Tallene er opdigtede. Pointen er den sidste kolonne: omkostning per dag reagerer på flere brugere, og det er godt. Forsøg per opgave og røde kørsler reagerer på det, der er galt. Derfor er det dem, du følger." })
   ]));
   opdater();
 })();

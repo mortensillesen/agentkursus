@@ -1,0 +1,257 @@
+{
+  "id": "12",
+  "del": 4,
+  "titel": "Enterprise-adoption",
+  "undertitel": "Det, der reelt stopper udrulning: permissions, data, godkendelse, kompetence og tillid.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Udfylde et lærred med fem felter for en organisation, du kender.",
+    "Navngive de tre største bremseklodser og begrunde, hvilken du tager først.",
+    "Pege på de konkrete mekanismer i værktøjet, der svarer til hvert felt."
+  ],
+  "hvorfor": [
+    "Alt i del 1 til 3 virkede, fordi du var én person med fuld adgang til dit eget repo. I en organisation er ingen af de forudsætninger givet. Udrulning stopper sjældent på teknik. Den stopper på, hvem der må hvad, hvor data må være, hvem der godkender, hvem der kan, og hvad der sker, når det første forsøg fejler offentligt.",
+    "Modulet er en skriveøvelse. Ingen rapport, ingen slides. Et lærred med fem felter, og tre bremseklodser med navn."
+  ],
+  "kernen": [
+    {
+      "type": "h3",
+      "tekst": "De fem felter, og hvad værktøjet kan"
+    },
+    {
+      "type": "tabel",
+      "hoved": [
+        "Felt",
+        "Spørgsmålet",
+        "Mekanismen i Claude Code"
+      ],
+      "raekker": [
+        [
+          "Permissions",
+          "Hvad må agenten gøre uden at spørge, og hvem bestemmer det",
+          "Permission-regler i settings, permission modes, sandboxing. Styrede indstillinger, som IT lægger på maskinen, og som ingen bruger kan overskrive"
+        ],
+        [
+          "Data",
+          "Hvilken kode og hvilke data må forlade maskinen, og hvor bliver de af",
+          "Aftalevilkår og opbevaring beskrives i sikkerhedsdokumentationen og Privacy Center. Cloud-sessioner kører i isolerede maskiner med begrænset netværk"
+        ],
+        [
+          "Godkendelse",
+          "Hvem trykker merge, og hvad må køre uden et menneske",
+          "Pull requests som port, CI-porte, styrede lister over tilladte MCP-servere"
+        ],
+        [
+          "Kompetence",
+          "Kan folk briefe, verificere og læse et transkript",
+          "Det er det, kurset er. Kompetencen er at skrive kriterier, ikke at skrive prompts"
+        ],
+        [
+          "Tillid",
+          "Hvad sker der, når det første forsøg fejler offentligt",
+          "Måling (modul 13), små reversible skridt, og en port med et menneske i, indtil tallene bærer"
+        ]
+      ]
+    },
+    {
+      "type": "h3",
+      "tekst": "Permissions og styring"
+    },
+    "I Manual-tilstand starter Claude Code med læseadgang og spørger, før den redigerer eller kører kommandoer, der kan ændre systemet. En organisation kan lægge styrede indstillinger på hver maskine, fx `permissions.deny` for kommandoer og stier, en fast liste over tilladte MCP-servere, og en lås på bypass-tilstand. Dokumentationen er præcis: styrede indstillinger gælder over alle andre niveauer, og ingen bruger-, projekt- eller lokal værdi overskriver dem. Det er svaret på det første felt, og det er teknisk løst. Det, der ikke er løst, er at beslutte, hvad der skal stå i dem.",
+    {
+      "type": "h3",
+      "tekst": "Data og tillid til fremmed kode"
+    },
+    "Sikkerhedsdokumentationen anbefaler at skrive egne MCP-servere eller bruge dem fra leverandører, man stoler på, og siger direkte, at Anthropic ikke sikkerhedsreviderer MCP-servere. Det samme gælder repoer: en `.mcp.json` og en hook i et klonet repo er andres kode, jf. modul 05. I en organisation er det et spørgsmål om, hvem der må godkende en ny server, og hvor listen bor. Dokumentationen peger på styrede indstillinger med en liste over tilladte servere.",
+    {
+      "type": "h3",
+      "tekst": "Kompetencespring og det første offentlige nederlag"
+    },
+    "Kompetencen, der mangler, er sjældent prompting. Den er at skrive et acceptkriterium, at læse et transkript, og at sige nej til en opgave, der ikke er klar. Det er del 2 af kurset. Og det første forsøg fejler. Dokumentationen anbefaler at starte med en lille pilotgruppe og etablere en baseline med målinger, før udrulningen udvides. Oversat: vælg et projekt, hvor en fejl er billig og synlig, mål fra dag ét, og hav en port med et menneske i, indtil tallene bærer.",
+    {
+      "type": "note",
+      "tekst": "Modulet er en skriveøvelse på maks 15 minutter. Lærredet skal være udfyldt, ikke perfekt. De tre bremseklodser skal have navn, ikke analyse."
+    }
+  ],
+  "sidebar": {
+    "titel": "Hvad det koster",
+    "afsnit": [
+      "Dokumentationen angiver et gennemsnit på cirka 13 dollar per udvikler per aktiv dag i virksomhedsudrulninger, og under 30 dollar per aktiv dag for 90 procent af brugerne. Tallet er nyttigt til budgettet, men ikke til bremseklodserne. Ingen af de fem felter handler om penge. De handler om beslutninger, ingen har truffet."
+    ]
+  },
+  "simulation": {
+    "id": "indfoerselsplan",
+    "beskrivelse": "En indførselsplan, hvor du skruer på tempo og kontrol og ser konsekvenserne for hvert af de fem felter.",
+    "maksMinutter": 3
+  },
+  "startbranch": null,
+  "nulstilKommando": null,
+  "oevelse": {
+    "forventetMinutter": 15,
+    "intro": [
+      "Vælg en organisation, du kender. Din egen, en du underviser i, eller en du har arbejdet i. Udfyld de fem felter med én til to linjer hver. Navngiv derefter de tre største bremseklodser, og skriv hvilken du ville tage først, og hvorfor."
+    ],
+    "trin": [
+      {
+        "tekst": "Udfyld lærredets fem rækker. Skriv, hvad der er sandt i dag, ikke hvad der burde være. Kan du ikke svare, så skriv \"ubesluttet\"."
+      },
+      {
+        "tekst": "Skriv de tre bremseklodser i række 6 til 8 med typen bremseklods. En bremseklods er noget, der stopper udrulning i morgen, hvis ingen gør noget. Ikke et ønske."
+      },
+      {
+        "tekst": "Sæt Først ved den ene. Begrundelsen skal kunne siges på ti sekunder til en, der ikke var med, og pege på et af de fem felter."
+      }
+    ],
+    "skema": {
+      "titel": "Lærredet og bremseklodserne",
+      "intro": "Række 1 til 5 er lærredet, ét felt per række. Række 6 til 8 er bremseklodserne. Sæt Først ved den ene.",
+      "kolonner": [
+        {
+          "id": "felt",
+          "label": "Felt",
+          "type": "select",
+          "valg": [
+            "permissions",
+            "data",
+            "godkendelse",
+            "kompetence",
+            "tillid",
+            "bremseklods"
+          ]
+        },
+        {
+          "id": "svar",
+          "label": "Sådan er det i dag, eller bremseklodsens navn",
+          "type": "text",
+          "pladsholder": "fx ingen har besluttet, hvem der må godkende en ny MCP-server"
+        },
+        {
+          "id": "foerst",
+          "label": "Først",
+          "type": "select",
+          "valg": [
+            "",
+            "ja"
+          ]
+        }
+      ],
+      "minRaekker": 8,
+      "krav": {
+        "kolonne": "svar",
+        "ikkeTom": true,
+        "min": 8,
+        "label": "udfyldt tekst"
+      }
+    },
+    "efter": [
+      {
+        "type": "note",
+        "tekst": "Begrundelsen for den bremseklods, du tager først, skriver du i sidste kolonne af dens række eller i dine egne noter. Ti sekunder, én henvisning til et af de fem felter."
+      }
+    ],
+    "tjekliste": {
+      "titel": "Før du markerer modulet gennemført",
+      "punkter": [
+        "Alle fem felter i lærredet har tekst, eller står som ubesluttet",
+        "Tre bremseklodser har navn",
+        "Én bremseklods har Først, og jeg kan begrunde det på ti sekunder"
+      ]
+    }
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når lærredet er udfyldt, og du kan begrunde dit første skridt.",
+    "kriterier": [
+      "Alle fem felter i lærredet har tekst.",
+      "Tre bremseklodser er navngivet, og én er valgt som den første.",
+      "Begrundelsen for valget kan siges på ti sekunder og henviser til et af de fem felter."
+    ],
+    "kommando": null,
+    "forventetOutput": null,
+    "hvisDetFejler": "Kan du ikke udfylde et felt, er det selv et fund: ingen i organisationen har besluttet det. Skriv \"ubesluttet\" i feltet. Det er ofte den største bremseklods."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvad kendetegner styrede indstillinger ifølge dokumentationen?",
+      "svar": [
+        "De kan slås fra af den enkelte udvikler i settings.json.",
+        "De lægges på maskinen af organisationen og gælder over alle andre niveauer.",
+        "De gælder kun i cloud-sessioner."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Nej. Ingen bruger-, projekt- eller lokal værdi overskriver dem.",
+        "Det er dokumentationens egen formulering, med få sikkerhedsundtagelser hvor en strengere værdi fra et lavere niveau stadig tæller.",
+        "De gælder på maskinen. Cloud-sessioner har deres egne kontroller."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvem sikkerhedsreviderer de MCP-servere, en organisation tager i brug?",
+      "svar": [
+        "Anthropic, for alle servere i deres katalog.",
+        "Ingen automatisk. Dokumentationen anbefaler egne servere eller betroede leverandører, og siger at Anthropic ikke reviderer dem.",
+        "GitHub."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Anthropic vurderer connectors mod optagelseskriterier, men sikkerhedsreviderer ikke servere.",
+        "Sådan står det i sikkerhedsdokumentationen. Ansvaret ligger hos organisationen, og listen over tilladte servere hører til i styrede indstillinger.",
+        "GitHub hoster kode. Det er ikke en revision."
+      ]
+    },
+    {
+      "spoergsmaal": "Dokumentationens råd før en bred udrulning er at",
+      "svar": [
+        "købe licenser til alle og se, hvad der sker.",
+        "starte med en lille pilotgruppe og etablere en baseline med målinger.",
+        "vente på næste version."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Uden baseline kan ingen sige, om det virker, og det første offentlige nederlag afgør stemningen.",
+        "Det er rådet på siden om omkostninger: pilotgruppe, tracking, baseline, derefter udvidelse.",
+        "Versioner ændrer ikke de fem felter. Beslutningerne gør."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvilken kompetence mangler oftest, når udrulning går i stå?",
+      "svar": [
+        "At skrive lange prompts.",
+        "At skrive acceptkriterier, læse transkripter og afvise opgaver, der ikke er klar.",
+        "At installere værktøjet."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Prompting er den mindste del. Modul 04 viste, at briefingen er kriterier, ikke længde.",
+        "Det er del 2 af kurset i én sætning, og det er det, der adskiller en pilot, der bærer, fra en der fejler.",
+        "Installation tager en halv time. Det er pre-flight, ikke kompetence."
+      ]
+    }
+  ],
+  "kilder": [
+    {
+      "titel": "Deploy managed settings",
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "note": "Styrede indstillinger gælder over alle andre niveauer, filplaceringer per styresystem, permissions.deny, allowedMcpServers, lås på bypass",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Security",
+      "url": "https://code.claude.com/docs/en/security",
+      "note": "Læseadgang som udgangspunkt i Manual, indbyggede beskyttelser, MCP-sikkerhed og at Anthropic ikke reviderer servere, cloud-sessioner, teamsikkerhed",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Manage costs effectively",
+      "url": "https://code.claude.com/docs/en/costs",
+      "note": "Cirka 13 dollar per udvikler per aktiv dag, under 30 for 90 procent, pilotgruppe og baseline, spend limits",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Configure permissions",
+      "url": "https://code.claude.com/docs/en/permissions",
+      "note": "Permission-regler, hvad der kræver godkendelse",
+      "hentet": "2026-09-06"
+    }
+  ]
+}

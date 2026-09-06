@@ -4,7 +4,7 @@ Selvstudiekursus i agent engineering: 14 moduler over to dage, med læsestof, sc
 
 ## Status
 
-Version 1.0.0, 2026-09-06. Alle 14 moduler er live, hver øvelse er kørt og tidtaget, og live-koblingen er deployet. Pre-flight-siden og `preflight.sh` tjekker installation og adgang dagen før.
+Version 1.1.0, 2026-09-06. Alle 14 moduler er live, hver øvelse er kørt og tidtaget, og live-koblingen er deployet. Kurset er skrevet til en læser, der ikke koder: han bestiller arbejdet hos Claude Code, følger med og bedømmer resultatet. Stilguiden står i `noter/stilguide-ikke-kodende.md`. Pre-flight-siden og `preflight.sh` tjekker installation og adgang dagen før.
 
 ## Kør lokalt
 

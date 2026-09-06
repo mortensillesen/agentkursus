@@ -11,20 +11,22 @@
   }
   var FASER = ["mål", "kontekst", "handling", "observation", "vurdering", "gentag"];
   var TRIN = [
-    { fase: "mål", ser: "Din prompt: \"Tilføj --json til kommandolinjen i fragtvaegt/cli.py, kør kommandoen bagefter og vis outputtet. Rør ikke andre filer.\"", goer: "Agenten uddrager målet: JSON-output fra CLI'en, bevist med en kørsel, kun én fil." },
-    { fase: "kontekst", ser: "CLAUDE.md, mappestrukturen og git-tilstanden er allerede i vinduet. cli.py er det ikke.", goer: "Beslutter at læse cli.py, før den rører noget." },
-    { fase: "handling", ser: "Tool call: Read fragtvaegt/cli.py", goer: "Læser filen.", kode: "Read(\"fragtvaegt/cli.py\")" },
-    { fase: "observation", ser: "68 linjer. argparse med transportform, zone, kolli og --tillaeg. Resultatet udskrives med fem print-linjer.", goer: "Ser, at der ikke findes noget flag endnu, og at r allerede er en dict." },
-    { fase: "vurdering", ser: "Målet kræver et nyt flag og en gren, der udskriver r som JSON.", goer: "Plan: tilføj --json til parseren, og udskriv json.dumps(r), når flaget er sat." },
-    { fase: "handling", ser: "Tool call: Edit fragtvaegt/cli.py", goer: "Tilføjer p.add_argument(\"--json\", action=\"store_true\") og en if-gren med json.dumps(r).", kode: "Edit(\"fragtvaegt/cli.py\")" },
-    { fase: "observation", ser: "Værktøjet svarer: filen er opdateret.", goer: "Ved endnu ikke, om det virker. Redigering er ikke bevis." },
-    { fase: "handling", ser: "Tool call: Bash python3 -m fragtvaegt fly 2 60x40x50:12 --json", goer: "Kører kommandoen for at se resultatet.", kode: "python3 -m fragtvaegt fly 2 60x40x50:12 --json" },
-    { fase: "observation", ser: "Traceback: NameError: name 'json' is not defined", goer: "Kommandoen fejlede. Fejlen står i outputtet.", fejl: true },
-    { fase: "vurdering", ser: "json.dumps bruges, men modulet er ikke importeret øverst i filen.", goer: "Her ville en agent uden observation have meldt færdig. Denne læser fejlen og retter årsagen.", fejl: true },
-    { fase: "handling", ser: "Tool call: Edit fragtvaegt/cli.py", goer: "Tilføjer import json øverst.", kode: "Edit(\"fragtvaegt/cli.py\")" },
-    { fase: "handling", ser: "Tool call: Bash, samme kommando igen", goer: "Kører kommandoen igen. Samme tjek, ny tilstand.", kode: "python3 -m fragtvaegt fly 2 60x40x50:12 --json" },
-    { fase: "observation", ser: "{\"fragtpligtig_vaegt\": 20.0, \"vaegtpris\": 1100.0, \"gebyr\": 250, \"tillaeg\": 0.0, \"total\": 1350, \"valuta\": \"DKK\"}", goer: "Outputtet er gyldig JSON med de forventede tal.", ok: true },
-    { fase: "vurdering", ser: "Målet er nået: flaget findes, kørslen viste JSON, kun cli.py er ændret.", goer: "Stopper løkken og rapporterer med outputtet som bevis.", ok: true }
+    { fase: "mål", ser: "Din bestilling: \"Tilføj transportformen kurer til beregneren, så den virker hele vejen fra kommandolinjen til prisen. Kør bagefter beregneren for kurer og vis mig outputtet. Ændr ikke noget for fly, vej og soe.\"", goer: "Agenten uddrager målet: en ny transportform, der virker hele vejen til prisen, bevist med en kørsel, og intet andet rørt." },
+    { fase: "kontekst", ser: "Projektets instruks (CLAUDE.md), mappestrukturen og git-tilstanden er allerede i vinduet. Takstfilen og beregneren er det ikke.", goer: "Beslutter at læse, før den rører noget." },
+    { fase: "handling", ser: "Tool call: læs takstfilen.", goer: "Læser filen.", kode: "Read(\"data/takster.json\")" },
+    { fase: "observation", ser: "Filen har fly, vej og soe. For hver af dem står divisor, minimum, gebyr og kr per kg for zone 1 til 4. Ingen kurer.", goer: "Ved nu, hvilke felter en ny transportform skal have, og at tallene fra bestillingen passer til dem." },
+    { fase: "vurdering", ser: "Målet kræver kurer i takstfilen med de fem tal, og at afrundingen behandler kurer som fly.", goer: "Plan: skriv kurer ind i takstfilen, og lad afrundingen af vægten følge fly." },
+    { fase: "handling", ser: "Tool call: ret takstfilen og afrundingen. To rettelser.", goer: "Skriver kurer ind begge steder.", kode: "Edit(\"data/takster.json\")" },
+    { fase: "observation", ser: "Værktøjet svarer: filerne er opdateret.", goer: "Ved endnu ikke, om det virker. En rettelse er ikke et bevis." },
+    { fase: "handling", ser: "Tool call: kør beregneren for kurer.", goer: "Kører kommandoen for at se resultatet.", kode: "python3 -m fragtvaegt kurer 2 60x40x50:12" },
+    { fase: "observation", ser: "Fejl: transportform kurer er ikke et gyldigt valg. Gyldige valg: fly, vej, soe.", goer: "Kommandoen fejlede. Svaret står i outputtet.", fejl: true },
+    { fase: "vurdering", ser: "Beregneren har sin egen liste over tilladte transportformer, og kurer står ikke på den.", goer: "Her ville en agent uden observation have meldt færdig. Denne læser fejlen og leder efter listen.", fejl: true },
+    { fase: "handling", ser: "Tool call: søg efter alle steder, hvor de tre transportformer er nævnt.", goer: "Søger i hele pakken.", kode: "Grep(\"soe\")" },
+    { fase: "observation", ser: "Listen findes to steder: i kommandolinjen og i beskrivelsen af en forsendelse.", goer: "Begge steder skal have kurer med." },
+    { fase: "handling", ser: "Tool call: ret de to lister.", goer: "Tilføjer kurer begge steder.", kode: "Edit(\"fragtvaegt/cli.py\")" },
+    { fase: "handling", ser: "Tool call: samme kommando igen.", goer: "Kører beregneren igen. Samme tjek, ny tilstand.", kode: "python3 -m fragtvaegt kurer 2 60x40x50:12" },
+    { fase: "observation", ser: "Fragtpligtig vaegt: 24.0 kg. Vaegtpris: 912.00 DKK. Gebyr: 120.00 DKK. Total: 1032 DKK.", goer: "Outputtet viser en pris for kurer, og tallene passer med bestillingen: 24 kg gange 38 kr plus 120 kr.", ok: true },
+    { fase: "vurdering", ser: "Målet er nået: kurer virker fra kommandolinjen til prisen, kørslen viste det, og fly, vej og soe er ikke rørt.", goer: "Stopper løkken og rapporterer med outputtet som bevis.", ok: true }
   ];
   var i = 0;
   var faser = el("ul", { class: "faser", "aria-label": "Faser i løkken" }, FASER.map(function (f) { return el("li", { text: f, "data-fase": f }); }));
@@ -51,7 +53,7 @@
   holder.appendChild(el("div", { class: "sim" }, [
     faser, kort,
     el("div", { class: "raekke" }, [forrige, naeste, taeller]),
-    el("p", { class: "note-lille", text: "Trin 9 og 10 er den indbyggede fejl. Læg mærke til, at fejlen kun bliver fundet, fordi agenten kørte kommandoen og læste outputtet." })
+    el("p", { class: "note-lille", text: "Trin 9 og 10 er den indbyggede fejl. Den bliver kun fundet, fordi agenten kørte beregneren og læste svaret. Du behøver ikke forstå rettelserne. Du skal kunne se, at der kom en observation mellem dem." })
   ]));
   vis();
 })();

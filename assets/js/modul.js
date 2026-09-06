@@ -104,7 +104,7 @@
     var born = [];
     if (oe.intro) born = born.concat(blokke(oe.intro));
     if (m.startbranch && m.nulstilKommando) {
-      born.push(p("Startbranch: `" + m.startbranch + "`. Stil sandbox-repoet om til modulets startpunkt, før du begynder. Kommandoen smider ikke noget væk, den laver en ny arbejdsbranch.", "brod"));
+      born.push(p("Startbranch: `" + m.startbranch + "`. Stil sandbox-repoet om til modulets startpunkt, før du begynder. Kommandoen sletter intet: løse ændringer fra sidste øvelse lægges til side med git stash, og der laves en ny arbejdsbranch fra modulets startpunkt.", "brod"));
       born.push(kopiBlok(m.nulstilKommando, "nulstil"));
     }
     if (oe.forventetMinutter) born.push(p("Forventet tid: " + oe.forventetMinutter + " minutter, heraf under to minutters agenttid.", "meta"));

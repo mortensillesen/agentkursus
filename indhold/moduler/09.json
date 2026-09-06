@@ -2,152 +2,258 @@
   "id": "09",
   "del": 3,
   "titel": "Produktions-workflows",
-  "undertitel": "Agenter i en pipeline. CI, deploy, review-porte, og hvad der må køre uden et menneske.",
+  "undertitel": "Porten på GitHub gælder for alle. Hvad der må køre uden et menneske, og hvad der ikke må.",
   "tidsestimat": 25,
   "sidstVerificeret": "2026-09-06",
   "laeringsmaal": [
-    "Forklare hvad en port i CI fanger, som en lokal hook ikke gør.",
-    "Læse en GitHub Actions-workflow og pege på trigger, port og deploy.",
+    "Forklare, hvad porten på GitHub fanger, som porten på din egen maskine ikke gør.",
+    "Pege på pipelinens tre dele: hvad der udløser den, hvad porten kræver, og hvad der først sker bagefter.",
     "Afgøre hvilke trin der må køre uden et menneske, og hvilke der ikke må."
   ],
   "hvorfor": [
-    "Hooken fra modul 06 virker kun på din maskine. Porten i CI virker for alle, der pusher, og den kan ikke slås fra med en lokal indstilling. Det er den port, der gælder, når agenter arbejder for flere mennesker, eller når ingen sidder og kigger.",
-    "Modulet lader dig se en rød og en grøn kørsel i dit eget repo, og en side der først deployes, når porten er passeret."
+    "Porten fra modul 06 sidder på din maskine. Den kan slås fra, og den gælder kun dig. Porten på GitHub ligger i repoet, kører på GitHubs maskiner og gælder alle, der sender arbejde ind. Det er den port, der tæller, når agenter arbejder for flere mennesker, eller når ingen sidder og kigger med.",
+    "Modulet lader dig se en rød og en grøn kørsel i dit eget repo, og en side der først bliver lagt op, når porten er passeret."
   ],
   "kernen": [
-    { "type": "h3", "tekst": "Pipelinen i sandboxen" },
-    "Workflowen ligger klar i `.github/workflows/ci-og-deploy.yml.deaktiveret`. Den er slået fra, fordi GitHub kun læser filer med endelsen `.yml` eller `.yaml`. Den har tre dele:",
-    { "type": "liste", "nummereret": true, "punkter": [
-      "Trigger: `on: push` til `main` og til `arbejde/modul-09`, plus `workflow_dispatch`, så den kan startes i hånden.",
-      "Port: jobbet `test` installerer pytest og kører suiten. Fejler en test, stopper alt her.",
-      "Deploy: jobbet `deploy` har `needs: test`. Det kører kun, når porten er grøn, og lægger mappen `site/` op som GitHub Pages med de officielle actions `configure-pages`, `upload-pages-artifact` og `deploy-pages`."
-    ]},
-    "Læg mærke til `permissions`: workflowen får kun `contents: read`, `pages: write` og `id-token: write`. Den kan ikke skrive til repoet. Det er princippet fra modul 05 igen: mindst mulig adgang.",
-    { "type": "h3", "tekst": "Hvad der må køre uden et menneske" },
-    { "type": "tabel", "hoved": ["Trin", "Uden menneske?", "Hvorfor"], "raekker": [
-      ["Kør tests og linters", "Ja", "Deterministisk, ingen bivirkninger, giver bestået eller fejlet"],
-      ["Deploy af en statisk side efter grøn port", "Ja, til en sandbox", "Reversibelt, ingen data, ingen kunder"],
-      ["Agenten skriver kode og åbner en pull request", "Ja", "Intet lander, før nogen godkender"],
-      ["Merge til main", "Kun med port og review", "Det er her, fejl bliver til historik"],
-      ["Deploy til produktion med kunder", "Nej, ikke uden en person i løkken", "Konsekvenser er ikke reversible med et git revert"]
-    ]},
-    "Dokumentationen har samme holdning til agenter i CI: `claude -p` kan køre i pipelines, pre-commit hooks og scripts, og `--allowedTools` afgrænser, hvad den må, når ingen sidder og godkender. Jo mindre en person ser, jo snævrere skal tilladelserne være.",
-    { "type": "h3", "tekst": "Review-porte" },
-    "En pull request er en port med et menneske i. Agenten kan lave ændringen, køre testene og skrive beskrivelsen, men en person trykker merge. GitHub Actions kan også lade Claude anmelde pull requests automatisk, som en anden agent med frisk kontekst, jf. modul 07. Det erstatter ikke mennesket i porten, det giver mennesket bedre grundlag.",
-    { "type": "note", "tekst": "Kursets egen kørsel: første push gav rød port på 25 sekunder, fordi startpunktet indeholder fejlen fra modul 06. Efter rettelsen var porten grøn, og siden lå live under et minut senere." }
+    {
+      "type": "h3",
+      "tekst": "Et billede fra hverdagen"
+    },
+    "På terminalen bliver hver palle vejet og målt, før den går på bilen. Kontrollen er den samme klokken syv om morgenen og klokken fem om eftermiddagen, uanset hvor travlt der er, og uanset hvem der står ved båndet. Chaufføren kan være nok så sikker på, at pallen er i orden. Den bliver vejet alligevel, og bilen bliver ikke frigivet, før kontrollen er grøn. Porten på GitHub er den kontrol. Den står ikke hjemme hos den enkelte. Den står på vejen ud.",
+    {
+      "type": "h3",
+      "tekst": "Pipelinen i sandboxen"
+    },
+    "Kontrollen ligger klar i repoet, men er slået fra: filen har en endelse, GitHub ikke læser. Øvelsen tænder den ved at give den den rigtige endelse. Den har tre dele:",
+    {
+      "type": "liste",
+      "nummereret": true,
+      "punkter": [
+        "Udløseren. Den starter af sig selv, hver gang der pushes til `main` eller til arbejdsbranchen i dette modul. Du kan også starte den i hånden fra Actions-siden.",
+        "Porten. Første job henter projektet, installerer det, der skal bruges, og kører testene. Fejler bare én test, stopper alt her.",
+        "Deploy. Andet job venter på porten. Er den grøn, lægger jobbet den lille side, der ligger i repoet, op som GitHub Pages. Er den rød, bliver siden aldrig lagt op."
+      ]
+    },
+    "Læg mærke til, hvor lidt kontrollen selv må: den må læse repoet og udgive siden, og den må ikke skrive i repoet. Det er princippet fra modul 05 igen, mindst mulig adgang, og det gælder også, når det er en maskine, der arbejder.",
+    {
+      "type": "h3",
+      "tekst": "Hvad der må køre uden et menneske"
+    },
+    {
+      "type": "tabel",
+      "hoved": [
+        "Trin",
+        "Uden menneske?",
+        "Hvorfor"
+      ],
+      "raekker": [
+        [
+          "Kør testene",
+          "Ja",
+          "Samme svar hver gang, ingen bivirkninger, og den melder selv bestået eller fejlet"
+        ],
+        [
+          "Læg en statisk side op efter grøn port",
+          "Ja, i en sandbox",
+          "Kan rulles tilbage, ingen data, ingen kunder"
+        ],
+        [
+          "Agenten laver ændringen og åbner en pull request",
+          "Ja",
+          "Intet lander, før nogen godkender"
+        ],
+        [
+          "Merge til `main`",
+          "Kun med port og review",
+          "Det er her, en fejl bliver til historik"
+        ],
+        [
+          "Deploy til produktion med rigtige kunder",
+          "Nej, ikke uden en person i porten",
+          "Konsekvenserne kan ikke rulles tilbage bagefter"
+        ]
+      ]
+    },
+    "Dokumentationen ser på det samme, når en agent kører i en pipeline uden en person ved skærmen: jo mindre nogen ser undervejs, jo snævrere skal agentens tilladelser være.",
+    {
+      "type": "h3",
+      "tekst": "Review-porte"
+    },
+    "En pull request er en port med et menneske i. Agenten kan lave ændringen, køre testene og skrive, hvad den har gjort, men et menneske trykker merge. Kørslen på GitHub kan også lade en anden agent med frisk kontekst læse ændringen igennem, som i modul 07. Det erstatter ikke mennesket i porten. Det giver mennesket et bedre grundlag.",
+    {
+      "type": "note",
+      "tekst": "Kursets egen kørsel: første push gav rød port efter 25 sekunder, fordi startpunktet indeholder fejlen fra modul 06. Efter rettelsen var porten grøn, og siden lå live under et minut senere."
+    }
   ],
   "sidebar": {
     "titel": "Cloudflare Pages ved siden af",
     "afsnit": [
-      "Samme repo kan deployes af to tjenester. Cloudflare Pages kobler sig på GitHub og bygger ved hvert push til den branch, du vælger som produktion. Uden build-kommando og med `site` som output-mappe er der intet at bygge, bare at kopiere. Trinnene står nederst i øvelsen. De kræver din Cloudflare-konto, så de er din del."
+      "Det samme repo kan lægges op af to tjenester. Cloudflare Pages kobler sig på GitHub og bygger ved hvert push til den branch, du peger på. Der er intet at bygge her, kun en mappe at kopiere, så feltet til byggekommando står tomt. Trinnene står nederst i øvelsen. De kræver din egen Cloudflare-konto, så de er din del, ikke kursets."
     ]
   },
   "simulation": {
     "id": "pipeline-porte",
-    "beskrivelse": "En pipeline med tre porte: tests, review, deploy. Slå dem til og fra, og se hvad der slipper igennem til produktion.",
+    "beskrivelse": "En pipeline med tre porte: testene, et menneske og deploy. Slå dem til og fra, og se hvad der slipper igennem til produktion.",
     "maksMinutter": 3
   },
   "startbranch": "start/modul-09",
-  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-09 origin/start/modul-09 && git checkout -- . && git config --unset core.hooksPath; true",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git stash push -u -q -m \"Gemt af nulstil, modul 09\" && git checkout -B arbejde/modul-09 origin/start/modul-09 && git config --unset core.hooksPath; true",
   "oevelse": {
     "forventetMinutter": 14,
     "intro": [
-      "Du aktiverer workflowen, pusher et startpunkt, der fejler porten, ser den røde kørsel, retter, og ser den grønne kørsel deploye siden. Den lokale hook fra modul 06 er slået fra i nulstil-kommandoen, så porten i CI er den eneste."
+      "Du tænder porten, sender et startpunkt af sted, der fejler med vilje, ser den røde kørsel i browseren, lader agenten rette fejlen, og ser den grønne kørsel lægge siden op. Porten på din egen maskine fra modul 06 er slået fra i nulstil-kommandoen, så porten på GitHub er den eneste, der er tilbage."
     ],
     "trin": [
-      { "tekst": "Stil repoet om til startpunktet, og aktivér workflowen. Det er hele aktiveringen: filen skifter endelse.", "kommando": "git mv .github/workflows/ci-og-deploy.yml.deaktiveret .github/workflows/ci-og-deploy.yml && git commit -m \"Aktivér workflow\"" },
-      { "tekst": "Push branchen. Startpunktet indeholder stadig fejlen fra modul 06, så porten bliver rød. Det er meningen.", "kommando": "git push -u origin arbejde/modul-09" },
-      { "tekst": "Se kørslen. Kommandoen følger den, til den er færdig. Læs, hvilket job der fejlede, og hvilken test.", "kommando": "gh run watch --exit-status; gh run list --limit 1" },
-      { "tekst": "Lad agenten rette det, og push igen.", "kommando": "claude", "prompt": "Kør testene, ret den fejl de finder (i koden, ikke i testen), kør dem igen, og commit med beskeden \"Ret afrunding for fly\". Push derefter branchen." },
-      { "tekst": "Følg den nye kørsel. Denne gang skal begge jobs være grønne, og deploy-jobbet skriver en URL.", "kommando": "gh run watch --exit-status && gh run view --json jobs --jq '.jobs[] | \"\\(.name): \\(.conclusion)\"'" },
-      { "tekst": "Åbn siden. Den viser byggetidspunkt og commit, så du kan se, at det er din kørsel.", "kommando": "open https://mortensillesen.github.io/fragtvaegt-sandbox/" },
-      { "tekst": "Cloudflare Pages, din del. Log ind på dash.cloudflare.com. Gå til Workers & Pages, vælg Create application, Pages, Connect to Git. Vælg repoet fragtvaegt-sandbox. Sæt production branch til arbejde/modul-09, framework preset None, build command tom, build output directory `site`. Vælg Save and Deploy. Du får en adresse på pages.dev, og hvert push til branchen deployer igen.", "note": "Trinnene er hentet fra Cloudflares dokumentation for git-integration, se kilderne. Menupunkternes navne kan ændre sig. Rækkefølgen er den samme." }
+      {
+        "tekst": "Stil repoet om til startpunktet med kommandoen ovenfor, og start Claude Code i mappen.",
+        "kommando": "claude"
+      },
+      {
+        "tekst": "Første bestilling: tænd porten, og send arbejdet af sted. Startpunktet indeholder stadig fejlen fra modul 06, så porten bliver rød. Det er meningen.",
+        "prompt": "Aktivér workflowen ved at omdøbe .github/workflows/ci-og-deploy.yml.deaktiveret til ci-og-deploy.yml, commit med beskeden Aktivér workflow, og push branchen arbejde/modul-09."
+      },
+      {
+        "tekst": "Åbn Actions-siden i browseren, og find den øverste kørsel. Den er gul, mens den arbejder, og bliver rød efter cirka et halvt minut. Klik ind på den, og se hvilket job der stoppede, og hvilken test der fejlede.",
+        "kommando": "open https://github.com/mortensillesen/fragtvaegt-sandbox/actions",
+        "note": "Læg mærke til, at det andet job aldrig blev startet. Det er porten: deploy venter på testene og bliver aldrig til noget, når de er røde."
+      },
+      {
+        "tekst": "Anden bestilling: lad agenten rette fejlen og sende af sted igen. Skift tilbage til terminalen med Claude Code.",
+        "prompt": "Kør testene, og ret den fejl, de finder. Fejlen er i beregneren, ikke i testen. Kør testene igen, så de er grønne, commit med beskeden Ret afrunding for fly, og push branchen."
+      },
+      {
+        "tekst": "Genindlæs Actions-siden. Den nye kørsel skal have begge job grønne, og deploy-jobbet ender med adressen på den side, det har lagt op.",
+        "kommando": "open https://github.com/mortensillesen/fragtvaegt-sandbox/actions",
+        "note": "Tager det mere end et par minutter, så genindlæs igen. Kørsler mod samme repo står i kø efter hinanden."
+      },
+      {
+        "tekst": "Åbn siden. Den viser et byggetidspunkt og de første syv tegn af din commit, så du kan se, at det er din kørsel, der har lagt den op.",
+        "kommando": "open https://mortensillesen.github.io/fragtvaegt-sandbox/"
+      },
+      {
+        "tekst": "Cloudflare Pages, din del. Log ind på dash.cloudflare.com. Gå til Workers & Pages, vælg Create application, Pages, Connect to Git. Vælg repoet fragtvaegt-sandbox. Sæt production branch til arbejde/modul-09, framework preset None, build command tom, build output directory `site`. Vælg Save and Deploy. Du får en adresse på pages.dev, og hvert push til branchen lægger siden op igen.",
+        "note": "Trinnene er hentet fra Cloudflares dokumentation for git-integration, se kilderne. Menupunkternes navne kan ændre sig. Rækkefølgen er den samme."
+      }
     ]
   },
   "verifikation": {
     "intro": "Modulet er bestået, når Actions viser en rød og derefter en grøn kørsel, og siden er live.",
     "kriterier": [
-      "Kørselslisten viser mindst to kørsler på din branch: den første med failure, den seneste med success.",
-      "Siden på GitHub Pages viser et byggetidspunkt og de første syv tegn af din commit.",
-      "Cloudflare Pages viser samme side på en pages.dev-adresse, hvis du tog det trin."
+      "Actions-siden viser mindst to kørsler på branchen arbejde/modul-09: den ældste rød, den nyeste grøn.",
+      "I den røde kørsel blev kun det første job kørt. I den grønne er begge job grønne.",
+      "Siden nedenfor viser et byggetidspunkt og syv tegn fra din commit.",
+      "Cloudflare Pages viser den samme side på en pages.dev-adresse, hvis du tog det trin."
     ],
-    "kommando": "gh run list --branch arbejde/modul-09 --limit 3 && curl -s https://mortensillesen.github.io/fragtvaegt-sandbox/ | grep -o \"Bygget: <span>[^<]*\"",
-    "forventetOutput": "to eller flere kørsler, den nyeste success, og en linje med Bygget: og et tidspunkt.",
-    "hvisDetFejler": "Er testjobbet grønt, men deploy-jobbet rødt, så tjek at branchen hedder præcis arbejde/modul-09. Pages-miljøet tillader kun main og den branch. Er siden ikke opdateret, så vent et minut og prøv igen med et andet tal efter spørgsmålstegnet i adressen."
+    "kommando": "open https://mortensillesen.github.io/fragtvaegt-sandbox/",
+    "forventetOutput": "siden åbner i browseren og viser linjen Bygget med et tidspunkt og syv tegn fra din commit. Står der stadig ukendt, er det ikke din kørsel, der ligger oppe.",
+    "hvisDetFejler": "Er porten grøn, men deploy-jobbet rødt, så tjek at branchen hedder præcis arbejde/modul-09. Kørslen må kun lægge siden op fra main og fra den branch. Er siden ikke opdateret, så vent et minut og genindlæs."
   },
   "live": {
     "titel": "Dine egne kørsler",
     "endpoint": "/runs?repo=fragtvaegt-sandbox&branch=arbejde/modul-09",
     "intro": "Når live-koblingen er aktiv, viser listen dine seneste Actions-kørsler gennem kursets Worker. Indtil da ser du kursets egen testkørsel.",
     "fallback": [
-      { "sha": "success", "besked": "Test og deploy: Ret afrunding for fly", "dato": "2026-09-06" },
-      { "sha": "failure", "besked": "Test og deploy: Aktivér workflow", "dato": "2026-09-06" }
+      {
+        "sha": "success",
+        "besked": "Test og deploy: Ret afrunding for fly",
+        "dato": "2026-09-06"
+      },
+      {
+        "sha": "failure",
+        "besked": "Test og deploy: Aktivér workflow",
+        "dato": "2026-09-06"
+      }
     ],
     "fallbackNote": "Eksempeldata fra kursets egen kørsel. Live-koblingen kobles på i en senere fase, og intet i modulet afhænger af den."
   },
   "quiz": [
     {
-      "spoergsmaal": "Hvorfor gælder porten i CI for alle, mens git-hooken fra modul 06 kun gælder for dig?",
+      "spoergsmaal": "Hvorfor gælder porten på GitHub for alle, mens porten fra modul 06 kun gælder for dig?",
       "svar": [
-        "Fordi CI er hurtigere.",
-        "Fordi workflow-filen ligger i repoet og kører på GitHubs maskiner, mens hookens aktivering ligger i din lokale .git/config.",
-        "Fordi hooks ikke kan køre tests."
+        "Fordi porten på GitHub er hurtigere.",
+        "Fordi den ligger i repoet og kører på GitHubs maskiner, mens porten fra modul 06 blev tændt med en indstilling, der kun findes på din maskine.",
+        "Fordi en port på din egen maskine ikke kan køre tests."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Hastighed er ikke forskellen. Hvor porten bor, er.",
-        "Præcis. Filen følger med repoet, indstillingen gør ikke.",
-        "Hooken kører tests fint. Den kører bare kun, hvor den er slået til."
+        "Hastighed er ikke forskellen. Hvor porten står, er.",
+        "Præcis. Filen følger med repoet. Indstillingen på din maskine gør ikke.",
+        "Den kører tests fint. Den kører bare kun der, hvor den er tændt."
       ]
     },
     {
-      "spoergsmaal": "Hvad gør needs: test i deploy-jobbet?",
+      "spoergsmaal": "Deploy-jobbet er sat op til at vente på testjobbet. Hvad betyder det i praksis?",
       "svar": [
-        "Kører testene en gang til.",
-        "Sikrer, at deploy kun kører, hvis test-jobbet lykkedes.",
-        "Giver deploy-jobbet adgang til testresultaterne."
+        "At testene bliver kørt en gang til, inden siden lægges op.",
+        "At siden kun bliver lagt op, hvis testene var grønne. Er de røde, startes deploy aldrig.",
+        "At deploy-jobbet får testresultaterne udleveret, så det kan vurdere dem selv."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Testene kører i deres eget job. needs kører intet igen.",
-        "Det er porten: fejler test, startes deploy aldrig.",
-        "needs handler om rækkefølge og betingelse, ikke om data."
+        "Testene kører i deres eget job. De køres ikke om.",
+        "Det er hele porten: rødt stopper der, og intet når videre ud.",
+        "Det handler om rækkefølge og betingelse, ikke om at sende data videre."
       ]
     },
     {
-      "spoergsmaal": "Hvilket trin bør ikke køre uden en person i løkken?",
+      "spoergsmaal": "Hvilket trin bør ikke køre uden en person i porten?",
       "svar": [
-        "Kør testsuiten.",
+        "Kør testene.",
         "Deploy til produktion med rigtige kunder.",
         "Åbn en pull request."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Tests er deterministiske og uden bivirkninger. Det er det, automatik er til.",
-        "Konsekvenserne kan ikke rulles tilbage med git. Der skal være et menneske i porten.",
-        "En pull request lander intet. Den er selv en port med et menneske i."
+        "Testene giver samme svar hver gang og har ingen bivirkninger. Det er præcis det, automatik er til.",
+        "Konsekvenserne kan ikke rulles tilbage. Der skal være et menneske i porten.",
+        "En pull request lander ingenting. Den er selv en port med et menneske i."
       ]
     },
     {
-      "spoergsmaal": "Workflowen har permissions med contents: read. Hvad betyder det for agenten i pipelinen?",
+      "spoergsmaal": "Kontrollen på GitHub må læse repoet og udgive siden, men ikke skrive i repoet. Hvad betyder det?",
       "svar": [
-        "Den kan ikke læse koden.",
-        "Den kan læse repoet, men ikke skrive til det. Deploy sker gennem Pages, ikke gennem commits.",
-        "Den kan hverken læse eller skrive."
+        "At den ikke kan læse koden og derfor ikke kan køre testene.",
+        "At den kan hente projektet, teste det og lægge siden op, men ikke ændre noget i historikken.",
+        "At den hverken kan læse eller skrive, og at siden lægges op af noget andet."
       ],
       "korrekt": 1,
       "forklaring": [
-        "read betyder læse. Den kan læse.",
-        "Mindst mulig adgang: læs, byg, deploy. Ingen skriveadgang til historikken.",
-        "Læse kan den. Skrive kan den ikke."
+        "Læse må den. Det er skriveadgangen, der er skåret væk.",
+        "Mindst mulig adgang: læs, test, udgiv. Ingen adgang til at ændre repoet.",
+        "Den læser og udgiver. Det er kun skrivning i repoet, den ikke må."
       ]
     }
   ],
   "kilder": [
-    { "titel": "GitHub Actions starter-workflow til Pages", "url": "https://github.com/actions/starter-workflows/blob/main/pages/static.yml", "note": "Permissions, concurrency og de tre Pages-actions. Sandboxens workflow er bygget på den", "hentet": "2026-09-06" },
-    { "titel": "Configuring a publishing source for your GitHub Pages site", "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site", "note": "GitHub Actions som publiceringskilde", "hentet": "2026-09-06" },
-    { "titel": "Cloudflare Pages: Git integration", "url": "https://developers.cloudflare.com/pages/get-started/git-integration/", "note": "Workers & Pages, Create application, Pages, Connect to Git, build settings, Save and Deploy, production branch og preview deployments", "hentet": "2026-09-06" },
-    { "titel": "Run Claude Code programmatically", "url": "https://code.claude.com/docs/en/headless", "note": "claude -p i CI og scripts, --allowedTools til ubemandede kørsler, --bare", "hentet": "2026-09-06" },
-    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Non-interactive mode i pipelines, adversarial review med frisk kontekst", "hentet": "2026-09-06" }
+    {
+      "titel": "GitHub Actions starter-workflow til Pages",
+      "url": "https://github.com/actions/starter-workflows/blob/main/pages/static.yml",
+      "note": "Permissions, concurrency og de tre Pages-actions. Sandboxens workflow er bygget på den",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Configuring a publishing source for your GitHub Pages site",
+      "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site",
+      "note": "GitHub Actions som publiceringskilde",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Cloudflare Pages: Git integration",
+      "url": "https://developers.cloudflare.com/pages/get-started/git-integration/",
+      "note": "Workers & Pages, Create application, Pages, Connect to Git, build settings, Save and Deploy, production branch og preview deployments",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Run Claude Code programmatically",
+      "url": "https://code.claude.com/docs/en/headless",
+      "note": "claude -p i CI og scripts, --allowedTools til ubemandede kørsler, --bare",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Best practices for Claude Code",
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "note": "Non-interactive mode i pipelines, adversarial review med frisk kontekst",
+      "hentet": "2026-09-06"
+    }
   ]
 }

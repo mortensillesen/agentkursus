@@ -10,16 +10,16 @@
     return e;
   }
   var PORTE = [
-    { id: "tests", navn: "Port 1: tests i CI", fanger: ["afrunding"] },
-    { id: "review", navn: "Port 2: review af et menneske før merge", fanger: ["scope", "regel"] },
-    { id: "deploy", navn: "Port 3: deploy kun efter grøn port", fanger: ["halvfaerdig"] }
+    { id: "tests", navn: "Port 1: testene kører på GitHub", fanger: ["afrunding"] },
+    { id: "review", navn: "Port 2: et menneske ser ændringen igennem før merge", fanger: ["scope", "regel"] },
+    { id: "deploy", navn: "Port 3: siden lægges kun op, når porten er grøn", fanger: ["halvfaerdig"] }
   ];
   var AENDRINGER = [
-    { id: "afrunding", tekst: "Agenten runder vej ned i stedet for op", type: "En test fejler" },
-    { id: "scope", tekst: "Agenten retter også en fil uden for opgaven", type: "Testene er grønne, men diffen er for stor" },
-    { id: "regel", tekst: "Agenten ændrer README-reglen, så koden passer", type: "Testene er grønne, reglen er forkert" },
-    { id: "halvfaerdig", tekst: "Push med en test, der fejler, fordi arbejdet er halvt", type: "Rød kørsel, men er deploy koblet fra den?" },
-    { id: "ren", tekst: "En korrekt rettelse med test", type: "Alt grønt" }
+    { id: "afrunding", tekst: "Agenten runder vægten ned for vej i stedet for op", type: "En test fejler" },
+    { id: "scope", tekst: "Agenten retter også noget, der lå uden for bestillingen", type: "Testene er grønne, men ændringen er større end bestilt" },
+    { id: "regel", tekst: "Agenten ændrer reglen i README, så beregneren passer til den", type: "Testene er grønne, men reglen er nu forkert" },
+    { id: "halvfaerdig", tekst: "Arbejdet sendes af sted halvfærdigt, med en test der stadig fejler", type: "Rød kørsel, men er deploy koblet til den?" },
+    { id: "ren", tekst: "En korrekt rettelse med et bevis, der kan køres igen", type: "Alt grønt" }
   ];
   var til = { tests: true, review: true, deploy: true };
   var liste = el("ul", { class: "handlinger", "aria-live": "polite" });
@@ -45,9 +45,9 @@
     return el("li", null, [inp, el("label", { for: "port-" + p.id, text: p.navn })]);
   }));
   holder.appendChild(el("div", { class: "sim" }, [
-    el("p", { text: "Fem ændringer på vej mod produktion. Slå porte fra, og se hvilke der slipper igennem." }),
+    el("p", { text: "Fem ændringer er på vej mod produktion. Sluk en port, og se hvilke der slipper igennem." }),
     porte, liste, status,
-    el("p", { class: "note-lille", text: "Læg mærke til, at tests ikke fanger alt. To af ændringerne er grønne og forkerte. Dem fanger kun et menneske i porten, og det er derfor, review ikke er valgfrit for merge til main." })
+    el("p", { class: "note-lille", text: "Læg mærke til, at testene ikke fanger alt. To af ændringerne er grønne og alligevel forkerte. Dem fanger kun et menneske, der ser ændringen igennem. Det er derfor, review ikke er valgfrit, når noget skal merges til main." })
   ]));
   opdater();
 })();

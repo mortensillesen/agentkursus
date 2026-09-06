@@ -1,0 +1,157 @@
+{
+  "id": "03",
+  "del": 2,
+  "titel": "Kontekst-engineering",
+  "undertitel": "Kontekstvinduet som en knap ressource: hvad der skal ind, hvad der ikke skal, og hvornår man rydder.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Forklare hvad der ligger i kontekstvinduet fra start, og hvad hvert filkald koster.",
+    "Vælge mellem at pege på en fil og at indsætte den, og begrunde valget.",
+    "Genkende forurenet kontekst og vide, hvornår `/clear` og `/compact` skal bruges."
+  ],
+  "hvorfor": [
+    "Alt, agenten ved i øjeblikket, ligger i ét vindue: din prompt, CLAUDE.md, hver fil den har læst, hvert output den har set. Vinduet er stort, men det fyldes hurtigt, og ydelsen falder, efterhånden som det fyldes. Dokumentationen kalder det den vigtigste ressource at styre.",
+    "Modul 02 handlede om, hvad der læses ind. Dette modul handler om budgettet: hvad der fortjener plads, hvad der stjæler den, og hvordan du får pladsen tilbage."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "En ressource med aftagende udbytte" },
+    "Anthropic definerer context engineering som de strategier, der kuraterer og vedligeholder det optimale sæt tokens under kørslen, inklusive alt det, der havner i vinduet uden om selve prompten. Det er bredere end prompt engineering: prompten er én linje i budgettet.",
+    { "type": "citat", "tekst": "Context, therefore, must be treated as a finite resource with diminishing marginal returns.", "kilde": "Anthropic, Effective context engineering for AI agents, 2025-09-29", "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" },
+    "Dokumentationens simulation af kontekstvinduet regner med 200.000 tokens. Ved opstart lægges systemprompten, auto memory, miljøoplysninger, MCP-værktøjernes navne, CLAUDE.md og beskrivelserne af skills ind, før du har skrevet noget. Derefter er det filerne, der dominerer: hver fil agenten læser, og hvert kommandooutput, bliver liggende. Simulationens eget råd er at være præcis i prompten, så agenten læser færre filer, og at bruge en subagent til tung research.",
+    { "type": "h3", "tekst": "Hvad der skal ind, og hvad der skal blive ude" },
+    { "type": "tabel", "hoved": ["Indhold", "Hvor det hører til", "Hvorfor"], "raekker": [
+      ["Kommandoer, konventioner, faldgruber", "CLAUDE.md, under 200 linjer", "Læses hver session. Hver linje koster hver gang."],
+      ["Regler, der kun gælder nogle filer", "`.claude/rules/` med `paths`", "Indlæses først, når agenten rører en matchende fil."],
+      ["Procedurer, der bruges af og til", "En skill", "Kun beskrivelsen ligger i vinduet, indtil den bruges."],
+      ["Research i mange filer", "En subagent", "Eget vindue. Du får et resumé tilbage, ikke filerne."],
+      ["En fejllog på 4000 linjer", "Ikke i prompten", "Pipe de sidste 50 linjer ind, eller peg på filen og lad agenten søge i den."]
+    ]},
+    "Det sidste punkt er det vigtigste valg i praksis. Peger du på en fil med `@sti`, læser agenten den, før den svarer, og den fylder i vinduet. Beskriver du i stedet, hvor svaret findes, henter agenten det selv, når den har brug for det. Anthropic kalder det just-in-time: agenten holder lette referencer og indlæser data ved kørsel med værktøjer, i stedet for at få alt serveret på forhånd.",
+    { "type": "h3", "tekst": "Forurening og oprydning" },
+    "Mislykkede forsøg bliver i vinduet. Efter to rettelser på samme problem er konteksten fyldt med tilgange, der ikke virkede, og agenten trækker på dem. Rådet er at rydde og skrive en bedre prompt med det, du har lært. Kommandoerne er få:",
+    { "type": "liste", "punkter": [
+      "`/context` viser, hvad der fylder, og bekræfter at CLAUDE.md er indlæst.",
+      "`/clear` nulstiller vinduet mellem opgaver, der ikke hænger sammen.",
+      "`/compact` med et fokus, fx `/compact fokusér på ændringerne i pris.py`, opsummerer og beholder det, du peger på. Automatisk komprimering sker af sig selv nær grænsen, men instruktioner tidligt i samtalen kan gå tabt. Derfor hører faste regler hjemme i CLAUDE.md, som genindlæses efter komprimering.",
+      "`/btw` stiller et sidespørgsmål, uden at svaret havner i historikken."
+    ]},
+    { "type": "note", "tekst": "Færre turns er ikke målet. Færre forkerte turns er. I kursets egen måling brugte agenten flere turns med den udbyggede CLAUDE.md, fordi den fulgte reglen om at køre tests både før og efter ændringen. Det er den slags forskel, du skal lede efter i øvelsen." }
+  ],
+  "sidebar": {
+    "titel": "Tre teknikker til lange forløb",
+    "afsnit": [
+      "Anthropics artikel nævner tre teknikker, når en opgave er større end ét vindue. Komprimering: opsummér samtalen og start et nyt vindue med resuméet. Struktureret notetagning: agenten skriver løbende noter til en fil uden for vinduet og læser dem igen senere. Subagenter: del arbejdet op, så hver del kører i sit eget vindue og returnerer et kort resumé.",
+      "Modul 07 og 08 bygger på de to sidste."
+    ]
+  },
+  "simulation": {
+    "id": "kontekst-beholder",
+    "beskrivelse": "Kontekstvinduet som en beholder. Træk elementer ind og se budgettet fyldes. Prøv at lægge en fejllog på 4000 linjer i, og se hvad der er tilbage til arbejdet.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-03",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-03 origin/start/modul-03 && git checkout -- .",
+  "oevelse": {
+    "forventetMinutter": 12,
+    "intro": [
+      "Du kører den samme opgave to gange, først med en tynd CLAUDE.md og så med en udbygget, og sammenligner tallene. Begge varianter ligger klar i `kursus/varianter/`. Kørslerne sker med `claude -p`, som kører uden at spørge undervejs og udskriver måltal som JSON til sidst."
+    ],
+    "trin": [
+      { "tekst": "Stil repoet om til startpunktet, og læg den tynde variant ind som CLAUDE.md.", "kommando": "cp kursus/varianter/CLAUDE.tynd.md CLAUDE.md" },
+      { "tekst": "Kør opgaven. Kommandoen giver agenten lov til at læse, redigere og køre `python3`, og gemmer resultatet som JSON. Den tager under et minut.", "kommando": "claude -p \"Tilføj en test i tests/test_pris.py, der viser at tillægget oe-tillaeg lægger præcis 150 kr til totalen for fly, zone 1, med et kolli på 60x40x50 cm og 12 kg. Kør testene og rapportér antal bestået og fejlet.\" --output-format json --allowedTools \"Read,Edit,Write,Grep,Glob,Bash(python3 *)\" > /tmp/koersel-tynd.json" },
+      { "tekst": "Læs tallene ud. Notér turns og sekunder i skemaet nedenfor, i rækken for tynd.", "kommando": "python3 -c \"import json; d=json.load(open('/tmp/koersel-tynd.json')); print('turns:', d['num_turns'], ' sekunder:', round(d['duration_ms']/1000)); print(d['result'][:600])\"" },
+      { "tekst": "Nulstil, og læg den udbyggede variant ind. Nulstil-kommandoen øverst i sektionen fjerner testen fra første kørsel.", "kommando": "cp kursus/varianter/CLAUDE.udbygget.md CLAUDE.md" },
+      { "tekst": "Kør præcis samme opgave igen, og læs tallene ud på samme måde. Notér dem i rækken for udbygget.", "kommando": "claude -p \"Tilføj en test i tests/test_pris.py, der viser at tillægget oe-tillaeg lægger præcis 150 kr til totalen for fly, zone 1, med et kolli på 60x40x50 cm og 12 kg. Kør testene og rapportér antal bestået og fejlet.\" --output-format json --allowedTools \"Read,Edit,Write,Grep,Glob,Bash(python3 *)\" > /tmp/koersel-udbygget.json && python3 -c \"import json; d=json.load(open('/tmp/koersel-udbygget.json')); print('turns:', d['num_turns'], ' sekunder:', round(d['duration_ms']/1000)); print(d['result'][:600])\"" },
+      { "tekst": "Læs de to resultattekster, og skriv én linje per række om, hvad agenten gjorde anderledes. Kørte den tests før ændringen? Læste den flere eller færre filer? Rapporterede den, som CLAUDE.md bad om?", "note": "Tallene svinger fra kørsel til kørsel. Forskellen i adfærd er mere stabil end forskellen i turns. Skriv, hvad der skyldes filen, og hvad der ligner tilfældighed." }
+    ],
+    "skema": {
+      "titel": "To kørsler, samme opgave",
+      "intro": "Én række per variant.",
+      "kolonner": [
+        { "id": "variant", "label": "Variant", "type": "select", "valg": ["tynd", "udbygget"] },
+        { "id": "turns", "label": "Turns", "type": "text", "pladsholder": "fx 7" },
+        { "id": "sekunder", "label": "Sekunder", "type": "text", "pladsholder": "fx 39" },
+        { "id": "note", "label": "Hvad skyldtes forskellen", "type": "text", "pladsholder": "fx kørte tests før ændringen" }
+      ],
+      "minRaekker": 2,
+      "krav": { "kolonne": "turns", "ikkeTom": true, "min": 2, "label": "et tal i Turns" }
+    }
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når skemaet er udfyldt og kommandoen viser den nye test.",
+    "kriterier": [
+      "To tal for turns og to for sekunder er noteret, ét sæt per variant.",
+      "Der står en linje om, hvad forskellen skyldtes, og hvad der ligner tilfældighed.",
+      "Testfilen indeholder den nye test efter anden kørsel."
+    ],
+    "kommando": "grep -n \"oe-tillaeg\" tests/test_pris.py && python3 -m pytest -q 2>&1 | tail -1",
+    "forventetOutput": "mindst én linje fra testfilen med oe-tillaeg, og en sidste linje med 1 failed og 11 passed.",
+    "hvisDetFejler": "Giver kørslen ingen JSON-fil, så kør kommandoen igen uden `> /tmp/...` og læs fejlen i terminalen. Den typiske årsag er, at `claude` ikke er logget ind, hvilket pre-flight skulle have fanget."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Du har en fejllog på 4000 linjer, og agenten skal finde årsagen. Hvad er det bedste valg?",
+      "svar": [
+        "Indsæt hele loggen i prompten, så agenten har alt.",
+        "Gem loggen som fil, giv agenten stien, og bed den søge i den. Eller pipe kun de sidste linjer ind.",
+        "Beskriv loggen med dine egne ord."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Hele loggen æder vinduet, og det meste af den er irrelevant. Ydelsen falder for resten af sessionen.",
+        "Agenten henter det, den har brug for, når den har brug for det. Det er just-in-time-princippet fra Anthropics artikel.",
+        "Din beskrivelse er en fortolkning. Agenten mister de præcise fejlbeskeder, den skal bruge."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvad sker der med instruktioner, du gav tidligt i en lang samtale, når konteksten komprimeres automatisk?",
+      "svar": [
+        "De bevares altid, fordi de er instruktioner.",
+        "De kan gå tabt. Faste regler hører derfor hjemme i CLAUDE.md, som genindlæses efter komprimering.",
+        "De flyttes automatisk til CLAUDE.md."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Komprimering opsummerer. Dokumentationen siger direkte, at detaljerede instruktioner fra tidligt i samtalen kan gå tabt.",
+        "Sådan beskriver dokumentationen det: læg vedvarende regler i CLAUDE.md i stedet for at stole på samtalehistorikken.",
+        "Intet flyttes automatisk. Du skal selv skrive reglerne ind."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvorfor kan en udbygget CLAUDE.md give flere turns end en tynd på samme opgave?",
+      "svar": [
+        "Fordi filen fylder mere, og agenten bliver langsommere.",
+        "Fordi filen kan bede om ekstra arbejde, fx at køre tests både før og efter en ændring.",
+        "Det kan den ikke. Mere kontekst giver altid færre turns."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Filens størrelse påvirker kontekst, ikke antallet af handlinger direkte.",
+        "Det var præcis det, kursets egen måling viste. Arbejdsreglerne i den udbyggede fil koster turns, men de er de rigtige turns.",
+        "Målet er ikke færrest turns, men færrest forkerte. Mere kontekst kan sagtens give flere handlinger."
+      ]
+    },
+    {
+      "spoergsmaal": "Du har rettet agenten to gange på samme fejl. Hvilken kommando hører til situationen?",
+      "svar": [
+        "`/context`",
+        "`/clear`, og derefter en ny prompt med det, du har lært.",
+        "`/btw`"
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "`/context` viser, hvad der fylder. Det rydder ikke op.",
+        "Konteksten er forurenet med mislykkede tilgange. Ryd, og start med en bedre prompt.",
+        "`/btw` er til sidespørgsmål, der ikke skal i historikken. Det løser ikke forureningen."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Effective context engineering for AI agents", "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", "note": "Anthropic, 2025-09-29. Definitionen, knap ressource med aftagende udbytte, just-in-time, komprimering, notetagning, subagenter", "hentet": "2026-09-06" },
+    { "titel": "Explore the context window", "url": "https://code.claude.com/docs/en/context-window", "note": "Simulationen af vinduet på 200.000 tokens, hvad der indlæses ved opstart, at filer dominerer forbruget", "hentet": "2026-09-06" },
+    { "titel": "How Claude Code works", "url": "https://code.claude.com/docs/en/how-claude-code-works", "note": "Hvad der ligger i vinduet, komprimering og hvad der kan gå tabt, /context, /compact", "hentet": "2026-09-06" },
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Kontekst som den vigtigste ressource, /clear mellem opgaver, to rettelser og så ryd, /btw, subagenter til research", "hentet": "2026-09-06" },
+    { "titel": "Run Claude Code programmatically", "url": "https://code.claude.com/docs/en/headless", "note": "claude -p, --output-format json, --allowedTools med præfiks-match. Felterne num_turns og duration_ms i JSON-outputtet er verificeret ved kørsel 2026-09-06, ikke beskrevet på siden", "hentet": "2026-09-06" }
+  ]
+}

@@ -10,22 +10,22 @@
     return e;
   }
   var LAG = [
-    { id: "filio", navn: "Terminal og fil-IO", tekst: "adgang til mappen og kommandolinjen" },
-    { id: "tools", navn: "Tool calls", tekst: "Read, Edit, Bash, Grep og de andre indbyggede værktøjer" },
+    { id: "filio", navn: "Terminal og filer", tekst: "adgang til mappen og til det, du selv kunne køre derfra" },
+    { id: "tools", navn: "Tool calls", tekst: "de handlinger, den kan udføre: læse, søge, rette, køre en kommando" },
     { id: "perm", navn: "Permissions", tekst: "hvad der må ske uden at spørge dig" },
-    { id: "hooks", navn: "Hooks", tekst: "shell-kommandoer på faste tidspunkter i løkken" },
-    { id: "mcp", navn: "MCP", tekst: "forbindelser til eksterne systemer" },
-    { id: "claudemd", navn: "Projektkontekst (CLAUDE.md)", tekst: "det, agenten ved fra start" }
+    { id: "hooks", navn: "Hooks", tekst: "kommandoer, der kører af sig selv på faste tidspunkter" },
+    { id: "mcp", navn: "MCP", tekst: "forbindelser til systemer uden for mappen" },
+    { id: "claudemd", navn: "Projektkontekst (CLAUDE.md)", tekst: "det, agenten ved, før du har skrevet noget" }
   ];
   var HANDLINGER = [
-    { tekst: "Læse cli.py", kraever: ["filio", "tools"] },
-    { tekst: "Redigere cli.py", kraever: ["filio", "tools"] },
+    { tekst: "Læse beregneren", kraever: ["filio", "tools"] },
+    { tekst: "Rette beregneren", kraever: ["filio", "tools"] },
     { tekst: "Køre testene", kraever: ["filio", "tools"] },
     { tekst: "Kende testkommandoen uden at gætte", kraever: ["claudemd"] },
     { tekst: "Blive stoppet, før den sletter en fil", kraever: ["perm"] },
-    { tekst: "Få testene kørt automatisk efter hver redigering", kraever: ["hooks", "tools"] },
-    { tekst: "Slå takster op i det eksterne takstsystem", kraever: ["mcp", "tools"] },
-    { tekst: "Svare på et spørgsmål om koden med ren tekst", kraever: [] }
+    { tekst: "Få testene kørt af sig selv efter hver rettelse", kraever: ["hooks", "tools"] },
+    { tekst: "Slå dagens takst op i et system uden for mappen", kraever: ["mcp", "tools"] },
+    { tekst: "Forklare en regel med ren tekst", kraever: [] }
   ];
   var tilstand = {};
   LAG.forEach(function (l) { tilstand[l.id] = true; });
@@ -49,12 +49,12 @@
   var nulstil = el("button", { type: "button", class: "sekundaer", text: "Slå alle lag til igen" });
   nulstil.addEventListener("click", function () { LAG.forEach(function (l) { tilstand[l.id] = true; document.getElementById("lag-" + l.id).checked = true; }); opdater(); });
   holder.appendChild(el("div", { class: "sim" }, [
-    el("p", { text: "Slå et lag fra, og se hvad agenten mister. Modellen er der stadig, den kan bare mindre." }),
+    el("p", { text: "Slå et lag fra, og se hvad agenten mister. Modellen er den samme hele vejen. Den kan bare mindre." }),
     lagListe,
     el("h4", { text: "Hvad agenten kan lige nu" }),
     liste,
     el("div", { class: "raekke" }, [nulstil]),
-    el("p", { class: "note-lille", text: "Prøv at slå Permissions fra alene. Agenten kan stadig alt, men intet stopper den. Prøv derefter kun Projektkontekst: den kan alt, men gætter kommandoerne." })
+    el("p", { class: "note-lille", text: "Slå Permissions fra alene. Agenten kan stadig det hele, men der er ingen, der spørger dig først. Slå derefter kun Projektkontekst fra: den kan stadig det hele, men den gætter, hvordan testene køres. Det er den elev, ingen har givet en instruks." })
   ]));
   opdater();
 })();

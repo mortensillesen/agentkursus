@@ -1,4 +1,4 @@
-/* Simulation, modul 08: to sessioner side om side. Hvad foeres videre, hvad tabes. Scriptet. */
+/* Simulation, modul 08: to sessioner efter hinanden. Hvad foeres videre, hvad tabes. Scriptet. */
 (function () {
   "use strict";
   var holder = document.getElementById("simulation");
@@ -10,21 +10,21 @@
     return e;
   }
   var VIDEN = [
-    { id: "claudemd", navn: "Testkommandoen står i CLAUDE.md", fra: "claudemd" },
-    { id: "status", navn: "Session 1 skrev STATUS.md med Gjort, Mangler, Beslutninger, Næste skridt", fra: "status" },
-    { id: "commit", navn: "Session 1 committede med beskrivende beskeder", fra: "commit" },
-    { id: "memory", navn: "Auto memory: du rettede agenten til at bruge python3 -m pytest", fra: "memory" }
+    { id: "instruksen", navn: "Testkommandoen står i instruksen CLAUDE.md", fra: "instruksen" },
+    { id: "statusfilen", navn: "Session 1 skrev STATUS.md med Gjort, Mangler, Beslutninger, Næste skridt", fra: "statusfilen" },
+    { id: "commits", navn: "Session 1 committede undervejs med beskrivende beskeder", fra: "commits" },
+    { id: "hukommelsen", navn: "Auto memory: du rettede agenten til at bruge den rigtige testkommando", fra: "hukommelsen" }
   ];
   var SPOERGSMAAL = [
-    { sp: "Hvad var opgaven?", kilder: ["status"] },
-    { sp: "Hvilke dele er færdige?", kilder: ["status", "commit"] },
-    { sp: "Hvorfor blev testen for flere kolli skrevet efter README og ikke efter koden?", kilder: ["status"] },
-    { sp: "Hvordan kører man testene?", kilder: ["claudemd", "memory"] },
-    { sp: "Hvad prøvede session 1, som ikke virkede?", kilder: ["status"] },
-    { sp: "Hvad stod der i samtalen i session 1?", kilder: [] }
+    { sp: "Hvad var opgaven?", kilder: ["statusfilen"] },
+    { sp: "Hvilke dele er færdige?", kilder: ["statusfilen", "commits"] },
+    { sp: "Hvorfor blev reglen for flere kolli taget fra README og ikke fra koden?", kilder: ["statusfilen"] },
+    { sp: "Hvordan kører man testene her?", kilder: ["instruksen", "hukommelsen"] },
+    { sp: "Hvad prøvede session 1, som ikke virkede?", kilder: ["statusfilen"] },
+    { sp: "Hvad blev der ellers sagt i samtalen i session 1?", kilder: [] }
   ];
   var til = {};
-  VIDEN.forEach(function (v) { til[v.id] = v.id === "claudemd"; });
+  VIDEN.forEach(function (v) { til[v.id] = v.id === "instruksen"; });
   var liste = el("ul", { class: "handlinger", "aria-live": "polite" });
   function opdater() {
     liste.textContent = "";
@@ -43,10 +43,10 @@
   }));
   holder.appendChild(el("div", { class: "sim" }, [
     el("div", { class: "kolonner" }, [
-      el("div", { class: "kolonne" }, [el("h4", { text: "Session 1 efterlod" }), valg]),
-      el("div", { class: "kolonne" }, [el("h4", { text: "Session 2 kan svare på" }), liste])
+      el("div", { class: "kolonne" }, [el("h4", { text: "Det, session 1 efterlod" }), valg]),
+      el("div", { class: "kolonne" }, [el("h4", { text: "Det, session 2 kan svare på" }), liste])
     ]),
-    el("p", { class: "note-lille", text: "Slå STATUS.md til, og se hvor mange spørgsmål der bliver grønne. Slå den fra igen, og se hvad git-historik og auto memory ikke dækker: mål og beslutninger." })
+    el("p", { class: "note-lille", text: "Slå statusfilen til, og se hvor mange linjer der bliver grønne. Slå den fra igen: commits og auto memory fortæller, hvad der blev gjort, ikke hvad der blev besluttet og hvorfor. Det er den forskel, en overdragelse skal dække." })
   ]));
   opdater();
 })();

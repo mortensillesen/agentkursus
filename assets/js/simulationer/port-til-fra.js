@@ -10,21 +10,21 @@
     return e;
   }
   var UDEN = [
-    { t: "Opgave: \"Vej skal runde ned, ikke op. Ret det og commit.\"" },
-    { t: "Agenten ændrer math.ceil til math.floor i afrund_vaegt." },
-    { t: "Agenten kører git commit -m \"Rund vej ned\"." },
-    { t: "Committen accepteres. Ingen tests kørte, ingen spurgte.", k: "fejl" },
-    { t: "test_vej_afrundes_op_til_hele_kilo fejler nu, men ingen ser det før næste gang, nogen kører testene." },
-    { t: "Pushes til main. CI findes ikke endnu. Siden deployes.", k: "fejl" },
-    { t: "Resultat: en kunde med 100,3 kg faktureres for 100 kg. Fejlen ligger i historikken med en pæn commitbesked.", k: "fejl" }
+    { t: "Bestilling: \"Vej skal runde ned, ikke op. Ret det, og commit.\"" },
+    { t: "Agenten ændrer afrundingen for vej, så den runder ned i stedet for op." },
+    { t: "Agenten committer med beskeden \"Rund vej ned\"." },
+    { t: "Committen går igennem. Ingen tests blev kørt, ingen sagde noget.", k: "fejl" },
+    { t: "Testen for afrundingen af vej fejler nu, men ingen ser det, før nogen tilfældigvis kører testene." },
+    { t: "Ændringen bliver lagt ud. Der er ingen port på GitHub endnu, så siden opdateres.", k: "fejl" },
+    { t: "Resultat: en kunde med 100,3 kg bliver faktureret for 100 kg. Fejlen står i historikken med en pæn commitbesked.", k: "fejl" }
   ];
   var MED = [
-    { t: "Opgave: samme. Porten er aktiv: git config core.hooksPath kursus/hooks." },
-    { t: "Agenten ændrer math.ceil til math.floor i afrund_vaegt." },
-    { t: "Agenten kører git commit -m \"Rund vej ned\"." },
-    { t: "pre-commit kører testene. test_vej_afrundes_op_til_hele_kilo fejler: forventede 101, fik 100. Commit afvist.", k: "fejl" },
-    { t: "Agenten læser hookens output. Observation, vurdering: README siger op til hele kg. Opgaven modsiger README." },
-    { t: "Agenten genopretter math.ceil, forklarer hvorfor, og committer en ændring, der ikke bryder reglen.", k: "ok" },
+    { t: "Bestilling: den samme. Forskellen er, at porten før commit er tændt." },
+    { t: "Agenten ændrer afrundingen for vej, så den runder ned i stedet for op." },
+    { t: "Agenten committer med beskeden \"Rund vej ned\"." },
+    { t: "Porten kører testene. Testen for afrundingen af vej fejler: den ventede 101 kg og fik 100. Commit afvist.", k: "fejl" },
+    { t: "Agenten læser portens svar. Observation, og så en vurdering: README siger op til hele kilo. Bestillingen modsiger reglen." },
+    { t: "Agenten genopretter oprundingen, forklarer hvorfor, og committer noget, der ikke bryder reglen.", k: "ok" },
     { t: "Resultat: porten fangede det, agenten rettede sig selv, og du fik en forklaring i stedet for en faktureringsfejl.", k: "ok" }
   ];
   var port = true, i = 0;
@@ -42,7 +42,7 @@
   }
   naeste.addEventListener("click", function () { i = i >= (port ? MED : UDEN).length ? 0 : i + 1; vis(); });
   holder.appendChild(el("div", { class: "sim" }, [
-    el("div", { class: "raekke" }, [tjek, el("label", { for: "sim-port", text: "Port aktiv (pre-commit kører testene)" })]),
+    el("div", { class: "raekke" }, [tjek, el("label", { for: "sim-port", text: "Port aktiv (testene køres, før noget kan committes)" })]),
     el("div", { class: "kolonne" }, [el("h4", { text: port ? "Med port" : "Uden port" }), ol]),
     el("div", { class: "raekke" }, [naeste, taeller]),
     el("p", { class: "note-lille", text: "Slå porten fra, og spil forløbet igen. Forskellen er ikke agenten. Det er, om nogen siger nej, før fejlen bliver til historik." })

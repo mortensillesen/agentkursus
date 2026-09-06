@@ -12,25 +12,25 @@
   var SVAG = {
     titel: "Svag: \"Priserne runder forkert. Fiks det.\"",
     trin: [
-      { t: "Søger efter \"round\" i hele repoet. Finder både afrund_vaegt i beregner.py og round() i pris.py." },
-      { t: "Kører testene. Ser én fejl i test_fly_afrundes_op_til_naermeste_halve_kilo." },
-      { t: "Antager, at den fejlende test er det, du mener med \"priserne runder forkert\"." },
-      { t: "Retter math.floor til math.ceil i beregner.py. Testene bliver grønne.", k: "fejl" },
-      { t: "Ser også round() i pris.py, men har intet eksempel og ingen regel at holde det op imod. Lader det være." },
+      { t: "Søger efter afrunding i hele projektet. Finder to steder: afrundingen af vægten og afrundingen af prisen." },
+      { t: "Kører testene. Ser én fejl, og den handler om afrundingen af vægten for fly." },
+      { t: "Antager, at det er den fejl, du mener med at priserne runder forkert. Det er det eneste signal, den har." },
+      { t: "Retter afrundingen af vægten for fly, så den runder op. Testene bliver grønne.", k: "fejl" },
+      { t: "Ser også afrundingen af prisen, men har hverken et eksempel eller en regel at holde den op imod. Lader den være." },
       { t: "Rapporterer: \"Afrundingsfejlen er rettet, alle tests består.\"", k: "fejl" },
-      { t: "Resultat: en anden fejl end den, du mente, er rettet. Den, du mente, er der stadig, og suiten er grøn. Du opdager det først, når en kunde faktureres 494 i stedet for 495.", k: "fejl" }
+      { t: "Resultat: en anden fejl end den, du mente, er rettet. Din er der stadig, og testene er grønne. Du opdager det først, når en kunde faktureres 494 i stedet for 495.", k: "fejl" }
     ]
   };
   var STAERK = {
     titel: "Stærk: mål, kendt tilstand, afgrænsning, acceptkriterium, rækkefølge, bevis",
     trin: [
-      { t: "Læser README-reglen om halve kroner og pris.py, som briefingen peger på. Læser ikke beregner.py, den er uden for afgrænsningen." },
-      { t: "Skriver testen med eksemplet soe, zone 1, 10x10x10:105, forventet 495. Kører den: fejler med 494. Fejlen er nu bevist." },
-      { t: "Kører hele suiten før ændringen: 2 fejl, den nye og den kendte i beregner." },
-      { t: "Retter afrundingen i beregn_pris til halve-op. Rører ikke afrund_vaegt.", k: "ok" },
-      { t: "Kører hele suiten: 1 fejl, den kendte. Præcis som briefingen sagde." },
-      { t: "Rapporterer med testoutputtet indsat og en linje om, at den kendte fejl i beregner er ladt være med vilje.", k: "ok" },
-      { t: "Resultat: den fejl, du mente, er rettet og dækket af en test. Intet andet er rørt. Du kan verificere det på ti sekunder.", k: "ok" }
+      { t: "Læser README-reglen om halve kroner og den prisudregning, briefingen peger på. Rører ikke afrundingen af vægten, den ligger uden for afgrænsningen." },
+      { t: "Skriver testen med eksemplet soe, zone 1, ét kolli på 10x10x10 cm og 105 kg, forventet 495. Kører den: den fejler med 494. Nu er fejlen bevist." },
+      { t: "Kører alle testene før ændringen: 2 fejl, den nye og den kendte." },
+      { t: "Retter afrundingen af prisen, så halve kroner rundes op. Rører ikke afrundingen af vægten.", k: "ok" },
+      { t: "Kører alle testene igen: 1 fejl, den kendte. Præcis som briefingen sagde." },
+      { t: "Rapporterer med testoutputtet indsat og en linje om, at den kendte fejl er ladt være med vilje.", k: "ok" },
+      { t: "Resultat: den fejl, du mente, er rettet og dækket af en test. Intet andet er rørt. Du kan tjekke det på ti sekunder med én kommando.", k: "ok" }
     ]
   };
   var i = 0;
@@ -50,10 +50,10 @@
   naeste.addEventListener("click", function () { i = i >= SVAG.trin.length ? 0 : i + 1; vis(); });
   alle.addEventListener("click", function () { i = SVAG.trin.length; vis(); });
   holder.appendChild(el("div", { class: "sim" }, [
-    el("p", { text: "Samme opgave, samme kode, to briefinger. Trinnene foldes ud parvis." }),
+    el("p", { text: "Samme opgave, samme projekt, to briefinger. Trinnene foldes ud parvis." }),
     el("div", { class: "kolonner" }, [a.wrap, b.wrap]),
     el("div", { class: "raekke" }, [naeste, alle, taeller]),
-    el("p", { class: "note-lille", text: "Den svage kørsel er ikke dum. Den er rationel ud fra det, den fik. Den rettede den eneste fejl, der havde et signal. Alt det, den manglede, står i tjeklisten." })
+    el("p", { class: "note-lille", text: "Den svage kørsel er ikke dum. Den er fornuftig ud fra det, den fik. Den rettede den eneste fejl, der havde et signal, fordi ingen havde fortalt den, hvad færdig var. Alt det, den manglede, står i tjeklisten." })
   ]));
   vis();
 })();

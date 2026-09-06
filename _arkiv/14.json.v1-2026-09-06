@@ -1,0 +1,152 @@
+{
+  "id": "14",
+  "del": 4,
+  "titel": "Atomare agenter og software-distillation",
+  "undertitel": "Når en agentisk løsning er stabil, kan den ofte skrives ned til noget mindre: et script, en skill eller én fokuseret agent.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Dele en opgave i det, der er deterministisk, og det, der kræver dømmekraft.",
+    "Erstatte systemet fra modul 10 med det mindst mulige, der løser opgaven, og måle forskellen.",
+    "Sige, hvad der gik tabt ved destillationen, og hvornår det er en pris værd at betale."
+  ],
+  "hvorfor": [
+    "Systemet i modul 10 løste opgaven to gange med samme resultat. Det er tegnet på, at opgaven er forstået. Og når en opgave er forstået, er det sjældent en agent, der skal løse den næste hundrede gange. Det er et script, som kalder én lille agent til det, der stadig kræver skøn.",
+    "Anthropics råd fra første modul gælder til sidst: find den simpleste løsning, og øg kun kompleksiteten, når det er nødvendigt. Dette modul går den anden vej: fra kompleks til simpel."
+  ],
+  "kernen": [
+    { "type": "advarsel", "tekst": "Forbehold: \"software-distillation\" og \"atomare agenter\" er ikke etablerede fagtermer med én definition. Det følgende er kursets tolkning, aftalt med kursets ejer, og bygget på Anthropics artikel Building effective agents og Claude Codes dokumentation. Læs det som en arbejdsmetode, ikke som et begreb med kilde." },
+    { "type": "h3", "tekst": "Atomare agenter" },
+    "En atomar agent har ét ansvar, én klar grænseflade og ingen viden om, hvad der sker uden om den. `takst-tester` fra modul 10 er en: den får en zone, læser en fil, kører en kommando, regner efter og returnerer en tabel. Den ændrer intet. Den kan kaldes fra en skill, fra et script, eller af dig, og resultatet er det samme.",
+    "Anthropics beskrivelse af subagenter i multi-agent-systemet er det nærmeste, kilderne kommer på en definition: hver subagent har brug for et mål, et outputformat, vejledning om værktøjer og klare grænser. Uden det dublerer de arbejde eller efterlader huller. Building effective agents beskriver de mønstre, atomare agenter sættes sammen i: kæde, routing, parallelisering, orkestrator med arbejdere. Fælles for dem er, at hver del kan testes alene.",
+    { "type": "h3", "tekst": "Destillation: fra system til script" },
+    "Kig på systemet fra modul 10 og spørg for hvert trin: kræver dette trin dømmekraft, eller er det en regel? Kald takstserveren for tre transportformer: regel. Skriv tallene ind i JSON: regel. Kør testene: regel. Regn efter og rapportér afvigelser i en tabel, som et menneske skal læse: skøn. Fire regler og ét skøn. Reglerne bliver til et script på 70 linjer. Skønnet bliver tilbage som én atomar agent.",
+    { "type": "tabel", "hoved": ["", "Systemet fra modul 10", "Destillatet"], "raekker": [
+      ["Bevægelige dele", "Skill, subagent, hook, MCP-forbindelse, model, CLAUDE.md", "Ét script og én subagent"],
+      ["Modelkald", "Cirka 8 turns plus subagenten", "Kun subagenten, 2 turns"],
+      ["Tid", "70 til 80 sekunder", "1 sekund plus 49 for subagenten"],
+      ["Omkostning", "Cirka 0,3 til 0,5 dollar per kørsel", "Cirka 0,18 dollar, alt til subagenten"],
+      ["Deterministisk", "Samme resultat i to kørsler, men ikke garanteret", "Garanteret for scriptets del"],
+      ["Fejltolerance", "Agenten kan håndtere et uventet svar fra serveren", "Scriptet stopper med en fejl. Det skal du selv fange"]
+    ]},
+    "Tallene er fra kursets egne kørsler. Læg mærke til den sidste række. Det er prisen: scriptet ved kun det, du skrev ind i det. Ændrer serveren sit svarformat, går scriptet i stykker, hvor agenten ville have læst det nye format og fortsat. Destillation er en handel: forudsigelighed og pris mod tilpasningsevne.",
+    { "type": "h3", "tekst": "Hvornår du destillerer" },
+    { "type": "liste", "punkter": [
+      "Opgaven har givet samme resultat flere gange, og du kan skrive reglerne ned uden at bruge ordet \"passende\".",
+      "Den kører ofte nok til, at pris og tid betyder noget.",
+      "Fejl er billige at opdage: en test, en exit-kode, en person der læser tabellen.",
+      "Det, der kræver skøn, kan isoleres i én atomar agent med klar grænseflade."
+    ]},
+    { "type": "note", "tekst": "Destillatet ligger klar i sandbox-repoet: `kursus/destillat/opdater_takst.py`. Det taler med takstserveren over den samme protokol, som Claude Code gør, bare uden en model imellem. Læs det, det er 70 linjer, og det er hele pointen." }
+  ],
+  "sidebar": {
+    "titel": "Det andet eksempel: nyhedsagenten",
+    "afsnit": [
+      "Samme metode på en anden opgave. En agent, der hver morgen finder nyheder om spedition, sorterer dem efter emne og skriver et resumé. Reglerne: hent kilderne, fjern dubletter, filtrér på nøgleord, gem det, der er nyt siden i går. Skønnet: hvilke tre historier er vigtigst, og hvad er den ene sætning, der opsummerer hver. Fire regler i et script. Én atomar agent, der får tyve overskrifter og returnerer tre med begrundelse. Scriptet kører gratis og forudsigeligt. Agenten kaldes én gang med lille kontekst. Og hvis agenten falder ud, har du stadig listen."
+    ]
+  },
+  "simulation": {
+    "id": "generel-eller-destilleret",
+    "beskrivelse": "En generel agent og en destilleret udgave side om side: trin, omkostning og fejltolerance. Lad serverens svarformat ændre sig, og se hvem der overlever.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-14",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-14 origin/start/modul-14 && git checkout -- . && rm -rf .claude",
+  "oevelse": {
+    "forventetMinutter": 12,
+    "intro": [
+      "Du kører destillatet, kører den ene atomare agent, og sammenligner med modul 10 i før- og efter-skabelonen."
+    ],
+    "trin": [
+      { "tekst": "Stil repoet om til startpunktet, og læs destillatet. Find de fire regler og tæl, hvor mange linjer der taler med serveren.", "kommando": "cat kursus/destillat/opdater_takst.py" },
+      { "tekst": "Kør det. Tag tid. Det skal give samme takster som modul 10 og køre testene.", "kommando": "time python3 kursus/destillat/opdater_takst.py 5 && python3 -m fragtvaegt fly 5 60x40x50:12 | tail -1" },
+      { "tekst": "Aktivér kun den atomare agent, ingen skill, ingen hook, ingen CLAUDE.md-ændring. Kald den én gang.", "kommando": "mkdir -p .claude/agents && cp kursus/byggeklodser/agents/takst-tester.md .claude/agents/ && claude -p \"Brug subagenten takst-tester til at verificere zone 5 i data/takster.json, og gengiv dens tabel.\" --output-format json --allowedTools \"Read,Grep,Glob,Agent,Bash(python3 *)\" > /tmp/koersel-tester.json && python3 -c \"import json; d=json.load(open('/tmp/koersel-tester.json')); print('sekunder:', round(d['duration_ms']/1000), ' turns:', d['num_turns'], ' dollar:', round(d['total_cost_usd'],2)); print(d['result'][:600])\"" },
+      { "tekst": "Udfyld før- og efter-skabelonen. Før er modul 10, tallene står i den modulside. Efter er det, du lige målte. Skriv til sidst én linje om, hvad der gik tabt, og om det er en pris værd at betale for denne opgave." }
+    ],
+    "skema": {
+      "titel": "Før og efter",
+      "kolonner": [
+        { "id": "maal", "label": "Mål", "type": "select", "valg": ["bevægelige dele", "sekunder", "modelkald", "hvad gik tabt"] },
+        { "id": "foer", "label": "Før: modul 10", "type": "text", "pladsholder": "fx 5 dele" },
+        { "id": "efter", "label": "Efter: destillat", "type": "text", "pladsholder": "fx 2 dele" }
+      ],
+      "minRaekker": 4,
+      "krav": { "kolonne": "efter", "ikkeTom": true, "min": 4, "label": "udfyldt efter-værdi" }
+    }
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når destillatet giver samme output som modul 10 med færre bevægelige dele, og tabet er noteret.",
+    "kriterier": [
+      "Destillatet skrev zone 5 for fly og soe, og CLI'en giver 2810 kr for fly til zone 5. Samme output som modul 10.",
+      "Skemaet viser færre bevægelige dele og færre modelkald efter end før.",
+      "Der står en linje om, hvad der gik tabt."
+    ],
+    "kommando": "python3 -m fragtvaegt fly 5 60x40x50:12 | tail -1 && grep -c '\"5\"' data/takster.json && wc -l < kursus/destillat/opdater_takst.py",
+    "forventetOutput": "Total: 2810 DKK, tallet 2, og et linjetal under 100.",
+    "hvisDetFejler": "Skriver destillatet, at zonen ikke findes, kører takstserveren ikke som forventet. Prøv `python3 kursus/mcp/takstserver.py` direkte med kommandoen fra `kursus/mcp/README.md`. Det er præcis den fejltolerance, tabellen taler om: scriptet fortæller dig, at noget er galt, men retter det ikke."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvad kendetegner en atomar agent i kursets tolkning?",
+      "svar": [
+        "Den er meget lille i kode.",
+        "Ét ansvar, én klar grænseflade, og ingen viden om, hvad der sker uden om den.",
+        "Den kører uden model."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Størrelsen er ikke kriteriet. Ansvaret og grænsefladen er.",
+        "Det er tolkningen, bygget på Anthropics krav til subagenter: mål, outputformat, værktøjer, grænser.",
+        "Uden model er det et script. Den atomare agent er netop der, hvor skønnet bor."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvilket spørgsmål afgør, om et trin kan destilleres til et script?",
+      "svar": [
+        "Er trinnet hurtigt?",
+        "Kræver trinnet dømmekraft, eller er det en regel, du kan skrive ned uden ordet \"passende\"?",
+        "Bruger trinnet MCP?"
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Hastighed er et resultat, ikke et kriterium.",
+        "Regler bliver til kode. Skøn bliver tilbage i én agent.",
+        "MCP kan kaldes fra et script, som destillatet viser."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvad gik tabt, da modul 10 blev destilleret?",
+      "svar": [
+        "Korrektheden. Scriptet regner forkert.",
+        "Tilpasningsevnen. Ændrer serveren sit svarformat, stopper scriptet, hvor agenten ville have læst videre.",
+        "Intet. Destillation er gratis."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Scriptet giver samme output. Det var kravet.",
+        "Det er handlen: forudsigelighed og pris mod tilpasningsevne. Den skal nævnes, ikke skjules.",
+        "Der er altid en pris. Kan du ikke sige den, har du ikke set den endnu."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvornår er destillation en dårlig idé?",
+      "svar": [
+        "Når opgaven kører hver dag.",
+        "Når opgaven stadig giver forskellige resultater fra gang til gang, og reglerne ikke kan skrives ned.",
+        "Når opgaven bruger tests."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Hyppighed taler for destillation, ikke imod.",
+        "Ustabile resultater betyder, at opgaven ikke er forstået endnu. Destillér det, der er stabilt, ikke det, der er uafklaret.",
+        "Tests gør destillation lettere, fordi porten allerede findes."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Building effective agents", "url": "https://www.anthropic.com/engineering/building-effective-agents", "note": "Anthropic, 2024-12-19. Find den simpleste løsning. Workflows mod agenter. Mønstrene kæde, routing, parallelisering og orkestrator med arbejdere", "hentet": "2026-09-06" },
+    { "titel": "How we built our multi-agent research system", "url": "https://www.anthropic.com/engineering/multi-agent-research-system", "note": "Anthropic, 2025-06-13. Hver subagent har brug for mål, outputformat, værktøjer og klare grænser", "hentet": "2026-09-06" },
+    { "titel": "Extend Claude Code", "url": "https://code.claude.com/docs/en/features-overview", "note": "Hook mod skill: hooks til det, der skal ske ens hver gang uden at tænke. Skill mod subagent", "hentet": "2026-09-06" },
+    { "titel": "MCP-specifikationen 2025-06-18: Transports", "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports", "note": "stdio-transporten, som destillatet bruger direkte", "hentet": "2026-09-06" }
+  ]
+}

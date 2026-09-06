@@ -5,6 +5,7 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 | Dato | Modul | Øvelse | Agenttid | Turns | Mortens trin, skøn | Samlet, skøn | Under 15 min |
 |---|---|---|---|---|---|---|---|
 | 2026-09-06 | 01 | Kør prompt (--json i CLI), læs transkript, udfyld skema | 39 s | 6 | 9 min | 10 min | ja |
+| 2026-09-06 | 01, v1.1 | Kør bestilling (transportformen kurer), læs transkript, udfyld skema | 85 s | 15 | 9 min | 11 min | ja |
 | 2026-09-06 | 02 | Ret to ting i CLAUDE.md, tilføj test, commit | 50 s | se log | 5 min | 6 min | ja |
 | 2026-09-06 | 03 | Samme opgave med tynd og udbygget CLAUDE.md via claude -p, notér turns | 39 s + 47 s | 7 og 8 | 6 min | 8 min | ja |
 | 2026-09-06 | 04 | Omskriv svag briefing efter tjekliste, kør én gang (fejl C) | 71 s | 11 | 9 min | 11 min | ja |
@@ -42,3 +43,9 @@ Målt af Claude Code med `claude -p` mod en frisk klon af `fragtvaegt-sandbox` f
 ## Samlet
 
 Alle 14 øvelser er kørt og tidtaget 2026-09-06. Ingen over 15 minutter. Modul 12 ligger på grænsen som ren skriveøvelse. Samlet målt øvelsestid: cirka 135 minutter, mod cirka 210 minutter afsat (14 gange 15). De målte tider står i kursus.json under maalt og vises på forsiden.
+
+## Version 1.1 (ikke-kodende læser)
+
+* Modul 01 fik en ny opgave: transportformen kurer i stedet for et JSON-flag. Målt 2026-09-06 mod en frisk klon af start/modul-01 (efter at branchen fik den tynde CLAUDE.md): 85 s, 15 turns, 0,68 dollar. Agenten rettede fire filer, kørte beregneren og viste 24.0 kg og 1032 DKK, som verifikationen forventer. Den lod den kendte fly-fejl være, som bestillingen bad om.
+* Modul 02 til 14: agent-opgaverne er de samme som i version 1.0, kun formuleret som bestillinger. Mortens egne trin er færre (git og shell-parsing er flyttet til agenten), så de målte tider fra 1.0 holder som øvre grænse. Modul 03 og 07 aflæser nu tid og tokens med /usage i stedet for claude -p, hvilket giver et par minutter mere til Morten, men stadig under 15.
+

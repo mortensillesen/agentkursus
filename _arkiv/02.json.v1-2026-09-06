@@ -1,0 +1,157 @@
+{
+  "id": "02",
+  "del": 1,
+  "titel": "Opsætning af miljø",
+  "undertitel": "Harnessen uden om modellen, og hvad projektkontekst gør ved adfærden.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Nævne lagene i harnessen: terminal, fil-IO, tool calls, permissions, hooks, MCP, projektkontekst.",
+    "Forklare hvad CLAUDE.md er, hvornår den læses, og hvorfor en forkert linje er værre end en manglende.",
+    "Skelne mellem kontekst, som agenten kan vælge at følge, og håndhævelse, som den ikke kan omgå."
+  ],
+  "hvorfor": [
+    "Den samme model opfører sig forskelligt i to forskellige harnesses. Det, der ligger uden om modellen, afgør hvad den kan røre, hvad den skal spørge om, og hvad den ved fra start.",
+    "Installationen er overstået i pre-flight. Dette modul handler om at forstå, hvad du har installeret, så du senere kan slå lag til og fra med vilje i stedet for at undre dig over adfærden."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "Harnessen: alt det uden om modellen" },
+    "Dokumentationen kalder Claude Code for en agentisk harness omkring Claude. Modellen ræsonnerer. Harnessen leverer værktøjerne, kontekststyringen og kørselsmiljøet, som gør en sprogmodel til en agent, der kan handle. Lagene er disse:",
+    { "type": "tabel", "hoved": ["Lag", "Hvad det gør", "Hvor det styres"], "raekker": [
+      ["Terminal og fil-IO", "Adgang til filerne i mappen og alt, du selv kan køre fra kommandolinjen, plus git-tilstanden", "Den mappe du starter `claude` i"],
+      ["Tool calls", "Fem kategorier: filoperationer, søgning, kørsel af kommandoer, web, kodeintelligens", "Indbygget, kan udvides"],
+      ["Permissions", "Hvad agenten må gøre uden at spørge. Fire tilstande: Auto, Manual, Accept edits, Plan", "`Shift+Tab` i sessionen og `.claude/settings.json`"],
+      ["Hooks", "Shell-kommandoer, der kører på faste tidspunkter i løkken, fx efter hver redigering", "`.claude/settings.json`"],
+      ["MCP", "Åben standard for forbindelser til eksterne systemer og data", "`.mcp.json` i projektet"],
+      ["Projektkontekst", "CLAUDE.md og auto memory, læst ved hver session", "`CLAUDE.md` i projektet og `~/.claude/CLAUDE.md`"]
+    ]},
+    { "type": "h3", "tekst": "Hvad CLAUDE.md gør ved adfærden" },
+    "CLAUDE.md læses ved starten af hver session, fra den mappe du står i og alle mapper over den. Indholdet lægges i kontekstvinduet som tekst, ikke som konfiguration. Agenten behandler det som råd, den følger så godt den kan. Det har to konsekvenser.",
+    { "type": "liste", "punkter": [
+      "Filen skal kun indeholde det, agenten ikke selv kan udlede af koden: kommandoer den ikke kan gætte, testkørsel, regler der afviger fra standard, faldgruber. Dokumentationens test for hver linje: ville det give fejl at fjerne den? Hvis ikke, så slet den.",
+      "En forkert linje er værre end en manglende. Agenten stoler på filen. Står der en forkert testkommando, kører den den forkerte kommando og bruger tid på at fejlfinde, før den opdager det. Det er præcis den fejl, du retter i øvelsen."
+    ]},
+    { "type": "citat", "tekst": "Claude treats them as context, not enforced configuration. To block an action regardless of what Claude decides, use a PreToolUse hook instead.", "kilde": "Claude Code docs, How Claude remembers your project", "url": "https://code.claude.com/docs/en/memory" },
+    "Hold filen under 200 linjer. Længere filer koster kontekst og gør, at reglerne bliver fulgt dårligere. Skal noget kun gælde for én slags filer, hører det til i `.claude/rules/` med en sti-afgrænsning. Skal noget kun bruges af og til, hører det til i en skill, som modul 10 viser.",
+    { "type": "h3", "tekst": "Permissions: hvad den må uden at spørge" },
+    "Læsning af filer i arbejdsmappen kræver ingen godkendelse. Redigering og shell-kommandoer kræver det i Manual-tilstand, medmindre du har givet lov på forhånd. I Auto-tilstand vurderer en separat klassifikator handlingerne i baggrunden og stopper dem, der ser risikable ud. Plan-tilstand lader agenten læse og foreslå uden at redigere. Tilladelser gemmes som regler i `.claude/settings.json`, fx at `git status` altid må køre.",
+    { "type": "note", "tekst": "Alt i dette modul kan slås fra lag for lag. Simulationen i næste sektion lader dig gøre det og se, hvad agenten så ikke længere kan." }
+  ],
+  "sidebar": {
+    "titel": "Kontekst eller håndhævelse",
+    "afsnit": [
+      "CLAUDE.md er kontekst. Agenten læser den og vælger, hvad den gør. Det er den rigtige plads til konventioner, kommandoer og arbejdsregler.",
+      "En hook er håndhævelse. Den kører som shell-kommando på et fast tidspunkt, uanset hvad agenten beslutter. Skal noget ske hver gang uden undtagelse, eller aldrig ske, så er det en hook og ikke en linje i CLAUDE.md. Modul 06 og 10 bygger på det skel."
+    ]
+  },
+  "simulation": {
+    "id": "harness-lag",
+    "beskrivelse": "Et lagdiagram over harnessen. Slå et lag fra og se, hvilke handlinger agenten mister, og hvad den stadig kan.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-02",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-02 origin/start/modul-02",
+  "oevelse": {
+    "forventetMinutter": 12,
+    "intro": [
+      "Sandbox-repoets CLAUDE.md indeholder to konkrete fejl. Du retter dem selv, committer, og giver derefter agenten en opgave, der viser at den læser filen."
+    ],
+    "trin": [
+      { "tekst": "Stil repoet om til startpunktet med kommandoen ovenfor, og åbn `CLAUDE.md` i en editor. Den er fem linjer lang." },
+      { "tekst": "Find de to påstande, der er forkerte, og ret dem. Ledetråd: den ene handler om, hvordan man kører tests, den anden om måleenheden. README.md er facit, hvis du er i tvivl.", "note": "Testkommandoen i dette repo er `python3 -m pytest -q`. Kolli måles i centimeter." },
+      { "tekst": "Commit din rettelse, så den er din og ikke agentens.", "kommando": "git commit -am \"Ret CLAUDE.md\"" },
+      { "tekst": "Start Claude Code i mappen og giv den opgaven. Læg mærke til, om den kører den rigtige testkommando første gang.", "kommando": "claude", "prompt": "Læs CLAUDE.md og README.md. Tilføj derefter en test i tests/test_beregner.py, der viser at fragtpligtig vægt for soe med et kolli på 100x100x100 cm og 500 kg er 1000 kg. Kør testene. Commit kun testfilen med beskeden \"Tilføj test for soe-volumen\"." },
+      { "tekst": "Når agenten er færdig, kig på loggen. Der skal være to nye commits: din og agentens." }
+    ],
+    "efter": [
+      { "type": "note", "tekst": "Én af testene i repoet fejler fra start. Det er meningen, og agenten vil nævne det. Bed den ikke rette det nu. Det er modul 06." }
+    ]
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når begge kommandoer giver det forventede.",
+    "kriterier": [
+      "Loggen viser din commit \"Ret CLAUDE.md\" og agentens \"Tilføj test for soe-volumen\" som de to øverste.",
+      "CLAUDE.md nævner `python3 -m pytest` og centimeter, ikke `npm test` og millimeter.",
+      "Agenten kørte `python3 -m pytest` i transkriptet, ikke `npm test`."
+    ],
+    "kommando": "git log --oneline -3 && grep -n \"pytest\\|centimeter\" CLAUDE.md",
+    "forventetOutput": "to nye commits øverst, og to linjer fra CLAUDE.md med pytest og centimeter.",
+    "hvisDetFejler": "Mangler agentens commit, så se om den i stedet committede flere filer eller ingen. Det er et svar på, hvor præcist prompten blev fulgt, og det tager vi op i modul 04."
+  },
+  "live": {
+    "titel": "Dine egne commits",
+    "endpoint": "/commits?repo=fragtvaegt-sandbox&branch=arbejde/modul-02",
+    "intro": "Når live-koblingen er aktiv, viser listen de seneste commits fra din arbejdsbranch, hentet gennem kursets egen Worker. Indtil da ser du et eksempel.",
+    "fallback": [
+      { "sha": "a751730", "besked": "Tilføj test for soe-volumen", "dato": "2026-09-06" },
+      { "sha": "c3e91b2", "besked": "Ret CLAUDE.md", "dato": "2026-09-06" },
+      { "sha": "b9900f3", "besked": "Sandbox: fragtpligtig vaegt med tests, kursuskomponenter slaaet fra", "dato": "2026-09-06" }
+    ],
+    "fallbackNote": "Eksempeldata fra kursets egen testkørsel. Live-koblingen kobles på i en senere fase, og intet i modulet afhænger af den."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvornår læser Claude Code din projekt-CLAUDE.md?",
+      "svar": [
+        "Kun når du beder den om det med @CLAUDE.md.",
+        "Ved starten af hver session, fra arbejdsmappen og mapperne over den.",
+        "Kun første gang du kører claude i mappen. Derefter er den gemt."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Du kan pege på filer med @, men CLAUDE.md læses uden at du gør noget.",
+        "Sådan beskriver dokumentationen indlæsningen: hver session, fra den aktuelle mappe og alle over den, sat sammen i rækkefølge.",
+        "Der gemmes ingen kopi. Ændrer du filen, gælder ændringen fra næste session."
+      ]
+    },
+    {
+      "spoergsmaal": "Du vil sikre, at der aldrig committes uden at testene kører. Hvor hører reglen hjemme?",
+      "svar": [
+        "I CLAUDE.md som en linje: \"Kør altid tests før commit\".",
+        "I en hook, fordi hooks kører uanset hvad agenten beslutter.",
+        "I prompten hver gang."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Linjen hjælper, men den er kontekst. Agenten kan springe den over, især i en lang session.",
+        "Dokumentationen er direkte: CLAUDE.md er kontekst, ikke håndhævelse. Skal noget ske hver gang, brug en hook.",
+        "Det virker, indtil du glemmer det. Håndhævelse skal ikke afhænge af din hukommelse."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvilken linje hører hjemme i CLAUDE.md ifølge dokumentationens test?",
+      "svar": [
+        "\"Skriv ren kode.\"",
+        "\"Brug python3 -m pytest, ikke pytest. Kommandoen pytest er ikke på PATH.\"",
+        "En beskrivelse af hver fil i repoet."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Selvfølgeligheder giver ingen adfærdsændring. Fjernes linjen, sker der ingen fejl, så den skal ud.",
+        "Det er en kommando, agenten ikke kan gætte, og en faldgrube. Fjernes linjen, laver agenten fejl.",
+        "Det kan agenten selv finde ud af ved at læse koden, og det fylder kontekst ved hver session."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvad sker der i Manual-tilstand, når agenten vil køre en shell-kommando, den ikke har fået lov til før?",
+      "svar": [
+        "Den kører kommandoen og fortæller dig bagefter.",
+        "Den spørger dig først.",
+        "Den nægter altid at køre kommandoer."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Det er Auto-tilstandens model, hvor en klassifikator vurderer i baggrunden, ikke Manual.",
+        "Manual spørger før redigeringer og shell-kommandoer, bortset fra et indbygget sæt læse-kommandoer og dem, du har tilladt i settings.",
+        "Den nægter ikke. Den spørger, og du kan give lov én gang eller permanent for den kommando."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "How Claude Code works", "url": "https://code.claude.com/docs/en/how-claude-code-works", "note": "Harness-begrebet, de fem værktøjskategorier, hvad agenten kan nå, de fire permission-tilstande", "hentet": "2026-09-06" },
+    { "titel": "How Claude remembers your project", "url": "https://code.claude.com/docs/en/memory", "note": "CLAUDE.md som kontekst, ikke håndhævelse. Indlæsningsrækkefølge, under 200 linjer, .claude/rules/", "hentet": "2026-09-06" },
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Testen for hver linje i CLAUDE.md, hvad der skal ind og ud, hooks som deterministiske", "hentet": "2026-09-06" },
+    { "titel": "Configure permissions", "url": "https://code.claude.com/docs/en/permissions", "note": "Læsning uden godkendelse, shell-kommandoer med, regler i settings.json", "hentet": "2026-09-06" },
+    { "titel": "Connect Claude Code to tools via MCP", "url": "https://code.claude.com/docs/en/mcp", "note": "Formatet for .mcp.json og projektomfang", "hentet": "2026-09-06" }
+  ]
+}

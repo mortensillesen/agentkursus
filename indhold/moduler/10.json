@@ -2,151 +2,278 @@
   "id": "10",
   "del": 3,
   "titel": "Byg dit eget agent-system",
-  "undertitel": "Projektkontekst, skill, subagent og hook sat sammen til ét system, der løser en tilbagevendende opgave.",
+  "undertitel": "Instruks, fast procedure, forbindelse, automatisk kontrol og en kollega, der regner efter. Fem dele, ét system.",
   "tidsestimat": 25,
   "sidstVerificeret": "2026-09-06",
   "laeringsmaal": [
-    "Vælge den rigtige udvidelse til hvert behov: CLAUDE.md, skill, subagent, hook eller MCP.",
-    "Sætte fire dele sammen til ét system og køre det to gange med sammenligneligt resultat.",
+    "Vælge den rigtige udvidelse til hvert behov: instruks, skill, subagent, hook eller MCP.",
+    "Sætte delene sammen til ét system og køre den samme opgave to gange med det samme resultat.",
     "Sige, hvad der falder ud, hvis én del fjernes."
   ],
   "hvorfor": [
-    "De foregående moduler har vist delene hver for sig. En tilbagevendende opgave, fx at opdatere takster hver måned, løses ikke af én prompt, men af et lille system: noget, der altid gælder, noget der startes, noget der verificerer, og noget der sker automatisk.",
-    "Dokumentationen har en enkel regel for, hvornår du bygger hvad: hver udvidelse har en genkendelig udløser. Modulet lader dig samle delene og se, hvad hver af dem bidrager med."
+    "De foregående moduler har vist delene hver for sig. En opgave, der kommer igen hver måned, fx at opdatere takster, løses ikke af én god prompt. Den løses af et lille system: noget, der altid gælder, noget du starter, noget der verificerer, og noget der sker helt af sig selv.",
+    "Dokumentationen har en enkel regel for, hvornår du bygger hvad: hver udvidelse har sin egen genkendelige udløser. Her samler du delene og ser, hvad hver af dem bidrager med."
   ],
   "kernen": [
-    { "type": "h3", "tekst": "Fire dele, fire roller" },
-    { "type": "tabel", "hoved": ["Del", "Rolle", "Udløseren for at bygge den"], "raekker": [
-      ["CLAUDE.md", "Det, der altid gælder: kommandoer, regler, hvad README er", "Agenten tager en konvention forkert to gange"],
-      ["Skill `/takstopdatering`", "Den tilbagevendende opgave som en fast procedure med trin", "Du skriver den samme prompt for tredje gang"],
-      ["Subagent `takst-tester`", "En anmelder med frisk kontekst, der kun læser og regner efter", "Verifikationen fylder samtalen, eller du vil have en anden til at bedømme"],
-      ["Hook efter hver redigering", "Kører testene, hver gang en fil skrives, uden at nogen beder om det", "Noget skal ske hver gang uden undtagelse"],
-      ["MCP-serveren fra modul 05", "Forbindelsen til taksterne", "Du kopierer data fra et system, agenten ikke kan se"]
-    ]},
-    "Udløserne er dokumentationens egne. Den anbefaler at bygge i den rækkefølge, behovene opstår, ikke at sætte alt op på forhånd. Systemet i dette modul er derfor lille: fem filer, ingen af dem over 30 linjer.",
-    { "type": "h3", "tekst": "Sådan hænger det sammen" },
-    { "type": "liste", "nummereret": true, "punkter": [
-      "Du skriver `/takstopdatering 5`. Skillen har `disable-model-invocation: true`, så kun du kan starte den, og den ligger ikke i kontekst, før du gør.",
-      "Skillens trin beder agenten kalde takstserveren, skrive taksterne ind, køre tests, og bede subagenten om at verificere.",
-      "Hooken kører testene igen, hver gang `data/takster.json` skrives. Agenten får outputtet tilbage som tekst, uden at nogen bad om det.",
-      "Subagenten `takst-tester` læser filen, kører CLI'en for hver transportform og regner efter. Den ændrer aldrig noget. Den rapporterer i en tabel.",
-      "Agenten samler det til en oversigt. Samme input, samme trin, samme oversigt, hver gang."
-    ]},
-    { "type": "h3", "tekst": "Hvad der falder ud, hvis en del fjernes" },
-    "Uden skillen skal du skrive alle trinnene hver gang, og du glemmer et af dem. Uden subagenten bedømmer den, der skrev, sit eget arbejde. Uden hooken er testkørslen et råd, agenten kan springe over. Uden MCP klipper du taksterne ind selv, og de er forældede, når du er færdig. Uden CLAUDE.md gætter agenten testkommandoen. Simulationen lader dig fjerne dem én ad gangen.",
-    { "type": "note", "tekst": "Kursets egen kørsel: to kørsler af `/takstopdatering 5` fra samme startpunkt gav byte for byte samme `takster.json`. Første kørsel 78 sekunder, anden 70. Begge kaldte takstserveren tre gange og subagenten én gang, og hooken kørte testene efter hver skrivning." }
+    {
+      "type": "h3",
+      "tekst": "Et billede fra hverdagen"
+    },
+    "Et lille speditionskontor kører ikke på én dygtig person. Der er en instruks om, hvordan man gør her. Der er en fast procedure for månedens takstopdatering, som nogen starter. Der er et opslag i transportørens system, så tallene er dagens. Der er en kontrol, der kører hver gang, uanset hvem der sad ved skærmen. Og der er en kollega, der regner efter uden at rette noget. Tag én af dem væk, og kontoret kører videre. Det er bare ikke længere til at regne med. Systemet her har præcis de fem dele.",
+    {
+      "type": "h3",
+      "tekst": "Fem dele, fem roller"
+    },
+    {
+      "type": "tabel",
+      "hoved": [
+        "Del",
+        "Rolle",
+        "Udløseren for at bygge den"
+      ],
+      "raekker": [
+        [
+          "Instruksen `CLAUDE.md`",
+          "Det, der altid gælder: hvordan testene køres, og at README er facit",
+          "Agenten tager den samme konvention forkert to gange"
+        ],
+        [
+          "Skillen `/takstopdatering`",
+          "Den tilbagevendende opgave som en fast procedure med trin",
+          "Du skriver den samme prompt for tredje gang"
+        ],
+        [
+          "Subagenten `takst-tester`",
+          "En anmelder med frisk kontekst, der kun læser og regner efter",
+          "Verifikationen fylder samtalen, eller du vil have en anden til at bedømme"
+        ],
+        [
+          "Hooken efter hver skrivning",
+          "Kører testene, hver gang en fil bliver skrevet, uden at nogen beder om det",
+          "Noget skal ske hver gang, uden undtagelse"
+        ],
+        [
+          "Forbindelsen fra modul 05",
+          "Adgangen til det takstsystem, repoet ikke selv kender",
+          "Du klipper tal ind fra et system, agenten ikke kan se"
+        ]
+      ]
+    },
+    "Udløserne er dokumentationens egne. Den anbefaler at bygge i den rækkefølge, behovene opstår, ikke at sætte alt op på forhånd. Derfor er systemet her lille: fem korte filer.",
+    {
+      "type": "h3",
+      "tekst": "Sådan hænger det sammen"
+    },
+    {
+      "type": "liste",
+      "nummereret": true,
+      "punkter": [
+        "Du skriver `/takstopdatering 5`. Kun du kan starte proceduren, og den fylder ikke i vinduet, før du gør det.",
+        "Procedurens trin beder agenten hente zonens takster gennem forbindelsen, skrive dem ind i takstfilen, køre testene og til sidst bede subagenten regne efter.",
+        "Hooken kører testene igen, hver gang takstfilen bliver skrevet. Agenten får resultatet tilbage, uden at nogen bad om det.",
+        "Subagenten `takst-tester` læser takstfilen, kører beregneren for hver transportform og regner efter. Den ændrer aldrig noget. Den svarer i en tabel.",
+        "Agenten samler det hele til én oversigt. Samme bestilling, samme trin, samme oversigt, hver gang."
+      ]
+    },
+    {
+      "type": "h3",
+      "tekst": "Hvad der falder ud, hvis en del fjernes"
+    },
+    "Uden proceduren skal du skrive alle trinnene hver gang, og du glemmer et af dem. Uden subagenten bedømmer den, der skrev, sit eget arbejde. Uden hooken er testkørslen et råd, agenten kan springe over. Uden forbindelsen klipper du taksterne ind selv, og de er forældede, når du er færdig. Uden instruksen gætter agenten, hvordan testene køres her. Simulationen lader dig slukke dem én ad gangen.",
+    {
+      "type": "note",
+      "tekst": "Kursets egen kørsel: to kørsler af `/takstopdatering 5` fra samme startpunkt gav helt samme takstfil. Første kørsel tog 78 sekunder, anden 70. Begge hentede takster tre gange gennem forbindelsen og kaldte subagenten én gang, og hooken kørte testene efter hver skrivning."
+    }
   ],
   "sidebar": {
     "titel": "Skill eller subagent",
     "afsnit": [
-      "De forveksles tit. En skill er indhold, der indlæses i den samtale, du er i: instruktioner, viden, en procedure. En subagent er en arbejder med sit eget vindue, der returnerer et resumé. Skillen bestemmer hvad, subagenten holder det ude af din kontekst. De kan kombineres: en skill kan starte subagenter, og en subagent kan have skills forudindlæst."
+      "De to forveksles tit. En skill er indhold, der lægges ind i den samtale, du er i: en procedure, en regel, en viden. En subagent er en arbejder med sit eget vindue, som sender et resumé tilbage. Skillen bestemmer, hvad der skal ske. Subagenten holder arbejdet ude af din kontekst. De kan kombineres, og det er det, systemet her gør."
     ]
   },
   "simulation": {
     "id": "system-diagram",
-    "beskrivelse": "Systemdiagrammet med de fem dele. Slå en del fra, og se hvad der falder ud af den tilbagevendende opgave.",
+    "beskrivelse": "Systemet med de fem dele. Sluk en del, og se hvad der falder ud af den tilbagevendende opgave.",
     "maksMinutter": 3
   },
   "startbranch": "start/modul-10",
-  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-10 origin/start/modul-10 && git checkout -- . && rm -rf .claude",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git stash push -u -q -m \"Gemt af nulstil, modul 10\" && git checkout -B arbejde/modul-10 origin/start/modul-10 && rm -rf .claude",
   "oevelse": {
     "forventetMinutter": 12,
     "intro": [
-      "Byggeklodserne ligger klar og slået fra i `kursus/byggeklodser/`. Du aktiverer dem med fire kopieringer, kører opgaven to gange, og sammenligner."
+      "Byggeklodserne ligger klar og slået fra i `kursus/byggeklodser/`. Du tænder dem med ét kopiér-trin, kører den samme opgave to gange, og lader agenten sammenligne resultaterne."
     ],
     "trin": [
-      { "tekst": "Stil repoet om til startpunktet. Læs derefter de tre byggeklodser. Det er 60 linjer i alt.", "kommando": "cat kursus/byggeklodser/skills/takstopdatering/SKILL.md kursus/byggeklodser/agents/takst-tester.md kursus/byggeklodser/hooks/settings.json" },
-      { "tekst": "Aktivér alle fire dele. Hver linje er én del: MCP-serveren, skillen, subagenten, hooken.", "kommando": "cp kursus/mcp/mcp.aktiv.json .mcp.json && mkdir -p .claude/skills .claude/agents && cp -r kursus/byggeklodser/skills/takstopdatering .claude/skills/ && cp kursus/byggeklodser/agents/takst-tester.md .claude/agents/ && cp kursus/byggeklodser/hooks/settings.json .claude/settings.json && ls -R .claude" },
-      { "tekst": "Kør systemet første gang. Skillen startes med skråstreg, og resten følger af dens trin. Sig ja til takstserveren og til subagenten, hvis du bliver spurgt.", "kommando": "claude", "prompt": "/takstopdatering 5" },
-      { "tekst": "Gem resultatet, nulstil datafilen, og kør igen i en ny session.", "kommando": "cp data/takster.json /tmp/takster-1.json && git checkout -- data/takster.json" },
-      { "tekst": "Anden kørsel, ny session, samme kommando.", "kommando": "claude", "prompt": "/takstopdatering 5" },
-      { "tekst": "Sammenlign de to resultater. Ingen forskel er det forventede. Er der forskel, så læs hvad det er, og skriv det i skemaet.", "kommando": "diff <(python3 -m json.tool /tmp/takster-1.json) <(python3 -m json.tool data/takster.json) && echo IDENTISK" }
+      {
+        "tekst": "Stil repoet om til startpunktet med kommandoen ovenfor. Tænd derefter alle fire dele med linjen her. Den lægger forbindelsen, proceduren, subagenten og hooken på plads og viser til sidst, hvad der nu ligger klar.",
+        "kommando": "cp kursus/mcp/mcp.aktiv.json .mcp.json && mkdir -p .claude/skills .claude/agents && cp -r kursus/byggeklodser/skills/takstopdatering .claude/skills/ && cp kursus/byggeklodser/agents/takst-tester.md .claude/agents/ && cp kursus/byggeklodser/hooks/settings.json .claude/settings.json && ls -R .claude",
+        "note": "Delene læses, når sessionen starter, så de skal tændes, før du starter Claude Code."
+      },
+      {
+        "tekst": "Start Claude Code, og bed agenten forklare de tre byggeklodser, før du bruger dem. Det er en vane, der er værd at have: lad agenten fortælle dig, hvad en fil gør, og hvad den har adgang til, før du stoler på den.",
+        "kommando": "claude",
+        "prompt": "Læs kursus/byggeklodser/skills/takstopdatering/SKILL.md, kursus/byggeklodser/agents/takst-tester.md og kursus/byggeklodser/hooks/settings.json. Forklar i én linje hver, hvad de gør, og hvad de har adgang til. Ændr intet."
+      },
+      {
+        "tekst": "Kør systemet første gang. Proceduren startes med skråstreg og et zonenummer. Sig ja til takstserveren og til subagenten, hvis du bliver spurgt.",
+        "prompt": "/takstopdatering 5"
+      },
+      {
+        "tekst": "Gem resultatet, og stil takstfilen tilbage, så anden kørsel starter præcis samme sted som den første.",
+        "prompt": "Kopiér data/takster.json til kursus/takster-foerste.json, og stil derefter data/takster.json tilbage til det, der står i git. Rør ikke andre filer."
+      },
+      {
+        "tekst": "Afslut sessionen, så anden kørsel ikke arver noget fra den første.",
+        "kommando": "/exit"
+      },
+      {
+        "tekst": "Anden kørsel: ny session, samme kommando.",
+        "kommando": "claude",
+        "prompt": "/takstopdatering 5"
+      },
+      {
+        "tekst": "Lad agenten sammenligne de to resultater. Ingen forskel er det forventede. Er der forskel, så skriv i skemaet, hvad den var.",
+        "prompt": "Sammenlign kursus/takster-foerste.json med data/takster.json felt for felt. Svar identisk eller ikke identisk, og er de ikke identiske, så skriv hvilke felter der er forskellige. Ændr intet.",
+        "note": "Testene fejler ét sted i begge kørsler. Det er den kendte fejl i afrundingen for fly, og proceduren siger udtrykkeligt, at agenten skal rapportere den i stedet for at rette den. Læg mærke til, om den holder sig til det."
+      }
     ],
     "skema": {
       "titel": "To kørsler af samme system",
       "kolonner": [
-        { "id": "identisk", "label": "Identisk resultat", "type": "select", "valg": ["ja", "nej"] },
-        { "id": "hook", "label": "Kørte hooken testene efter skrivningen", "type": "select", "valg": ["ja", "nej", "så det ikke"] },
-        { "id": "note", "label": "Hvad var forskelligt, hvis noget", "type": "text", "pladsholder": "fx subagentens tabel havde en anden rækkefølge" }
+        {
+          "id": "identisk",
+          "label": "Identisk resultat",
+          "type": "select",
+          "valg": [
+            "ja",
+            "nej"
+          ]
+        },
+        {
+          "id": "hook",
+          "label": "Kørte hooken testene efter skrivningen",
+          "type": "select",
+          "valg": [
+            "ja",
+            "nej",
+            "så det ikke"
+          ]
+        },
+        {
+          "id": "note",
+          "label": "Hvad var forskelligt, hvis noget",
+          "type": "text",
+          "pladsholder": "fx subagentens tabel havde en anden rækkefølge"
+        }
       ],
       "minRaekker": 1,
-      "krav": { "kolonne": "identisk", "ikkeTom": true, "min": 1, "label": "et svar på om resultatet var identisk" }
+      "krav": {
+        "kolonne": "identisk",
+        "ikkeTom": true,
+        "min": 1,
+        "label": "et svar på om resultatet var identisk"
+      }
     }
   },
   "verifikation": {
-    "intro": "Modulet er bestået, når samme opgave er løst to gange med sammenligneligt resultat.",
+    "intro": "Modulet er bestået, når den samme opgave er løst to gange med det samme resultat.",
     "kriterier": [
-      "diff-kommandoen skrev IDENTISK, eller forskellen er beskrevet i skemaet og ligger uden for takster.json.",
-      "Begge transkripter viser mindst tre kald til takstserveren og ét kald til subagenten takst-tester.",
-      "Zone 5 findes for fly og soe, og CLI'en regner med den."
+      "Agenten svarede identisk, da den sammenlignede de to takstfiler, eller forskellen står i skemaet.",
+      "Begge transkripter viser, at taksterne blev hentet gennem forbindelsen, og at subagenten takst-tester regnede efter bagefter.",
+      "Beregneren kender nu zone 5, som repoet ikke kendte før."
     ],
-    "kommando": "python3 -m fragtvaegt fly 5 60x40x50:12 | tail -1 && grep -c '\"5\"' data/takster.json",
-    "forventetOutput": "Total: 2810 DKK, og tallet 2 for to forekomster af zone 5.",
-    "hvisDetFejler": "Starter skillen ikke, så tjek at `.claude/skills/takstopdatering/SKILL.md` findes, og prøv at skrive `/` alene i sessionen for at se listen. Kaldes subagenten ikke, så se om agenten sprang trin 5 i skillen over. Det er et svar til skemaet: skillen er en instruktion, ikke en garanti."
+    "kommando": "python3 -m fragtvaegt fly 5 60x40x50:12",
+    "forventetOutput": "fem linjer, hvor fragtpligtig vægt er 20.0 kg og total er 2810 DKK. Regnestykket: 60 x 40 x 50 cm delt med 6000 giver 20 kg, og det er mere end de 12 kg, kolliet vejer. 20 kg gange 128 kr plus 250 kr i gebyr.",
+    "hvisDetFejler": "Sker der ingenting, når du skriver skråstreg-kommandoen, så skriv `/` alene i sessionen og se, om proceduren står på listen. Gør den ikke det, blev kopieringen i trin 1 ikke kørt færdig, eller sessionen blev startet før den. Blev subagenten aldrig kaldt, så sprang agenten et trin over i proceduren. Det er også et svar til skemaet: en procedure er en instruktion, ikke en garanti."
   },
   "quiz": [
     {
-      "spoergsmaal": "Du skriver den samme prompt for tredje gang for at starte en opgave. Hvilken udvidelse peger dokumentationen på?",
+      "spoergsmaal": "Du skriver den samme prompt for tredje gang for at starte den samme opgave. Hvilken udvidelse peger dokumentationen på?",
       "svar": [
         "En hook.",
         "En skill, du selv starter med skråstreg.",
-        "En større CLAUDE.md."
+        "En længere instruks i CLAUDE.md."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Hooks er til ting, der skal ske automatisk ved en hændelse, ikke til opgaver du starter.",
-        "Det er udløseren i dokumentationens tabel: samme prompt igen og igen bliver til en skill.",
-        "CLAUDE.md er til det, der altid gælder. En procedure, du bruger af og til, fylder der unødigt."
+        "Hooks er til det, der skal ske automatisk, når noget bestemt sker, ikke til opgaver du selv starter.",
+        "Det er udløseren i dokumentationens egen tabel: den samme prompt igen og igen bliver til en skill.",
+        "Instruksen er til det, der altid gælder. En procedure, du bruger en gang om måneden, fylder der unødigt."
       ]
     },
     {
       "spoergsmaal": "Hvad sker der, hvis du fjerner hooken fra systemet?",
       "svar": [
-        "Skillen holder op med at virke.",
-        "Testkørslen efter hver skrivning bliver et råd i skillen, som agenten kan springe over.",
-        "Subagenten kan ikke startes."
+        "Proceduren holder op med at virke.",
+        "Testkørslen efter hver skrivning bliver et råd i proceduren, som agenten kan springe over.",
+        "Subagenten kan ikke længere startes."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Skillen er uafhængig af hooken.",
-        "Hooken er den eneste del, der er håndhævelse. Resten er instruktioner.",
-        "Subagenten startes af skillens trin, ikke af hooken."
+        "Proceduren virker uafhængigt af hooken.",
+        "Hooken er den eneste del, der er håndhævelse. Resten er instruktioner, og en instruktion kan man se bort fra.",
+        "Subagenten startes af procedurens trin, ikke af hooken."
       ]
     },
     {
-      "spoergsmaal": "Hvorfor har skillen disable-model-invocation: true?",
+      "spoergsmaal": "Proceduren `/takstopdatering` er sat op, så agenten ikke selv kan finde på at starte den. Hvorfor?",
       "svar": [
         "Så den kører hurtigere.",
-        "Så kun du kan starte den, og dens indhold ikke ligger i kontekst, før du gør.",
-        "Så den ikke kan bruge MCP."
+        "Så kun du starter den, og dens trin ikke fylder i vinduet, før du gør det.",
+        "Så den ikke kan bruge forbindelsen til takstsystemet."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Hastighed påvirkes ikke.",
-        "Dokumentationens anbefaling til skills med bivirkninger: kun brugeren starter dem, og de koster ingen kontekst før da.",
-        "MCP-adgang styres af permissions, ikke af det felt."
+        "Hastigheden påvirkes ikke.",
+        "Det er dokumentationens anbefaling for procedurer, der ændrer noget: kun brugeren starter dem, og de koster ingen kontekst, før det sker.",
+        "Adgangen til forbindelsen styres af tilladelser, ikke af hvem der må starte proceduren."
       ]
     },
     {
-      "spoergsmaal": "Subagenten takst-tester har kun Read, Bash og Grep. Hvorfor?",
+      "spoergsmaal": "Subagenten takst-tester må læse filer, søge og køre kommandoer, men ikke rette noget. Hvorfor?",
       "svar": [
-        "Fordi Edit er langsomt.",
+        "Fordi rettelser er langsomme.",
         "Fordi en anmelder ikke skal kunne rette det, den bedømmer. Mindst mulig adgang.",
-        "Fordi subagenter ikke kan redigere."
+        "Fordi subagenter aldrig kan rette filer."
       ],
       "korrekt": 1,
       "forklaring": [
         "Hastighed er ikke grunden.",
-        "Skriver og anmelder skal være adskilt, og anmelderen skal ikke kunne ændre resultatet.",
-        "Subagenter kan få alle værktøjer. Det er et valg at holde dem tilbage."
+        "Den, der skriver, og den, der bedømmer, skal være adskilt, og anmelderen skal ikke kunne ændre det, den er sat til at kontrollere.",
+        "En subagent kan sagtens få lov at rette. Her er det et valg at lade være."
       ]
     }
   ],
   "kilder": [
-    { "titel": "Extend Claude Code", "url": "https://code.claude.com/docs/en/features-overview", "note": "Match features to your goal, udløserne i Build your setup over time, skill mod subagent, hook mod skill, kontekstomkostning per feature", "hentet": "2026-09-06" },
-    { "titel": "Extend Claude with skills", "url": "https://code.claude.com/docs/en/skills", "note": ".claude/skills/, frontmatter, disable-model-invocation, $ARGUMENTS", "hentet": "2026-09-06" },
-    { "titel": "Create custom subagents", "url": "https://code.claude.com/docs/en/sub-agents", "note": ".claude/agents/, tools-feltet, invokation", "hentet": "2026-09-06" },
-    { "titel": "Hooks reference", "url": "https://code.claude.com/docs/en/hooks", "note": "PostToolUse med matcher, ${CLAUDE_PROJECT_DIR}, exit-koder", "hentet": "2026-09-06" },
-    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Hooks som deterministiske, skills til procedurer, subagenter til review", "hentet": "2026-09-06" }
+    {
+      "titel": "Extend Claude Code",
+      "url": "https://code.claude.com/docs/en/features-overview",
+      "note": "Match features to your goal, udløserne i Build your setup over time, skill mod subagent, hook mod skill, kontekstomkostning per feature",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Extend Claude with skills",
+      "url": "https://code.claude.com/docs/en/skills",
+      "note": ".claude/skills/, frontmatter, disable-model-invocation, $ARGUMENTS",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Create custom subagents",
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "note": ".claude/agents/, tools-feltet, invokation",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Hooks reference",
+      "url": "https://code.claude.com/docs/en/hooks",
+      "note": "PostToolUse med matcher, ${CLAUDE_PROJECT_DIR}, exit-koder",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Best practices for Claude Code",
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "note": "Hooks som deterministiske, skills til procedurer, subagenter til review",
+      "hentet": "2026-09-06"
+    }
   ]
 }

@@ -8,13 +8,18 @@
   "laeringsmaal": [
     "Udfylde et lærred med fem felter for en organisation, du kender.",
     "Navngive de tre største bremseklodser og begrunde, hvilken du tager først.",
-    "Pege på de konkrete mekanismer i værktøjet, der svarer til hvert felt."
+    "Sige, hvad værktøjet kan gøre ved hvert felt, og hvad det ikke kan."
   ],
   "hvorfor": [
-    "Alt i del 1 til 3 virkede, fordi du var én person med fuld adgang til dit eget repo. I en organisation er ingen af de forudsætninger givet. Udrulning stopper sjældent på teknik. Den stopper på, hvem der må hvad, hvor data må være, hvem der godkender, hvem der kan, og hvad der sker, når det første forsøg fejler offentligt.",
+    "Alt i del 1 til 3 virkede, fordi du var én person med fuld adgang til dit eget projekt. I en organisation er intet af det givet. Udrulning stopper sjældent på teknik. Den stopper på, hvem der må hvad, hvor data må være, hvem der godkender, hvem der kan, og hvad der sker, når det første forsøg fejler offentligt.",
     "Modulet er en skriveøvelse. Ingen rapport, ingen slides. Et lærred med fem felter, og tre bremseklodser med navn."
   ],
   "kernen": [
+    {
+      "type": "h3",
+      "tekst": "Et billede fra hverdagen"
+    },
+    "Et nyt TMS skal indføres. Den ene vej er at sætte hele afdelingen på det mandag morgen. Alle er langsomme samtidig, og den første fejl bliver hele husets historie om systemet. Den anden vej er tre disponenter i seks uger. De finder de ti ting, vejledningen ikke nævnte, og de kan fortælle resten, hvad der virker. Teknikken er den samme begge veje. Forskellen er tempoet.",
     {
       "type": "h3",
       "tekst": "De fem felter, og hvad værktøjet kan"
@@ -30,27 +35,27 @@
         [
           "Permissions",
           "Hvad må agenten gøre uden at spørge, og hvem bestemmer det",
-          "Permission-regler i settings, permission modes, sandboxing. Styrede indstillinger, som IT lægger på maskinen, og som ingen bruger kan overskrive"
+          "Regler for, hvad der må køres uden at spørge, og styrede indstillinger, organisationen lægger på maskinen, og som ingen kan overskrive"
         ],
         [
           "Data",
           "Hvilken kode og hvilke data må forlade maskinen, og hvor bliver de af",
-          "Aftalevilkår og opbevaring beskrives i sikkerhedsdokumentationen og Privacy Center. Cloud-sessioner kører i isolerede maskiner med begrænset netværk"
+          "Aftalevilkår og opbevaring er beskrevet i sikkerhedsdokumentationen og Privacy Center. Cloud-sessioner kører i isolerede maskiner med begrænset netværk"
         ],
         [
           "Godkendelse",
-          "Hvem trykker merge, og hvad må køre uden et menneske",
-          "Pull requests som port, CI-porte, styrede lister over tilladte MCP-servere"
+          "Hvem trykker på knappen, og hvad må køre uden et menneske",
+          "Pull requests som port, porten på GitHub, og en styret liste over de MCP-servere, der må bruges"
         ],
         [
           "Kompetence",
-          "Kan folk briefe, verificere og læse et transkript",
-          "Det er det, kurset er. Kompetencen er at skrive kriterier, ikke at skrive prompts"
+          "Kan folk bestille, verificere og læse et transkript",
+          "Det er det, kurset er. Kompetencen er at skrive kriterier, ikke at skrive lange prompts"
         ],
         [
           "Tillid",
           "Hvad sker der, når det første forsøg fejler offentligt",
-          "Måling (modul 13), små reversible skridt, og en port med et menneske i, indtil tallene bærer"
+          "Måling (modul 13), små skridt der kan fortrydes, og en port med et menneske i, indtil tallene bærer"
         ]
       ]
     },
@@ -58,20 +63,20 @@
       "type": "h3",
       "tekst": "Permissions og styring"
     },
-    "I Manual-tilstand starter Claude Code med læseadgang og spørger, før den redigerer eller kører kommandoer, der kan ændre systemet. En organisation kan lægge styrede indstillinger på hver maskine, fx `permissions.deny` for kommandoer og stier, en fast liste over tilladte MCP-servere, og en lås på bypass-tilstand. Dokumentationen er præcis: styrede indstillinger gælder over alle andre niveauer, og ingen bruger-, projekt- eller lokal værdi overskriver dem. Det er svaret på det første felt, og det er teknisk løst. Det, der ikke er løst, er at beslutte, hvad der skal stå i dem.",
+    "I Manual-tilstand starter Claude Code med læseadgang og spørger, før den retter noget eller kører en kommando, der kan ændre systemet. En organisation kan lægge styrede indstillinger på hver maskine: hvad der aldrig må røres, hvilke MCP-servere der er tilladt, og en lås på den tilstand, hvor agenten ikke spørger om noget. Dokumentationen er præcis her: styrede indstillinger gælder over alle andre niveauer, og ingen bruger-, projekt- eller lokal værdi overskriver dem. Det er teknisk løst. Det, der ikke er løst, er at beslutte, hvad der skal stå i dem.",
     {
       "type": "h3",
       "tekst": "Data og tillid til fremmed kode"
     },
-    "Sikkerhedsdokumentationen anbefaler at skrive egne MCP-servere eller bruge dem fra leverandører, man stoler på, og siger direkte, at Anthropic ikke sikkerhedsreviderer MCP-servere. Det samme gælder repoer: en `.mcp.json` og en hook i et klonet repo er andres kode, jf. modul 05. I en organisation er det et spørgsmål om, hvem der må godkende en ny server, og hvor listen bor. Dokumentationen peger på styrede indstillinger med en liste over tilladte servere.",
+    "Sikkerhedsdokumentationen anbefaler MCP-servere, man selv har skrevet, eller som kommer fra en leverandør, man stoler på, og siger direkte, at Anthropic ikke sikkerhedsreviderer MCP-servere. Det samme gælder projekter, du henter ned: en forbindelse eller en hook, der følger med, er andres kode, jf. modul 05. Spørgsmålet i en organisation er, hvem der må godkende en ny server. Dokumentationen peger på en styret liste over tilladte servere.",
     {
       "type": "h3",
-      "tekst": "Kompetencespring og det første offentlige nederlag"
+      "tekst": "Kompetence og det første offentlige nederlag"
     },
-    "Kompetencen, der mangler, er sjældent prompting. Den er at skrive et acceptkriterium, at læse et transkript, og at sige nej til en opgave, der ikke er klar. Det er del 2 af kurset. Og det første forsøg fejler. Dokumentationen anbefaler at starte med en lille pilotgruppe og etablere en baseline med målinger, før udrulningen udvides. Oversat: vælg et projekt, hvor en fejl er billig og synlig, mål fra dag ét, og hav en port med et menneske i, indtil tallene bærer.",
+    "Kompetencen, der mangler, er sjældent prompting. Den er at skrive et acceptkriterium, at læse et transkript, og at sige nej til en opgave, der ikke er klar. Og det første forsøg fejler. Dokumentationen anbefaler en lille pilotgruppe og et udgangspunkt at måle imod, før udrulningen udvides. Oversat: vælg et sted, hvor en fejl er billig og synlig, mål fra dag ét, og hold en port med et menneske i, indtil tallene bærer.",
     {
       "type": "note",
-      "tekst": "Modulet er en skriveøvelse på maks 15 minutter. Lærredet skal være udfyldt, ikke perfekt. De tre bremseklodser skal have navn, ikke analyse."
+      "tekst": "Skriveøvelse på maks 15 minutter. Lærredet skal være udfyldt, ikke perfekt. Bremseklodserne skal have navn, ikke analyse."
     }
   ],
   "sidebar": {
@@ -90,7 +95,7 @@
   "oevelse": {
     "forventetMinutter": 15,
     "intro": [
-      "Vælg en organisation, du kender. Din egen, en du underviser i, eller en du har arbejdet i. Udfyld de fem felter med én til to linjer hver. Navngiv derefter de tre største bremseklodser, og skriv hvilken du ville tage først, og hvorfor."
+      "Ingen terminal i dette modul. Vælg en organisation, du kender: din egen, en du underviser i, eller en du har arbejdet i. Udfyld de fem felter med én til to linjer hver. Navngiv derefter de tre største bremseklodser, og skriv hvilken du ville tage først, og hvorfor."
     ],
     "trin": [
       {
@@ -174,7 +179,7 @@
     {
       "spoergsmaal": "Hvad kendetegner styrede indstillinger ifølge dokumentationen?",
       "svar": [
-        "De kan slås fra af den enkelte udvikler i settings.json.",
+        "Den enkelte kan slå dem fra på sin egen maskine.",
         "De lægges på maskinen af organisationen og gælder over alle andre niveauer.",
         "De gælder kun i cloud-sessioner."
       ],
@@ -196,20 +201,20 @@
       "forklaring": [
         "Anthropic vurderer connectors mod optagelseskriterier, men sikkerhedsreviderer ikke servere.",
         "Sådan står det i sikkerhedsdokumentationen. Ansvaret ligger hos organisationen, og listen over tilladte servere hører til i styrede indstillinger.",
-        "GitHub hoster kode. Det er ikke en revision."
+        "GitHub gemmer kode. Det er ikke en revision."
       ]
     },
     {
       "spoergsmaal": "Dokumentationens råd før en bred udrulning er at",
       "svar": [
         "købe licenser til alle og se, hvad der sker.",
-        "starte med en lille pilotgruppe og etablere en baseline med målinger.",
+        "starte med en lille pilotgruppe og få et udgangspunkt at måle imod.",
         "vente på næste version."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Uden baseline kan ingen sige, om det virker, og det første offentlige nederlag afgør stemningen.",
-        "Det er rådet på siden om omkostninger: pilotgruppe, tracking, baseline, derefter udvidelse.",
+        "Uden noget at måle imod kan ingen sige, om det virker, og det første offentlige nederlag afgør stemningen.",
+        "Det er rådet på siden om omkostninger: pilotgruppe, måling, udgangspunkt, derefter udvidelse.",
         "Versioner ændrer ikke de fem felter. Beslutningerne gør."
       ]
     },
@@ -222,7 +227,7 @@
       ],
       "korrekt": 1,
       "forklaring": [
-        "Prompting er den mindste del. Modul 04 viste, at briefingen er kriterier, ikke længde.",
+        "Prompting er den mindste del. Modul 04 viste, at bestillingen er kriterier, ikke længde.",
         "Det er del 2 af kurset i én sætning, og det er det, der adskiller en pilot, der bærer, fra en der fejler.",
         "Installation tager en halv time. Det er pre-flight, ikke kompetence."
       ]

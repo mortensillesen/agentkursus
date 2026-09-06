@@ -1,0 +1,159 @@
+{
+  "id": "04",
+  "del": 2,
+  "titel": "Effektiv prompting til agenter",
+  "undertitel": "Forskellen på at prompte en chat og at briefe en agent.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Skrive en briefing med mål, afgrænsning, acceptkriterier og et klart færdig-signal.",
+    "Afgøre hvornår en opgave skal planlægges først, og hvornår den bare skal gøres.",
+    "Vurdere en briefing mod en tjekliste, før den sendes."
+  ],
+  "hvorfor": [
+    "En chat retter du undervejs. En agent arbejder alene i minutter og kommer tilbage med et resultat. Er briefingen svag, er resultatet plausibelt og forkert, og du opdager det først bagefter.",
+    "Dokumentationens ord er, at Claude kan udlede hensigt, men ikke læse tanker. Jo mere præcis instruktionen er, jo færre rettelser. Dette modul gør præcisionen til en tjekliste, du kan bruge hver gang."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "Opgave, ikke instruktion" },
+    "En agent skal ikke have en liste af tastetryk. Den skal have en opgave med et mål, en afgrænsning og en måde at afgøre, om den er færdig. Dokumentationen viser forskellen som par af før og efter:",
+    { "type": "tabel", "hoved": ["Svag", "Stærk", "Hvad der blev tilføjet"], "raekker": [
+      ["\"add tests for foo.py\"", "\"write a test for foo.py covering the edge case where the user is logged out. avoid mocks.\"", "Afgrænsning: hvilken fil, hvilket tilfælde, hvilken stil"],
+      ["\"fix the login bug\"", "\"users report that login fails after session timeout. check the auth flow in src/auth/, especially token refresh. write a failing test that reproduces the issue, then fix it\"", "Symptom, sandsynligt sted, og hvad færdig ser ud som"],
+      ["\"the build is failing\"", "\"the build fails with this error: [paste error]. fix it and verify the build succeeds. address the root cause, don't suppress the error\"", "Bevis ind, bevis ud, og hvad der ikke tæller som løst"]
+    ]},
+    { "type": "h3", "tekst": "Sådan ved du, at du er færdig" },
+    "Det vigtigste element i en briefing er færdig-signalet. Agenten stopper, når arbejdet ser færdigt ud. Uden et tjek, den selv kan køre, er \"ser færdigt ud\" det eneste signal, og så bliver du verifikationen. Giv den noget, der siger bestået eller fejlet: en test, en kommando med exit-kode, et output der skal matche. Bed den vise beviset frem for at påstå succes: testoutputtet, kommandoen den kørte, og hvad den fik tilbage.",
+    { "type": "h3", "tekst": "Plan først, eller bare gør det" },
+    "Anbefalingen er fire faser: udforsk, planlæg, byg, commit. Plan-tilstand (`Shift+Tab`) lader agenten læse og foreslå uden at redigere, så du kan rette planen, før koden skrives. Men planlægning koster. Dokumentationens tommelfingerregel: kan du beskrive ændringen i én sætning, så spring planen over. Planlæg, når du er usikker på tilgangen, når ændringen rører mange filer, eller når du ikke kender koden.",
+    { "type": "h3", "tekst": "Små ordrer frem for én stor" },
+    "En stor opgave i én prompt giver én lang løkke, hvor tidlige fejl forplanter sig. Del den op: én ordre, ét verificerbart resultat, næste ordre. Til store features foreslår dokumentationen at lade agenten interviewe dig først og skrive en spec, og så starte en frisk session til selve byggeriet, så konteksten kun indeholder specen.",
+    { "type": "h3", "tekst": "Briefing-tjeklisten" },
+    { "type": "liste", "nummereret": true, "punkter": [
+      "Mål: hvad skal være sandt, når agenten er færdig. Én sætning.",
+      "Kendt tilstand: hvad fejler i dag, og hvad fejler med vilje, som den skal lade være.",
+      "Afgrænsning: hvilke filer må røres, og hvilke må ikke.",
+      "Acceptkriterier: en test eller kommando med et forventet resultat.",
+      "Rækkefølge: skal den skrive en fejlende test først, planlægge først, eller bare gøre det.",
+      "Bevis: bed om at se output, ikke en påstand.",
+      "Kilder: peg på README, en fil eller et mønster i koden, som den skal følge."
+    ]}
+  ],
+  "sidebar": {
+    "titel": "Hvornår en vag prompt er rigtig",
+    "afsnit": [
+      "Vaghed er ikke altid en fejl. Dokumentationen nævner, at en prompt som \"hvad ville du forbedre i denne fil?\" kan finde ting, du ikke ville have spurgt om. Vage prompts er til udforskning, hvor du har råd til at rette kursen. Stærke briefinger er til arbejde, du vil gå fra."
+    ]
+  },
+  "simulation": {
+    "id": "briefing-side-om-side",
+    "beskrivelse": "Samme opgave med svag og stærk briefing side om side. Fold resultaterne ud og se, hvor den svage kørsel gik galt.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-04",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-04 origin/start/modul-04 && git checkout -- .",
+  "oevelse": {
+    "forventetMinutter": 14,
+    "intro": [
+      "Her er en bevidst svag briefing. Du skriver den om efter tjeklisten, kører den én gang uden at gribe ind, og bedømmer resultatet.",
+      { "type": "kode", "etiket": "svag briefing", "tekst": "Priserne runder forkert. Fiks det." },
+      "Fakta, du har brug for til omskrivningen: README siger, at totalen afrundes til hele kroner, og at halve kroner rundes op. Koden i `fragtvaegt/pris.py` bruger Pythons `round()`, som runder halve til lige. Eksempel: soe, zone 1, kolli 10x10x10:105 giver total 494, facit er 495. Én test i `tests/test_beregner.py` fejler i forvejen og skal lades være. Afrundingen af vægt i `beregner.py` er ikke en del af opgaven."
+    ],
+    "trin": [
+      { "tekst": "Skriv briefingen om i en teksteditor, før du åbner Claude Code. Gå tjeklisten igennem punkt for punkt, og sæt kryds nedenfor, når punktet er dækket." },
+      { "tekst": "Stil repoet om til startpunktet, start Claude Code, og indsæt din briefing. Grib ikke ind, før den er færdig, heller ikke hvis den spørger om lov til noget rimeligt. Sig ja.", "kommando": "claude" },
+      { "tekst": "Læs slutrapporten. Viste den testoutput? Rørte den kun de filer, du tillod? Lod den den fejlende test i beregner være?" },
+      { "tekst": "Udfyld skemaet: blev opgaven løst uden korrigerende indgriben, og hvis ikke, hvor brød det sammen, og hvilket punkt i tjeklisten manglede i din briefing." }
+    ],
+    "tjekliste": {
+      "titel": "Min briefing dækker",
+      "punkter": ["Mål i én sætning", "Kendt tilstand: den test der allerede fejler", "Afgrænsning: kun pris.py og test_pris.py", "Acceptkriterium: en test med eksemplet 494 mod 495", "Rækkefølge: fejlende test først, så rettelse, så hele suiten", "Bevis: vis testoutputtet til sidst", "Kilde: README-reglen om halve kroner"]
+    },
+    "skema": {
+      "titel": "Resultat af kørslen",
+      "kolonner": [
+        { "id": "loest", "label": "Løst uden indgriben", "type": "select", "valg": ["ja", "nej"] },
+        { "id": "note", "label": "Hvor brød det sammen, eller hvad manglede i briefingen", "type": "text", "pladsholder": "fx rettede også beregner.py, afgrænsning manglede" }
+      ],
+      "minRaekker": 1,
+      "krav": { "kolonne": "loest", "ikkeTom": true, "min": 1, "label": "et svar på om opgaven blev løst" }
+    },
+    "efter": [
+      { "type": "note", "tekst": "Kursets egen kørsel med en briefing efter tjeklisten løste opgaven på 11 turns uden indgriben, tilføjede testen først, rettede kun pris.py og lod den fejlende test være. Det er målestokken." }
+    ]
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når tjeklisten er krydset af, skemaet er udfyldt, og kommandoen giver det forventede.",
+    "kriterier": [
+      "Alle syv punkter i tjeklisten er markeret, eller du kan sige hvilket du bevidst udelod og hvorfor.",
+      "Skemaet siger ja, eller nej med en linje om hvor det brød sammen.",
+      "Eksemplet giver nu 495, og testsuiten har stadig præcis én fejlende test."
+    ],
+    "kommando": "python3 -m fragtvaegt soe 1 10x10x10:105 | tail -1 && python3 -m pytest -q 2>&1 | tail -1",
+    "forventetOutput": "Total: 495 DKK, og en sidste linje med 1 failed og 11 passed.",
+    "hvisDetFejler": "Står der 494, løste agenten ikke opgaven. Står der 0 failed, rettede den også den test, den skulle lade være. Begge dele er svar til skemaet, ikke nederlag. Notér dem, og skriv hvilket punkt i tjeklisten der ville have forhindret det."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvad er det vigtigste enkelte element i en briefing til en agent?",
+      "svar": [
+        "En høflig tone.",
+        "Et færdig-signal, agenten selv kan tjekke: en test eller kommando med bestået eller fejlet.",
+        "En liste over alle filer i repoet."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Tonen påvirker ikke, om agenten kan afgøre, hvornår den er færdig.",
+        "Uden et tjek stopper agenten, når arbejdet ser færdigt ud. Med et tjek lukker løkken sig selv.",
+        "Det kan agenten selv finde. Det fylder kontekst uden at give retning."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvornår anbefaler dokumentationen at springe plan-tilstand over?",
+      "svar": [
+        "Aldrig. Planlæg altid først.",
+        "Når ændringen kan beskrives i én sætning, fx et typo eller en enkelt loglinje.",
+        "Når opgaven rører mange filer."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Planlægning koster tid og kontekst. Dokumentationen siger direkte, at det ikke altid betaler sig.",
+        "Det er tommelfingerreglen: kan du beskrive diffen i én sætning, så spring planen over.",
+        "Mange filer er netop et tilfælde, hvor planlægning betaler sig."
+      ]
+    },
+    {
+      "spoergsmaal": "Agenten skriver \"Fejlen er rettet\" uden at vise output. Hvad har din briefing manglet?",
+      "svar": [
+        "Et krav om bevis: vis testoutputtet og den kommando, du kørte.",
+        "Et krav om at skrive pænere.",
+        "Intet. Agenten ved bedst."
+      ],
+      "korrekt": 0,
+      "forklaring": [
+        "Bevis er hurtigere at læse end at gentage verifikationen selv, og det virker også for sessioner, du ikke så.",
+        "Stil har intet med bevis at gøre.",
+        "Påstande er ikke bevis. Det er hele pointen med modulet."
+      ]
+    },
+    {
+      "spoergsmaal": "Du har en stor feature, der rører fem filer, og du kender ikke koden godt. Hvad er den anbefalede fremgangsmåde?",
+      "svar": [
+        "Skriv én lang prompt med alt, og lad den køre.",
+        "Lad agenten interviewe dig og skrive en spec, start så en frisk session til byggeriet.",
+        "Bed agenten gøre sit bedste."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Én lang løkke lader tidlige fejl forplante sig gennem alle fem filer.",
+        "Specen samler beslutningerne, og den friske session bygger med ren kontekst. Det er dokumentationens mønster til store features.",
+        "Uden mål og målestok er \"sit bedste\" ikke noget, der kan verificeres."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Provide specific context med før og efter, Give Claude a way to verify its work, Explore first then plan then code, Let Claude interview you, hvornår vage prompts er rigtige", "hentet": "2026-09-06" },
+    { "titel": "How Claude Code works", "url": "https://code.claude.com/docs/en/how-claude-code-works", "note": "Delegate, don't dictate. Plan-tilstand som permission mode", "hentet": "2026-09-06" },
+    { "titel": "Building effective agents", "url": "https://www.anthropic.com/engineering/building-effective-agents", "note": "Anthropic, 2024-12-19. Find den simpleste løsning, og øg kun kompleksiteten når det er nødvendigt", "hentet": "2026-09-06" }
+  ]
+}

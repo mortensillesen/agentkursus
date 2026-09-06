@@ -1,0 +1,161 @@
+{
+  "id": "01",
+  "del": 1,
+  "titel": "Den agentiske løkke",
+  "undertitel": "Mål, kontekst, handling, observation, vurdering, gentag.",
+  "tidsestimat": 25,
+  "sidstVerificeret": "2026-09-06",
+  "laeringsmaal": [
+    "Beskrive løkken i seks trin og genkende dem i et rigtigt transkript.",
+    "Pege på de fire steder, hvor løkken typisk bryder sammen.",
+    "Forklare forskellen på autocomplete og uddelegering med ét eksempel."
+  ],
+  "hvorfor": [
+    "En chat svarer og venter. En agent handler, ser resultatet af handlingen og handler igen, indtil målet er nået eller den giver op. Den forskel er hele grunden til, at Claude Code kan arbejde alene i minutter ad gangen.",
+    "Ser du ikke løkken, ser du heller ikke, hvornår den kører i ring, hvornår den gætter i stedet for at læse output, og hvornår den mangler noget at måle sig mod. Resten af kurset handler om at styre hvert trin i løkken. Dette modul handler om at kunne se dem."
+  ],
+  "kernen": [
+    { "type": "h3", "tekst": "Seks trin, der gentages" },
+    { "type": "liste", "punkter": [
+      "Mål: det, der skal være sandt, når agenten er færdig. Det kommer fra din prompt.",
+      "Kontekst: alt det, agenten ved lige nu. Din prompt, CLAUDE.md, filer den har læst, output den har set.",
+      "Handling: ét tool call. Læs en fil, søg, redigér, kør en kommando.",
+      "Observation: det, værktøjet giver tilbage. Filindhold, testoutput, en fejlbesked, en exit-kode.",
+      "Vurdering: er målet nået, og hvad mangler. Det er her modellen tænker.",
+      "Gentag: næste handling vælges ud fra det, den lige har set. Ikke ud fra en plan lagt på forhånd."
+    ]},
+    "Anthropic skelner mellem workflows og agenter. I en workflow er rækkefølgen af modelkald og værktøjer lagt fast i kode på forhånd. En agent vælger selv sin næste handling og sit næste værktøj, og den gør det ud fra det, omgivelserne svarer.",
+    { "type": "citat", "tekst": "During execution, it's crucial for the agents to gain 'ground truth' from the environment at each step.", "kilde": "Anthropic, Building effective agents, 2024-12-19", "url": "https://www.anthropic.com/engineering/building-effective-agents" },
+    "Claude Codes egen dokumentation beskriver den samme løkke som tre faser, der glider sammen: saml kontekst, handl, verificér. Hvert tool call giver ny information, som styrer næste skridt. Det er derfor, agenten kan kæde dusinvis af handlinger sammen og rette kursen undervejs.",
+    { "type": "h3", "tekst": "Sådan ser løkken ud i praksis" },
+    "Dokumentationen giver et eksempel på, hvad agenten kan finde på at gøre, når du skriver \"fix the failing tests\". Læg mærke til, at hvert andet trin er en observation.",
+    { "type": "tabel", "hoved": ["Trin i transkriptet", "Type"], "raekker": [
+      ["Kører testsuiten", "Handling"],
+      ["Læser fejloutputtet", "Observation"],
+      ["Søger efter de relevante kildefiler", "Handling"],
+      ["Læser filerne for at forstå koden", "Observation"],
+      ["Redigerer filerne", "Handling"],
+      ["Kører testene igen", "Handling, og dens output er observationen, der afgør om målet er nået"]
+    ]},
+    { "type": "h3", "tekst": "Hvor løkken bryder sammen" },
+    { "type": "liste", "nummereret": true, "punkter": [
+      "Ingen målestok. Uden en test, et build eller en kommando med en exit-kode har agenten kun \"det ser færdigt ud\" at gå efter. Anthropics råd er at give den et tjek, den selv kan køre. Uden det bliver du selv verifikationsløkken.",
+      "Forurenet kontekst. Mislykkede forsøg bliver i kontekstvinduet, og agenten gentager dem. Dokumentationen anbefaler: har du rettet den to gange på samme problem, så ryd konteksten og skriv en bedre prompt.",
+      "Ingen stopbetingelse. En løkke uden grænse for antal forsøg kører i ring. Anthropic nævner et maksimalt antal iterationer som den almindelige løsning.",
+      "Observation, der springes over. Agenten læser ikke fejlen, men gætter. Det ser du i et transkript som to handlinger lige efter hinanden uden nogen vurdering imellem."
+    ]},
+    { "type": "h3", "tekst": "Du er selv en del af løkken" },
+    "Du kan afbryde når som helst, give mere kontekst eller bede om en anden tilgang. I terminalen stopper `Esc` den igangværende handling, og en rettelse skrevet midt i en kørsel bliver læst, så snart det aktuelle trin er færdigt. Den bedste brug af løkken er ikke at planlægge alt på forhånd, men at rette tidligt, når den drejer forkert."
+  ],
+  "sidebar": {
+    "titel": "Autocomplete eller uddelegering",
+    "afsnit": [
+      "Autocomplete foreslår den næste linje ud fra det, der står omkring markøren. Du vurderer hvert forslag, og din opmærksomhed er bundet hele tiden.",
+      "Uddelegering er noget andet. Du beskriver et mål og en målestok, agenten kører løkken og kommer tilbage med et resultat og bevis for, at det virker. Din indsats flytter fra at bedømme hvert forslag til at formulere målet og målestokken rigtigt på forhånd. Dokumentationens formulering er \"delegate, don't dictate\": giv kontekst og retning, og lad agenten finde ud af, hvilke filer den skal læse."
+    ]
+  },
+  "simulation": {
+    "id": "agentisk-loekke",
+    "beskrivelse": "En klikbar løkke. Hvert klik viser, hvad agenten ser og gør i det trin. Undervejs opdager den en fejl i sit eget arbejde og retter den, så du ser observation og vurdering i funktion.",
+    "maksMinutter": 3
+  },
+  "startbranch": "start/modul-01",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-01 origin/start/modul-01",
+  "oevelse": {
+    "forventetMinutter": 12,
+    "intro": [
+      "Du kører én færdig prompt mod sandbox-repoet og læser bagefter transkriptet med løkkens briller på. Målet er ikke koden, men at du kan pege på trinnene."
+    ],
+    "trin": [
+      { "tekst": "Åbn en terminal, gå til sandbox-repoet og stil det om til startpunktet med kommandoen ovenfor. Start derefter Claude Code i mappen.", "kommando": "claude" },
+      { "tekst": "Indsæt prompten præcis som den står, og lad agenten arbejde færdig uden at gribe ind. Sig ja til de tilladelser, den beder om.", "prompt": "Tilføj en valgmulighed --json til kommandolinjen i fragtvaegt/cli.py, så resultatet udskrives som JSON i stedet for tekst. Kør kommandoen python3 -m fragtvaegt fly 2 60x40x50:12 --json bagefter og vis mig outputtet. Rør ikke andre filer." },
+      { "tekst": "Læs sessionen igennem fra toppen. Hver gang agenten bruger et værktøj, er det en handling. Det, værktøjet svarer, er en observation. Teksten, hvor agenten forklarer hvad den vil gøre eller hvad den så, er en vurdering." },
+      { "tekst": "Udfyld skemaet nedenfor med mindst otte rækker i den rækkefølge, trinnene skete. Skriv kort, fx \"læste cli.py\" eller \"kørte kommandoen, fik JSON tilbage\". Skemaet gemmes i din browser, mens du skriver." },
+      { "tekst": "Find ét sted, hvor en observation direkte ændrede agentens næste handling, og skriv det i den sidste række. Fandt du intet sted, så skriv det. Det er også et svar.", "note": "Springer agenten trin over, fx redigerer uden først at læse filen, så notér det. Det er præcis den slags, du skal kunne se." }
+    ],
+    "skema": {
+      "titel": "Løkkens trin i dit transkript",
+      "intro": "Én række per trin. Vælg typen og skriv en linje om, hvad der skete.",
+      "kolonner": [
+        { "id": "trin", "label": "Type", "type": "select", "valg": ["mål", "kontekst", "handling", "observation", "vurdering"] },
+        { "id": "note", "label": "Hvad skete der", "type": "text", "pladsholder": "fx læste cli.py" }
+      ],
+      "minRaekker": 8,
+      "krav": { "kolonne": "trin", "vaerdi": "observation", "min": 3, "label": "typen observation" }
+    }
+  },
+  "verifikation": {
+    "intro": "Modulet er bestået, når alle tre punkter holder.",
+    "kriterier": [
+      "Skemaet har mindst tre rækker af typen observation. Statuslinjen under skemaet viser grønt.",
+      "Agenten viste JSON-output fra kommandoen i transkriptet.",
+      "Kommandoen nedenfor giver JSON i din egen terminal."
+    ],
+    "kommando": "python3 -m fragtvaegt fly 2 60x40x50:12 --json",
+    "forventetOutput": "et JSON-objekt med fragtpligtig vægt 20.0 og total 1350.",
+    "hvisDetFejler": "Virker kommandoen ikke, er det ikke din fejl, og det ændrer ikke på øvelsens pointe. Notér i skemaet, hvor agenten burde have observeret det, og gå videre. Modul 06 handler om, hvordan man forhindrer netop det."
+  },
+  "quiz": [
+    {
+      "spoergsmaal": "Hvad er den afgørende forskel på en workflow og en agent ifølge Anthropic?",
+      "svar": [
+        "En agent bruger en større model end en workflow.",
+        "I en workflow er rækkefølgen af kald lagt fast i kode. En agent vælger selv næste skridt ud fra det, den observerer.",
+        "En workflow kan ikke bruge værktøjer."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Modelstørrelsen har intet med skellet at gøre. Samme model kan indgå i begge.",
+        "Det er definitionen fra Building effective agents: workflows følger foruddefinerede kodestier, agenter styrer selv proces og værktøjsbrug.",
+        "Workflows bruger værktøjer i stor stil. Forskellen er, hvem der bestemmer rækkefølgen."
+      ]
+    },
+    {
+      "spoergsmaal": "Du læser et transkript og ser to redigeringer af samme fil lige efter hinanden uden nogen tekst imellem. Hvad mangler?",
+      "svar": [
+        "Et mål. Agenten vidste ikke, hvad den skulle.",
+        "En observation og en vurdering mellem de to handlinger.",
+        "Intet. To handlinger i træk er normalt."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Målet blev sat i prompten. Problemet ligger inde i løkken, ikke før den.",
+        "Efter en handling skal agenten se resultatet og vurdere det, før den handler igen. Springes det over, gætter den.",
+        "To handlinger i træk kan forekomme, men uden vurdering imellem er det netop det sammenbrud, modulet beskriver."
+      ]
+    },
+    {
+      "spoergsmaal": "Hvilken af disse giver agenten en målestok, den selv kan bruge i løkken?",
+      "svar": [
+        "\"Gør koden pænere.\"",
+        "\"Skriv en test, der viser fejlen, ret koden, og kør testen igen.\"",
+        "\"Vær omhyggelig.\""
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Pænere har ingen exit-kode. Agenten kan kun vurdere ud fra, om det ser færdigt ud.",
+        "Testen giver bestået eller fejlet. Det er et signal, agenten kan læse i transkriptet og handle på.",
+        "Omhu er ikke noget, agenten kan måle. Den skal have noget, der siger ja eller nej."
+      ]
+    },
+    {
+      "spoergsmaal": "Du har rettet agenten to gange på samme problem, og den fejler stadig. Hvad anbefaler dokumentationen?",
+      "svar": [
+        "Ret den en tredje gang med flere detaljer.",
+        "Ryd konteksten og skriv en ny, bedre prompt med det, du har lært.",
+        "Skift til en større model."
+      ],
+      "korrekt": 1,
+      "forklaring": [
+        "Konteksten er allerede fyldt med mislykkede forsøg, og en tredje rettelse lægger oven i dem.",
+        "Best practices siger det direkte: efter to mislykkede rettelser, ryd og start forfra med en mere præcis prompt.",
+        "Modelskift løser ikke forurenet kontekst. Den nye model arver den samme historik."
+      ]
+    }
+  ],
+  "kilder": [
+    { "titel": "Building effective agents", "url": "https://www.anthropic.com/engineering/building-effective-agents", "note": "Anthropic, 2024-12-19. Definitionen af agenter og workflows, ground truth fra omgivelserne, stopbetingelser", "hentet": "2026-09-06" },
+    { "titel": "How Claude Code works", "url": "https://code.claude.com/docs/en/how-claude-code-works", "note": "De tre faser, eksemplet med fejlende tests, afbrydelse med Esc, delegate don't dictate", "hentet": "2026-09-06" },
+    { "titel": "Best practices for Claude Code", "url": "https://code.claude.com/docs/en/best-practices", "note": "Giv Claude et tjek den selv kan køre, ryd konteksten efter to rettelser", "hentet": "2026-09-06" }
+  ]
+}

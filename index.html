@@ -43,13 +43,11 @@
 
       main.appendChild(el("h1", { text: k.titel }));
       main.appendChild(el("p", { class: "meta", text: k.undertitel }));
-      main.appendChild(el("p", { class: "brod", text: "Du bygger intet. Kursussitet, sandbox-repoet og alle komponenter er sat op på forhånd. Hvert modul har de samme otte sektioner: hvorfor, kernen, en scriptet simulation, en øvelse mod et rigtigt repo, verifikation med en kommando, en quiz med forklaringer, kilder med dato, og fremdrift." }));
-      main.appendChild(el("ol", null, [
-        el("li", null, [el("a", { href: "preflight.html", text: "Kør pre-flight dagen før." }), " Cirka 30 minutter, kun installation og adgang."]),
-        el("li", { text: "Tag modulerne i rækkefølge. Hvert modul starter med en kommando, der stiller sandbox-repoet om til modulets startpunkt, så en mislykket øvelse aldrig blokerer den næste." }),
-        el("li", { text: "Markér modulet gennemført nederst på siden, og notér din tid. Forsiden og dashboardet samler tallene." }),
-        el("li", null, [el("a", { href: "dashboard.html", text: "Læs dine egne tal i dashboardet" }), " undervejs og i modul 13."])
-      ]));
+      var fs = k.forside || { intro: "", trin: [], fremdriftTekst: "" };
+      main.appendChild(el("p", { class: "brod", text: fs.intro }));
+      main.appendChild(el("ol", null, (fs.trin || []).map(function (t) {
+        return el("li", null, [t.link ? el("a", { href: t.link, text: t.linkTekst }) : null, t.tekst]);
+      })));
 
       main.appendChild(el("div", { class: "kort-raekke" }, [
         el("div", { class: "kort" }, [el("div", { class: "tal", text: gennemfoert.length + " af " + k.moduler.length }), el("div", { class: "tekst", text: "moduler gennemført" })]),
@@ -108,7 +106,7 @@
       nulstil.addEventListener("click", function () { if (window.confirm("Slet al fremdrift, skemaer og quizresultater i denne browser? Eksportér først, hvis du vil beholde dem.")) { window.Fremdrift.nulstil(); window.location.reload(); } });
       main.appendChild(el("section", { id: "fremdrift" }, [
         el("h2", null, [el("span", { class: "nr", text: "Data" }), el("span", { text: "Fremdrift" })]),
-        el("p", { class: "brod", text: "Fremdrift, skemaer og quizresultater gemmes kun i din browser under nøglen " + k.fremdriftNoegle + ". Browseren kan slette dem uden varsel, så eksportér ved dagens slutning. Import fletter filens moduler ind over det, der ligger her." }),
+        el("p", { class: "brod", text: (fs.fremdriftTekst || "").replace("{noegle}", k.fremdriftNoegle) }),
         el("div", { class: "raekke" }, [eksport, el("label", { for: "import-fil", class: "knap sekundaer", text: "Importér fremdrift" }), fil, nulstil]),
         status
       ]));

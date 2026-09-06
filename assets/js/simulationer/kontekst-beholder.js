@@ -13,20 +13,20 @@
   var OPSTART = [
     { navn: "Systemprompt", tokens: 4200 },
     { navn: "Auto memory", tokens: 680 },
-    { navn: "Miljøoplysninger", tokens: 280 },
-    { navn: "MCP-værktøjsnavne", tokens: 120 },
+    { navn: "Oplysninger om maskinen", tokens: 280 },
+    { navn: "Navne på forbindelserne (MCP)", tokens: 120 },
     { navn: "CLAUDE.md (tynd)", tokens: 100 }
   ];
   var VALG = [
-    { navn: "Din prompt", tokens: 150 },
-    { navn: "Læs cli.py", tokens: 900 },
-    { navn: "Læs test_pris.py", tokens: 700 },
-    { navn: "Testoutput, kort", tokens: 400 },
-    { navn: "Hele takster.json", tokens: 500 },
+    { navn: "Din bestilling", tokens: 150 },
+    { navn: "Læs beregneren", tokens: 900 },
+    { navn: "Læs testfilen for pris", tokens: 700 },
+    { navn: "Svar fra testene, kort", tokens: 400 },
+    { navn: "Hele takstfilen", tokens: 500 },
     { navn: "CLAUDE.md (udbygget) i stedet for tynd", tokens: 500 },
     { navn: "Fejllog på 4000 linjer, indsat", tokens: 60000, advarsel: true },
     { navn: "Research i 20 filer i hovedvinduet", tokens: 25000, advarsel: true },
-    { navn: "Samme research som subagent, kun resumé", tokens: 600 },
+    { navn: "Samme research hos en subagent, kun resuméet", tokens: 600 },
     { navn: "Tre mislykkede forsøg på samme fejl", tokens: 9000, advarsel: true }
   ];
   var poster = OPSTART.slice();
@@ -41,7 +41,7 @@
     var s = sum(), pct = Math.min(100, Math.round(100 * s / MAKS));
     fyld.style.width = pct + "%";
     fyld.className = "fyld" + (pct >= 90 ? " fuld" : pct >= 60 ? " advarsel" : "");
-    status.textContent = fmt(s) + " af " + fmt(MAKS) + " tokens, " + pct + " %. Tilbage til arbejdet: " + fmt(Math.max(0, MAKS - s)) + "." + (pct >= 60 ? " Ydelsen falder herfra, og automatisk komprimering nærmer sig." : "");
+    status.textContent = fmt(s) + " af " + fmt(MAKS) + " tokens, " + pct + " %. Tilbage til arbejdet: " + fmt(Math.max(0, MAKS - s)) + "." + (pct >= 60 ? " Kvaliteten falder herfra, og en automatisk komprimering nærmer sig." : "");
     liste.textContent = "";
     poster.forEach(function (p) { liste.appendChild(el("li", { class: p.advarsel ? "mistet" : "ok" }, [el("span", { text: p.navn }), el("span", { class: "aarsag", text: fmt(p.tokens) + " tokens" })])); });
   }
@@ -61,12 +61,12 @@
   var ryd = el("button", { type: "button", class: "sekundaer", text: "/clear" });
   ryd.addEventListener("click", function () { poster = OPSTART.slice(); opdater(); });
   holder.appendChild(el("div", { class: "sim" }, [
-    el("p", { text: "Vinduet er 200.000 tokens. Opstarten er allerede betalt. Læg ting i, og se hvad der er tilbage til arbejdet." }),
+    el("p", { text: "Bordet er 200.000 tokens stort. Opstarten er allerede lagt frem. Læg ting på bordet, og se, hvor meget plads der er tilbage til selve arbejdet." }),
     maaler, status,
-    el("h4", { text: "Læg i vinduet" }), chips,
+    el("h4", { text: "Læg på bordet" }), chips,
     el("div", { class: "raekke" }, [kompakt, ryd]),
     el("h4", { text: "Det ligger der nu" }), liste,
-    el("p", { class: "note-lille", text: "Tallene for opstart er fra dokumentationens simulation af kontekstvinduet. Resten er skøn til at vise størrelsesforhold. Bemærk, at /compact beholder opstarten og erstatter samtalen med et resumé, mens /clear fjerner alt fra samtalen." })
+    el("p", { class: "note-lille", text: "Læg fejlloggen ind og se, hvor meget plads den ene beslutning koster. Læg derefter mærke til forskellen på de to research-knapper: samme arbejde, men subagenten sender kun resuméet tilbage. /compact rydder ikke bordet, den lægger et resumé i stedet for samtalen. /clear tager alt fra samtalen væk." })
   ]));
   opdater();
 })();

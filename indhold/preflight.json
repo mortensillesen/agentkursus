@@ -1,6 +1,6 @@
 {
   "titel": "Pre-flight",
-  "intro": "Cirka 30 minutter. Køres dagen før dag 1. Kun installation og adgang: intet af det her er en del af kurset. Går noget galt, skal det løses i dag, ikke i morgen.",
+  "intro": "Cirka 30 minutter. Køres dagen før dag 1. Kun installation og adgang: intet af det her er en del af kurset. Du skal ikke forstå kommandoerne, bare køre dem og læse svaret. Går noget galt, skal det løses i dag, ikke i morgen.",
   "sidstVerificeret": "2026-09-06",
   "script": {
     "intro": "Det hurtigste er scriptet. Det tjekker alle punkterne nedenfor på én gang, skriver OK eller FEJL per punkt med en rettelse, og kloner de to repos, hvis de mangler. Første kommando henter det og viser det i less, så du kan læse det. Det er 60 linjer og ændrer intet andet. Tryk q, når du har læst, og kør derefter anden kommando.",

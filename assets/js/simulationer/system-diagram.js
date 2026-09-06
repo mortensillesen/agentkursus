@@ -1,4 +1,4 @@
-/* Simulation, modul 10: systemdiagram med fem dele. Slaa en del fra og se hvad der falder ud. Scriptet. */
+/* Simulation, modul 10: systemet med fem dele. Sluk en del og se hvad der falder ud. Scriptet. */
 (function () {
   "use strict";
   var holder = document.getElementById("simulation");
@@ -10,20 +10,20 @@
     return e;
   }
   var DELE = [
-    { id: "claudemd", navn: "CLAUDE.md", rolle: "testkommandoen og at README er facit" },
-    { id: "skill", navn: "Skill /takstopdatering", rolle: "de seks faste trin" },
-    { id: "mcp", navn: "MCP-takstserver", rolle: "forbindelsen til taksterne" },
-    { id: "hook", navn: "Hook efter hver skrivning", rolle: "tests uden at nogen beder om det" },
-    { id: "agent", navn: "Subagent takst-tester", rolle: "frisk kontekst, regner efter, ændrer intet" }
+    { id: "claudemd", navn: "Instruksen CLAUDE.md", rolle: "hvordan testene køres her, og at README er facit" },
+    { id: "skill", navn: "Proceduren /takstopdatering", rolle: "de faste trin, du starter med én kommando" },
+    { id: "mcp", navn: "Forbindelsen til takstsystemet", rolle: "dagens takster, hentet i stedet for klippet ind" },
+    { id: "hook", navn: "Hooken efter hver skrivning", rolle: "testene kører, uden at nogen beder om det" },
+    { id: "agent", navn: "Subagenten takst-tester", rolle: "frisk kontekst, regner efter, ændrer intet" }
   ];
   var TRIN = [
-    { tekst: "Du starter opgaven med én kommando", kraever: ["skill"], uden: "du skriver seks trin selv, og glemmer et" },
-    { tekst: "Zonens takster hentes friske", kraever: ["mcp"], uden: "du klipper tal ind, som kan være forældede" },
-    { tekst: "Kun de transportformer, zonen tilbyder, skrives ind", kraever: ["mcp", "skill"], uden: "agenten gætter, om vej findes" },
-    { tekst: "Testene kører, når filen er skrevet, uanset hvad", kraever: ["hook"], uden: "testkørslen er et råd, der kan springes over" },
-    { tekst: "Agenten kører den rigtige testkommando første gang", kraever: ["claudemd"], uden: "den prøver pytest, som ikke er på PATH" },
+    { tekst: "Du starter hele opgaven med én kommando", kraever: ["skill"], uden: "du skriver alle trinnene selv, og glemmer et af dem" },
+    { tekst: "Zonens takster er dagens tal", kraever: ["mcp"], uden: "du klipper tal ind, og de kan være forældede" },
+    { tekst: "Kun de transportformer, zonen faktisk tilbyder, skrives ind", kraever: ["mcp", "skill"], uden: "agenten gætter, om zonen overhovedet har vej" },
+    { tekst: "Testene kører, så snart takstfilen er skrevet, uanset hvad", kraever: ["hook"], uden: "testkørslen er et råd, agenten kan springe over" },
+    { tekst: "Agenten kører den rigtige testkommando første gang", kraever: ["claudemd"], uden: "den gætter, hvordan man kører testene i dette projekt" },
     { tekst: "En anden bedømmer resultatet med frisk kontekst", kraever: ["agent"], uden: "den, der skrev, bedømmer sit eget arbejde" },
-    { tekst: "Samme oversigt hver gang", kraever: ["skill", "agent"], uden: "formatet varierer fra kørsel til kørsel" }
+    { tekst: "Samme oversigt tilbage hver gang", kraever: ["skill", "agent"], uden: "svaret ser forskelligt ud fra kørsel til kørsel" }
   ];
   var til = {};
   DELE.forEach(function (d) { til[d.id] = true; });
@@ -42,15 +42,15 @@
     inp.addEventListener("change", function () { til[d.id] = inp.checked; opdater(); });
     return el("li", null, [inp, el("label", { for: "del-" + d.id }, [el("b", { text: d.navn + ": " }), d.rolle])]);
   }));
-  var nulstil = el("button", { type: "button", class: "sekundaer", text: "Alle dele til igen" });
+  var nulstil = el("button", { type: "button", class: "sekundaer", text: "Tænd alle dele igen" });
   nulstil.addEventListener("click", function () { DELE.forEach(function (d) { til[d.id] = true; document.getElementById("del-" + d.id).checked = true; }); opdater(); });
   holder.appendChild(el("div", { class: "sim" }, [
-    el("p", { text: "Den tilbagevendende opgave: opdatér takster for en zone. Fem dele bærer den. Slå en del fra, og se hvad der falder ud." }),
+    el("p", { text: "Den tilbagevendende opgave: opdatér takster for en zone. Fem dele bærer den. Sluk en del, og se hvad der falder ud." }),
     dele,
     el("h4", { text: "Hvad systemet leverer lige nu" }),
     liste,
     el("div", { class: "raekke" }, [nulstil]),
-    el("p", { class: "note-lille", text: "Prøv at slå hooken fra alene. Alt ser stadig ud til at virke. Det er forskellen på et råd og en garanti: du ser den først den dag, agenten springer trinnet over." })
+    el("p", { class: "note-lille", text: "Prøv at slukke hooken alene. Alt ser stadig ud til at virke. Det er forskellen på et råd og en garanti: du opdager den først den dag, agenten springer trinnet over." })
   ]));
   opdater();
 })();

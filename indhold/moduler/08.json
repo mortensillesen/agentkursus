@@ -2,113 +2,211 @@
   "id": "08",
   "del": 3,
   "titel": "Langtkørende agenter og hukommelse",
-  "undertitel": "Designe bevidst, hvad der overlever mellem sessioner. Filer som hukommelse.",
+  "undertitel": "Vælge bevidst, hvad der overlever mellem sessioner. Overdragelsen er en fil.",
   "tidsestimat": 25,
   "sidstVerificeret": "2026-09-06",
   "laeringsmaal": [
     "Sige præcis, hvad en ny session ved fra start, og hvad den ikke ved.",
-    "Vælge mellem CLAUDE.md, auto memory, en statusfil og git-historik til hver slags viden.",
-    "Skrive en statusfil, som en fremmed session kan fortsætte fra uden at spørge."
+    "Vælge det rigtige sted til hver slags viden: instruksen, auto memory, en statusfil eller git-historikken.",
+    "Bestille en statusfil, som en fremmed session kan fortsætte fra uden at spørge om noget."
   ],
   "hvorfor": [
-    "Hver session starter med et tomt kontekstvindue. Alt det, du og agenten fandt ud af i går, er væk, medmindre det står et sted, den næste session læser. Det er ikke en fejl, det er et designvalg, og det tvinger dig til at vælge, hvad der skal overleve.",
-    "Anthropic beskriver problemet direkte for lange opgaver: hver ny session begynder uden hukommelse om det foregående. Løsningen er ikke længere sessioner. Det er bedre noter."
+    "Hver ny session starter med et tomt vindue. Alt det, du og agenten fandt ud af i går, er væk, medmindre det står et sted, den næste session læser. Det er ikke en fejl. Det er et vilkår, og det tvinger dig til at vælge, hvad der skal overleve.",
+    "Anthropic siger det direkte om lange opgaver: hver ny session begynder uden hukommelse om den forrige. Løsningen er ikke længere sessioner. Det er bedre noter."
   ],
   "kernen": [
-    { "type": "h3", "tekst": "Hvad der overlever, og hvor" },
-    { "type": "tabel", "hoved": ["Viden", "Hvor den overlever", "Hvem skriver"], "raekker": [
-      ["Konventioner, kommandoer, regler", "`CLAUDE.md`, læses hver session", "Dig"],
-      ["Rettelser og præferencer, agenten har lært", "Auto memory i `~/.claude/projects/<projekt>/memory/`, de første 200 linjer af MEMORY.md", "Agenten selv"],
-      ["Hvor langt opgaven er nået, og hvad der mangler", "En statusfil i repoet, fx `STATUS.md`", "Agenten, på din ordre"],
-      ["Hvad der er ændret, og hvorfor", "Git-historikken med gode commitbeskeder", "Agenten eller dig"],
-      ["Selve samtalen", "Sessionsfilen. Kan genoptages med `claude --continue`, men den er ikke viden, den er historik", "Claude Code"]
-    ]},
-    "Den sidste række er den, folk misforstår. En genoptaget session får hele samtalen tilbage, inklusive alt det, der fyldte vinduet. Det er nyttigt, når du blev afbrudt for en time siden. Det er ikke en strategi for arbejde, der spænder over dage, for så er vinduet fuldt af gamle forsøg, som modul 03 advarede om.",
-    { "type": "h3", "tekst": "Struktureret notetagning" },
-    { "type": "citat", "tekst": "Structured note-taking, or agentic memory, is a technique where the agent regularly writes notes persisted to memory outside of the context window.", "kilde": "Anthropic, Effective context engineering for AI agents, 2025-09-29", "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" },
-    "Anthropics artikel om harnesses til lange opgaver bruger to greb: en fremdriftsfil ved siden af git-historikken, og en fast rytme, hvor hver session gør et lille, afgrænset stykke arbejde, committer med en beskrivende besked og efterlader strukturerede noter. Første session sætter miljøet op, hver følgende session læser noterne, verificerer at tingene virker, og tager næste skridt.",
-    "En god statusfil har fire overskrifter: Gjort, Mangler, Beslutninger, Næste skridt. Beslutninger er den, der oftest glemmes, og den, der sparer mest. Uden den træffer næste session dem igen, måske anderledes.",
-    { "type": "h3", "tekst": "Hvad der ikke hører hjemme i hukommelsen" },
-    { "type": "liste", "punkter": [
-      "Alt, der kan udledes af koden. Filstruktur, funktionsnavne, hvad en klasse gør. Det læser agenten selv, og det bliver forældet.",
-      "Mislykkede forsøg i detaljer. Én linje under Beslutninger om, hvad der ikke virkede og hvorfor, er nok.",
-      "Hemmeligheder. Statusfilen committes. Tokens gør ikke."
-    ]},
-    { "type": "note", "tekst": "Kursets egen kørsel af øvelsen: session 1 skrev to testfiler og STATUS.md på 212 sekunder og stoppede. Session 2 læste STATUS.md, skrev de to sidste filer uden at gentage noget og uden at spørge, på 180 sekunder. Den fandt også den kendte fejl i beregner og skrev den ind under Beslutninger i stedet for at rette den, fordi statusfilen sagde det." }
+    {
+      "type": "h3",
+      "tekst": "Et billede fra hverdagen"
+    },
+    "Klokken er 16. Du har en sending, der holder fast i Padborg, en kunde, der har ringet to gange, og en vognmand, du har lovet svar i morgen. Aftenvagten møder ind. Det, der står i overdragelsen, er alt, hun har. Ikke fordi hun er doven, men fordi hun ikke var her. Skriver du kun, hvad du nåede, og ikke hvad du besluttede og hvorfor, træffer hun beslutningerne om igen. Sådan møder hver ny session ind hos agenten.",
+    {
+      "type": "h3",
+      "tekst": "Hvad der overlever, og hvor"
+    },
+    {
+      "type": "tabel",
+      "hoved": [
+        "Viden",
+        "Hvor den overlever",
+        "Hvem skriver"
+      ],
+      "raekker": [
+        [
+          "Konventioner, kommandoer, regler",
+          "Instruksen `CLAUDE.md`, som læses ved hver start",
+          "Dig"
+        ],
+        [
+          "Rettelser og præferencer, agenten har lært",
+          "Auto memory, som Claude Code selv fører per projekt på din maskine",
+          "Agenten selv"
+        ],
+        [
+          "Hvor langt opgaven er nået, og hvad der mangler",
+          "En statusfil i repoet, fx `STATUS.md`",
+          "Agenten, på din bestilling"
+        ],
+        [
+          "Hvad der er ændret, og hvorfor",
+          "Git-historikken, hvis commitbeskederne er gode",
+          "Agenten"
+        ],
+        [
+          "Selve samtalen",
+          "Sessionen kan genoptages med `claude --continue`, men det er historik, ikke viden",
+          "Claude Code"
+        ]
+      ]
+    },
+    "Den sidste række er den, folk misforstår. En genoptaget session får hele den gamle samtale tilbage, også alt det, der fyldte uden at hjælpe. Fint, hvis du blev afbrudt for en time siden. Over flere dage er vinduet fuldt af gamle forsøg, præcis som modul 03 advarede om.",
+    {
+      "type": "h3",
+      "tekst": "Struktureret notetagning"
+    },
+    {
+      "type": "citat",
+      "tekst": "Structured note-taking, or agentic memory, is a technique where the agent regularly writes notes persisted to memory outside of the context window.",
+      "kilde": "Anthropic, Effective context engineering for AI agents, 2025-09-29",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+    },
+    "Anthropics artikel om lange opgaver bruger to greb: en fremdriftsfil ved siden af git-historikken, og en fast rytme, hvor hver session tager et lille, afgrænset stykke, committer med en beskrivende besked og efterlader noter i fast form. Næste session læser noterne og tager næste skridt.",
+    "En god statusfil har fire overskrifter: Gjort, Mangler, Beslutninger, Næste skridt. Beslutninger er den, der oftest glemmes, og den, der sparer mest. Uden den træffer næste session dem igen.",
+    {
+      "type": "h3",
+      "tekst": "Hvad der ikke hører hjemme i en statusfil"
+    },
+    {
+      "type": "liste",
+      "punkter": [
+        "Alt, agenten selv kan læse sig til i projektet. Det finder den hurtigere, end du kan skrive det ned, og noten bliver forældet.",
+        "Mislykkede forsøg i detaljer. Én linje under Beslutninger om, hvad der ikke virkede og hvorfor, er nok.",
+        "Hemmeligheder. Statusfilen bliver committet. Tokens skal ikke."
+      ]
+    },
+    {
+      "type": "note",
+      "tekst": "Kursets egen kørsel af øvelsen: session 1 skrev to testfiler og STATUS.md på 212 sekunder og stoppede. Session 2 læste STATUS.md, skrev de to sidste uden at gentage noget og uden at spørge, på 180 sekunder. Den fandt også den kendte fejl i afrundingen og skrev den ind under Beslutninger i stedet for at rette den, fordi statusfilen sagde, at koden ikke måtte røres."
+    }
   ],
   "sidebar": {
     "titel": "Auto memory er ikke din statusfil",
     "afsnit": [
-      "Claude Code gemmer selv noter på tværs af sessioner: dine rettelser, dine præferencer, ting den ikke kan udlede af koden. Det er nyttigt, og du kan se og redigere det med `/memory`. Men det er agentens hukommelse om dig, ikke om opgaven. Fremdrift på en konkret opgave hører hjemme i repoet, hvor den følger med branchen og kan læses af enhver session, på enhver maskine."
+      "Claude Code fører selv noter på tværs af sessioner: dine rettelser, dine præferencer, ting den ikke kan læse sig til. Det er nyttigt, og du kan se og redigere dem med `/memory`. Men det er agentens hukommelse om dig, ikke om opgaven. Fremdrift på en konkret opgave hører hjemme i repoet, hvor den følger med branchen og kan læses af enhver session på enhver maskine."
     ]
   },
   "simulation": {
     "id": "to-sessioner",
-    "beskrivelse": "To sessioner side om side. Se hvad der føres videre, og hvad der tabes, afhængigt af hvad første session skrev ned.",
+    "beskrivelse": "To sessioner efter hinanden. Vælg, hvad den første efterlod, og se hvilke spørgsmål den næste kan svare på uden at spørge dig.",
     "maksMinutter": 3
   },
   "startbranch": "start/modul-08",
-  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-08 origin/start/modul-08 && git checkout -- . && git clean -fq tests STATUS.md",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git stash push -u -q -m \"Gemt af nulstil, modul 08\" && git checkout -B arbejde/modul-08 origin/start/modul-08",
   "oevelse": {
     "forventetMinutter": 14,
     "intro": [
-      "Du starter en opgave i fire dele, afbryder sessionen med vilje midtvejs, og starter en ny session, som kun må bruge det, den første skrev ned."
+      "Du bestiller en opgave i fire dele, stopper sessionen med vilje midtvejs, og starter en ny, som kun må bruge det, den første skrev ned. Det er overdragelsen, du tester, ikke agenten."
     ],
     "trin": [
-      { "tekst": "Stil repoet om til startpunktet, start Claude Code, og giv den opgaven. Den beder agenten føre STATUS.md løbende og stoppe efter del 2.", "kommando": "claude", "prompt": "Opgave i fire dele: skriv fire nye testfiler. 1) tests/test_soe.py: volumenvægt og fragtpligtig vægt for soe. 2) tests/test_flere_kolli.py: fragtpligtig vægt for en forsendelse med to forskellige kolli efter reglen i README. 3) tests/test_tillaeg.py: fast tillæg og to procent-tillæg sammen. 4) tests/test_cli.py: parse_kolli og main med --tillaeg. Ret ikke koden i fragtvaegt/.\n\nFør løbende filen STATUS.md i repoets rod med fire overskrifter: Gjort, Mangler, Beslutninger, Næste skridt. Opdatér den, hver gang en del er færdig. Skriv den, så en helt ny session kan fortsætte uden at spørge mig om noget.\n\nStop efter del 2, uanset hvad, og sørg for at STATUS.md er opdateret, før du stopper.", "note": "Vil du afbryde rigtigt midtvejs, så tryk Esc, når du ser at anden testfil er skrevet. Agenten når ikke altid at opdatere STATUS.md før afbrydelsen, og det er også en erfaring. Bed den i så fald: \"Opdatér STATUS.md nu, og stop.\"" },
-      { "tekst": "Læs STATUS.md, før du går videre. Kan du selv se, hvad der mangler, uden at kigge i samtalen? Hvis ikke, mangler filen noget.", "kommando": "cat STATUS.md" },
-      { "tekst": "Afslut sessionen, så den nye session ikke arver noget. Start en ny.", "kommando": "/exit", "note": "Brug ikke `claude --continue`. Det ville give den nye session hele samtalen, og så beviser øvelsen intet." },
-      { "tekst": "Giv den nye session kun dette. Grib ikke ind.", "kommando": "claude", "prompt": "Læs STATUS.md og fortsæt, hvor den forrige session slap. Spørg mig ikke om noget, og gentag ikke det, der allerede er gjort. Opdatér STATUS.md, når du er færdig, og kør hele suiten til sidst." },
-      { "tekst": "Læs den nye sessions transkript. Læste den STATUS.md som det første? Rørte den de filer, der allerede var færdige? Spurgte den om noget? Notér svarene i skemaet." }
+      {
+        "tekst": "Stil repoet om til startpunktet med kommandoen ovenfor, og start Claude Code i mappen. Giv derefter bestillingen. Den beder agenten føre STATUS.md undervejs og stoppe halvvejs.",
+        "kommando": "claude",
+        "prompt": "Opgave i fire dele: skriv fire nye testfiler. 1) tests/test_soe.py: volumenvægt og fragtpligtig vægt for soe. 2) tests/test_flere_kolli.py: fragtpligtig vægt for en forsendelse med to forskellige kolli efter reglen i README. 3) tests/test_tillaeg.py: et fast tillæg og to procent-tillæg sammen. 4) tests/test_cli.py: at et kolli skrevet som LxBxH:VAEGT læses rigtigt fra kommandolinjen, og at en kørsel med --tillaeg giver den rigtige total. Ret ikke koden i fragtvaegt/.\n\nFør løbende filen STATUS.md i repoets rod med fire overskrifter: Gjort, Mangler, Beslutninger, Næste skridt. Opdatér den, hver gang en del er færdig. Skriv den, så en helt ny session kan fortsætte uden at spørge mig om noget.\n\nStop efter del 2, uanset hvad, og sørg for at STATUS.md er opdateret, før du stopper.",
+        "note": "Vil du stoppe den rigtigt midtvejs, så tryk `Esc`, når du kan se, at anden testfil er skrevet. Agenten når ikke altid at opdatere STATUS.md først, og det er også en erfaring. Bed den i så fald: \"Opdatér STATUS.md nu, og stop.\""
+      },
+      {
+        "tekst": "Vis statusfilen i terminalen, og læs den, som var du aftenvagten. Kan du selv se, hvad der mangler, og hvorfor det blev gjort sådan, uden at kigge i samtalen? Kan du ikke det, mangler filen noget.",
+        "kommando": "cat STATUS.md"
+      },
+      {
+        "tekst": "Afslut sessionen, så den næste ikke arver noget.",
+        "kommando": "/exit",
+        "note": "Brug ikke `claude --continue` til at komme videre. Det ville give den nye session hele samtalen, og så beviser øvelsen ingenting."
+      },
+      {
+        "tekst": "Start en ny session, og giv den kun dette. Grib ikke ind, og forklar ikke noget, selv om den går i stå.",
+        "kommando": "claude",
+        "prompt": "Læs STATUS.md og fortsæt, hvor den forrige session slap. Spørg mig ikke om noget, og gentag ikke det, der allerede er gjort. Opdatér STATUS.md, når du er færdig, og kør testene til sidst."
+      },
+      {
+        "tekst": "Læs den nye sessions transkript. Læste den statusfilen som det første? Rørte den det, der allerede var færdigt? Spurgte den om noget? Skriv svarene i skemaet.",
+        "note": "Testene ender med at fejle ét sted, og det er den kendte fejl i afrundingen for fly, som er lagt ind med vilje. Den hører til under Beslutninger, ikke i en rettelse. Modul 09 kommer tilbage til den."
+      }
     ],
     "skema": {
       "titel": "Hvad den nye session gjorde",
       "kolonner": [
-        { "id": "spurgte", "label": "Spurgte den om noget", "type": "select", "valg": ["nej", "ja"] },
-        { "id": "gentog", "label": "Gentog den færdigt arbejde", "type": "select", "valg": ["nej", "ja"] },
-        { "id": "note", "label": "Hvad manglede i STATUS.md, hvis noget", "type": "text", "pladsholder": "fx testkommandoen stod der ikke" }
+        {
+          "id": "spurgte",
+          "label": "Spurgte den om noget",
+          "type": "select",
+          "valg": [
+            "nej",
+            "ja"
+          ]
+        },
+        {
+          "id": "gentog",
+          "label": "Gentog den færdigt arbejde",
+          "type": "select",
+          "valg": [
+            "nej",
+            "ja"
+          ]
+        },
+        {
+          "id": "note",
+          "label": "Hvad manglede i STATUS.md, hvis noget",
+          "type": "text",
+          "pladsholder": "fx testkommandoen stod der ikke"
+        }
       ],
       "minRaekker": 1,
-      "krav": { "kolonne": "spurgte", "ikkeTom": true, "min": 1, "label": "et svar på om den spurgte" }
+      "krav": {
+        "kolonne": "spurgte",
+        "ikkeTom": true,
+        "min": 1,
+        "label": "et svar på om den spurgte"
+      }
     }
   },
   "verifikation": {
-    "intro": "Modulet er bestået, når den nye session kom videre uden at du forklarede noget.",
+    "intro": "Modulet er bestået, når den nye session kom videre, uden at du forklarede den noget.",
     "kriterier": [
-      "Skemaet siger nej til begge spørgsmål, eller du kan pege på præcis hvilken linje i STATUS.md der manglede.",
-      "Alle fire testfiler findes, og STATUS.md er opdateret af anden session.",
-      "Kommandoen viser fire testfiler og en statusfil med de fire overskrifter."
+      "Skemaet siger nej til begge spørgsmål, eller du kan pege på præcis den linje, der manglede i statusfilen.",
+      "Transkriptet fra anden session viser, at den læste statusfilen først og gik i gang uden at spørge.",
+      "Statusfilen er opdateret af anden session og har alle fire overskrifter."
     ],
-    "kommando": "ls tests/test_soe.py tests/test_flere_kolli.py tests/test_tillaeg.py tests/test_cli.py && grep -c \"^## \" STATUS.md",
-    "forventetOutput": "de fire filnavne, og et tal på mindst 4 for overskrifter i STATUS.md.",
-    "hvisDetFejler": "Spurgte den nye session, hvad opgaven var, manglede STATUS.md selve opgaven. Det er den mest almindelige mangel: agenten skriver fremdrift, men ikke mål. Tilføj en overskrift Opgave øverst, og prøv igen."
+    "kommando": "cat STATUS.md",
+    "forventetOutput": "statusfilen med de fire overskrifter Gjort, Mangler, Beslutninger og Næste skridt. Under Gjort står alle fire dele, og de sidste to er skrevet af anden session.",
+    "hvisDetFejler": "Spurgte den nye session, hvad opgaven overhovedet var, manglede statusfilen selve målet. Det er den mest almindelige mangel: agenten skriver fremdrift, men ikke opgave. Bed om en overskrift Opgave øverst, og prøv igen."
   },
   "quiz": [
     {
       "spoergsmaal": "Hvad ved en helt ny session om det, du lavede i går?",
       "svar": [
         "Alt. Claude Code husker samtaler.",
-        "Kun det, der står i CLAUDE.md, auto memory, repoet og git-historikken.",
+        "Kun det, der står i instruksen, i auto memory, i repoet og i git-historikken.",
         "Intet, uanset hvad."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Samtaler gemmes, men de indlæses ikke i en ny session. Det kræver --continue eller --resume.",
+        "Samtaler gemmes, men de indlæses ikke i en ny session, medmindre du beder om det med `--continue` eller `--resume`.",
         "Det er præcis de fire steder, viden kan overleve. Alt andet er væk.",
-        "Ikke intet. CLAUDE.md og auto memory læses ved hver start, og repoet er der."
+        "Ikke intet. Instruksen og auto memory læses ved hver start, og repoet ligger der stadig."
       ]
     },
     {
-      "spoergsmaal": "Hvorfor er claude --continue ikke en strategi for arbejde over flere dage?",
+      "spoergsmaal": "Hvorfor er en genoptaget session ikke en strategi for arbejde over flere dage?",
       "svar": [
         "Fordi det kun virker samme dag.",
-        "Fordi det bringer hele den gamle samtale med, inklusive fyldt og forurenet kontekst.",
-        "Fordi det sletter git-historikken."
+        "Fordi den bringer hele den gamle samtale med, også alt det, der fyldte uden at hjælpe.",
+        "Fordi den sletter git-historikken."
       ],
       "korrekt": 1,
       "forklaring": [
         "Sessioner gemmes i 30 dage som standard. Tiden er ikke problemet.",
-        "Du får historik, ikke viden. Efter dage er vinduet fuldt af gamle forsøg. En statusfil giver den nye session kun det, den skal bruge.",
+        "Du får historik, ikke viden. Efter et par dage er vinduet fuldt af gamle forsøg. En statusfil giver den nye session kun det, den skal bruge.",
         "Git rører den ikke."
       ]
     },
@@ -117,35 +215,60 @@
       "svar": [
         "Gjort",
         "Beslutninger",
-        "Filstruktur"
+        "Filoversigt"
       ],
       "korrekt": 1,
       "forklaring": [
-        "Gjort er nødvendig, men næste session kan ofte se det i git.",
-        "Uden beslutningerne træffer næste session dem igen, måske anderledes. Det er den dyreste gentagelse.",
-        "Filstrukturen kan agenten selv læse, og den bliver forældet."
+        "Gjort er nødvendig, men næste session kan ofte se det samme i git-historikken.",
+        "Uden beslutningerne træffer næste session dem igen, måske anderledes. Det er den dyreste gentagelse, præcis som ved et vagtskifte.",
+        "Hvad der ligger hvor, kan agenten selv finde, og en oversigt bliver forældet."
       ]
     },
     {
       "spoergsmaal": "Hvad er forskellen på auto memory og en statusfil i repoet?",
       "svar": [
         "Ingen. Begge gemmer fremdrift.",
-        "Auto memory er agentens noter om dig og dine præferencer, lokalt på maskinen. Statusfilen er fremdrift på opgaven og følger med repoet.",
+        "Auto memory er agentens noter om dig og dine præferencer, kun på din maskine. Statusfilen er fremdrift på opgaven og følger med repoet.",
         "Auto memory er altid mere pålidelig."
       ],
       "korrekt": 1,
       "forklaring": [
         "De gemmer forskellige ting forskellige steder.",
-        "Sådan beskriver dokumentationen auto memory: præferencer og rettelser, per repo, kun på din maskine. Opgavens fremdrift hører hjemme i repoet.",
+        "Sådan beskriver dokumentationen auto memory: præferencer og rettelser, per projekt, kun lokalt. Opgavens fremdrift hører hjemme i repoet, hvor enhver session kan læse den.",
         "Pålidelighed er ikke skellet. Hvad og hvor er."
       ]
     }
   ],
   "kilder": [
-    { "titel": "Effective harnesses for long-running agents", "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents", "note": "Anthropic, 2025-11-26. Hver session starter uden hukommelse, fremdriftsfil ved siden af git, små skridt med commits og noter, initialiserings- og arbejdssession", "hentet": "2026-09-06" },
-    { "titel": "Effective context engineering for AI agents", "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", "note": "Anthropic, 2025-09-29. Struktureret notetagning og komprimering", "hentet": "2026-09-06" },
-    { "titel": "How Claude remembers your project", "url": "https://code.claude.com/docs/en/memory", "note": "CLAUDE.md mod auto memory, placering, de første 200 linjer, /memory", "hentet": "2026-09-06" },
-    { "titel": "Manage sessions", "url": "https://code.claude.com/docs/en/sessions", "note": "--continue og --resume, hvad en genoptaget session får tilbage, /clear, 30 dages opbevaring", "hentet": "2026-09-06" },
-    { "titel": "Commands", "url": "https://code.claude.com/docs/en/commands", "note": "/exit og /memory", "hentet": "2026-09-06" }
+    {
+      "titel": "Effective harnesses for long-running agents",
+      "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+      "note": "Anthropic, 2025-11-26. Hver session starter uden hukommelse, fremdriftsfil ved siden af git, små skridt med commits og noter, initialiserings- og arbejdssession",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Effective context engineering for AI agents",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "note": "Anthropic, 2025-09-29. Struktureret notetagning og komprimering",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "How Claude remembers your project",
+      "url": "https://code.claude.com/docs/en/memory",
+      "note": "CLAUDE.md mod auto memory, placering, de første 200 linjer, /memory",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Manage sessions",
+      "url": "https://code.claude.com/docs/en/sessions",
+      "note": "--continue og --resume, hvad en genoptaget session får tilbage, /clear, 30 dages opbevaring",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Commands",
+      "url": "https://code.claude.com/docs/en/commands",
+      "note": "/exit og /memory",
+      "hentet": "2026-09-06"
+    }
   ]
 }

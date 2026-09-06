@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentkursus</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/css/kursus.css">
+</head>
+<body>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+  <header class="top"><div class="inder">
+    <a class="kursus" href="./">Agentkursus</a>
+    <a href="preflight.html">Pre-flight</a>
+    <a href="dashboard.html">Dashboard</a>
+    <div class="fremdrift-linje"><span class="fremdrift-tekst">0 af 14 gennemført</span><div class="bar" aria-hidden="true"><span></span></div></div>
+  </div></header>
+  <main id="indhold">
+    <p class="pladsholder">Indlæser kursus ...</p>
+  </main>
+  <footer><div class="inder"><span class="verificeret">Sidst verificeret: ...</span><span>Fremdrift gemmes kun i din browser.</span></div></footer>
+  <script src="assets/js/fremdrift.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    function el(tag, attrs, born) {
+      var e = document.createElement(tag);
+      if (attrs) Object.keys(attrs).forEach(function (k) {
+        if (k === "text") e.textContent = attrs[k];
+        else if (k === "class") e.className = attrs[k];
+        else e.setAttribute(k, attrs[k]);
+      });
+      (born || []).forEach(function (b) { if (b) e.appendChild(typeof b === "string" ? document.createTextNode(b) : b); });
+      return e;
+    }
+    function render(k) {
+      var main = document.querySelector("main");
+      main.textContent = "";
+      var fremdrift = window.Fremdrift ? window.Fremdrift.laes() : { moduler: {} };
+      var gennemfoert = k.moduler.filter(function (m) { return fremdrift.moduler[m.id] && fremdrift.moduler[m.id].gennemfoert; });
+      var minutter = k.moduler.reduce(function (s, m) { var f = fremdrift.moduler[m.id]; return s + ((f && f.forbrugtMinutter) || 0); }, 0);
+      var total = k.moduler.reduce(function (s, m) { return s + m.tidsestimat; }, 0);
+
+      main.appendChild(el("h1", { text: k.titel }));
+      main.appendChild(el("p", { class: "meta", text: k.undertitel }));
+      main.appendChild(el("p", { class: "brod", text: "Du bygger intet. Kursussitet, sandbox-repoet og alle komponenter er sat op på forhånd. Hvert modul har de samme otte sektioner: hvorfor, kernen, en scriptet simulation, en øvelse mod et rigtigt repo, verifikation med en kommando, en quiz med forklaringer, kilder med dato, og fremdrift." }));
+      main.appendChild(el("ol", null, [
+        el("li", null, [el("a", { href: "preflight.html", text: "Kør pre-flight dagen før." }), " Cirka 30 minutter, kun installation og adgang."]),
+        el("li", { text: "Tag modulerne i rækkefølge. Hvert modul starter med en kommando, der stiller sandbox-repoet om til modulets startpunkt, så en mislykket øvelse aldrig blokerer den næste." }),
+        el("li", { text: "Markér modulet gennemført nederst på siden, og notér din tid. Forsiden og dashboardet samler tallene." }),
+        el("li", null, [el("a", { href: "dashboard.html", text: "Læs dine egne tal i dashboardet" }), " undervejs og i modul 13."])
+      ]));
+
+      main.appendChild(el("div", { class: "kort-raekke" }, [
+        el("div", { class: "kort" }, [el("div", { class: "tal", text: gennemfoert.length + " af " + k.moduler.length }), el("div", { class: "tekst", text: "moduler gennemført" })]),
+        el("div", { class: "kort" }, [el("div", { class: "tal", text: String(minutter) }), el("div", { class: "tekst", text: "minutter brugt indtil nu" })]),
+        el("div", { class: "kort" }, [el("div", { class: "tal", text: (Math.round(total / 6) / 10).toString().replace(".", ",") + " t" }), el("div", { class: "tekst", text: "ren modultid i alt" })])
+      ]));
+
+      main.appendChild(el("p", { class: "brod", text: k.dage.map(function (d) { return d.titel + ": modul " + d.moduler[0] + " til " + d.moduler[d.moduler.length - 1] + ", cirka " + d.effektiveTimer + " effektive timer med pauser og det, der går galt."; }).join(" ") }));
+      main.appendChild(el("div", { class: "note", text: k.dagNote }));
+
+      var bar = document.querySelector(".top .bar > span"); if (bar) bar.style.width = Math.round(100 * gennemfoert.length / k.moduler.length) + "%";
+      var ft = document.querySelector(".top .fremdrift-tekst"); if (ft) ft.textContent = gennemfoert.length + " af " + k.moduler.length + " gennemført";
+
+      k.dele.forEach(function (d) {
+        var sek = el("section", { class: "del" }, [el("h2", null, [el("span", { class: "nr", text: "Del " + d.nr }), el("span", { text: d.titel + ", dag " + d.dag })])]);
+        var ul = el("ul", { class: "modulliste" });
+        k.moduler.filter(function (m) { return m.del === d.nr; }).forEach(function (m) {
+          var f = fremdrift.moduler[m.id];
+          var titelEl = m.status === "planlagt" ? el("span", { class: "planlagt", text: m.titel + " (kommer)" }) : el("a", { href: "moduler/" + m.slug + "/", text: m.titel });
+          ul.appendChild(el("li", null, [
+            el("span", { class: "id", text: m.id }),
+            titelEl,
+            f && f.gennemfoert ? el("span", { class: "flueben", text: "✓", "aria-label": "gennemført" }) : null,
+            el("span", { class: "tid", text: (f && f.forbrugtMinutter ? f.forbrugtMinutter + " min brugt, " : "") + m.tidsestimat + " min" + (m.maalt ? ", øvelse målt til " + m.maalt.samlet : "") })
+          ]));
+        });
+        sek.appendChild(ul);
+        main.appendChild(sek);
+      });
+
+      var status = el("p", { class: "meta", role: "status" });
+      var eksport = el("button", { type: "button", text: "Eksportér fremdrift" });
+      eksport.addEventListener("click", function () {
+        var tekst = window.Fremdrift.eksporter();
+        var navn = "agentkursus-fremdrift-" + new Date().toISOString().slice(0, 10) + ".json";
+        try {
+          var blob = new Blob([tekst], { type: "application/json" });
+          var a = el("a", { href: URL.createObjectURL(blob), download: navn });
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          status.textContent = "Gemt som " + navn + ". Læg filen et sted, du kan finde den.";
+        } catch (e) { status.textContent = "Kunne ikke starte download. Kopiér i stedet: " + e.message; }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tekst).then(function () { status.textContent += " Teksten ligger også i udklipsholderen."; }, function () {});
+      });
+      var fil = el("input", { type: "file", accept: "application/json,.json", id: "import-fil", "aria-label": "Vælg fremdriftsfil" });
+      fil.addEventListener("change", function () {
+        var f = fil.files && fil.files[0]; if (!f) return;
+        var r = new FileReader();
+        r.onload = function () {
+          var res = window.Fremdrift.importer(String(r.result), true);
+          status.textContent = res.ok ? "Importeret. " + res.antal + " moduler har nu data. Siden genindlæses." : "Import fejlede: " + res.fejl;
+          if (res.ok) setTimeout(function () { window.location.reload(); }, 1200);
+        };
+        r.readAsText(f);
+      });
+      var nulstil = el("button", { type: "button", class: "sekundaer", text: "Slet al fremdrift i denne browser" });
+      nulstil.addEventListener("click", function () { if (window.confirm("Slet al fremdrift, skemaer og quizresultater i denne browser? Eksportér først, hvis du vil beholde dem.")) { window.Fremdrift.nulstil(); window.location.reload(); } });
+      main.appendChild(el("section", { id: "fremdrift" }, [
+        el("h2", null, [el("span", { class: "nr", text: "Data" }), el("span", { text: "Fremdrift" })]),
+        el("p", { class: "brod", text: "Fremdrift, skemaer og quizresultater gemmes kun i din browser under nøglen " + k.fremdriftNoegle + ". Browseren kan slette dem uden varsel, så eksportér ved dagens slutning. Import fletter filens moduler ind over det, der ligger her." }),
+        el("div", { class: "raekke" }, [eksport, el("label", { for: "import-fil", class: "knap sekundaer", text: "Importér fremdrift" }), fil, nulstil]),
+        status
+      ]));
+
+      var fod = document.querySelector("footer .verificeret");
+      if (fod) fod.textContent = "Sidst verificeret: " + k.sidstVerificeret + ". Øvelser målt " + (k.maaltDato || k.sidstVerificeret) + ". Version " + k.version + ".";
+    }
+    fetch("indhold/kursus.json")
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(render)
+      .catch(function (e) {
+        var main = document.querySelector("main");
+        main.textContent = "";
+        main.appendChild(el("h1", { text: "Kurset kunne ikke indlæses" }));
+        main.appendChild(el("p", { class: "brod", text: "Kunne ikke hente indhold/kursus.json (" + e.message + "). Kører du lokalt, så start en server med: python3 -m http.server" }));
+      });
+  })();
+  </script>
+</body>
+</html>

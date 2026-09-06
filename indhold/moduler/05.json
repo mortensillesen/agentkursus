@@ -6,90 +6,165 @@
   "tidsestimat": 25,
   "sidstVerificeret": "2026-09-06",
   "laeringsmaal": [
-    "Forklare et tool call som en navngiven funktion med JSON-argumenter og tekst tilbage.",
-    "Beskrive hvad MCP standardiserer, og hvordan en server aktiveres i et projekt.",
-    "Afgøre hvornår en forbindelse er bedre end at indsætte data, og hvad den koster i tillid."
+    "Forklare et tool call som ét kald af ét værktøj: agenten beder om noget, og får et svar tilbage.",
+    "Beskrive hvad MCP giver dig, og hvordan en forbindelse tændes i et projekt.",
+    "Afgøre hvornår en forbindelse er bedre end at klippe data ind, og hvad den koster i tillid."
   ],
   "hvorfor": [
-    "Uden værktøjer kan en model kun svare med tekst. Med værktøjer kan den læse, køre, søge og spørge eksterne systemer. Alt det, agenten gør i løkken, sker gennem tool calls.",
-    "MCP er den åbne standard, der lader dig koble nye systemer på uden at skrive integrationen om for hver klient. Det er også kode, der kører med dine rettigheder. Begge dele hører til i dette modul."
+    "Uden værktøjer kan en model kun svare med tekst. Med værktøjer kan den læse, køre, søge og spørge systemer uden for din maskine. Alt det, agenten gør i løkken fra modul 01, sker gennem tool calls.",
+    "MCP er den åbne standard, der lader dig koble et system på, uden at nogen skal bygge en ny integration for hvert program. Det er også kode, der kører med dine rettigheder. Begge dele hører til her."
   ],
   "kernen": [
-    { "type": "h3", "tekst": "Et tool call" },
-    "Modellen skriver ikke kommandoer direkte i din terminal. Den beder harnessen om at køre et navngivet værktøj med argumenter i JSON, fx `Bash` med `command: \"python3 -m pytest -q\"`. Harnessen kører det, og resultatet kommer tilbage som tekst i kontekstvinduet. Det er observationen fra modul 01. Hvert værktøj koster plads: navnet og beskrivelsen ligger i vinduet, og hvert resultat lægges til.",
-    { "type": "h3", "tekst": "Hvad MCP løser" },
-    { "type": "citat", "tekst": "MCP (Model Context Protocol) is an open-source standard for connecting AI applications to external systems.", "kilde": "modelcontextprotocol.io, What is the Model Context Protocol", "url": "https://modelcontextprotocol.io/docs/getting-started/intro" },
-    "Standarden sammenligner sig selv med USB-C: én stikforbindelse, som mange enheder og mange klienter kan bruge. En MCP-server udstiller værktøjer, og eventuelt data og promptskabeloner, gennem JSON-RPC over stdio eller HTTP. Claude Code er klienten. Den starter serveren som en proces, spørger hvilke værktøjer den har, og kalder dem på samme måde som de indbyggede. I permissions og transkripter hedder værktøjet `mcp__server__vaerktoej`, i dette modul fx `mcp__takster__hent_takst`.",
-    { "type": "liste", "punkter": [
-      "Projektomfang: `.mcp.json` i repoets rod. Formatet er `{\"mcpServers\": {\"navn\": {\"command\": ..., \"args\": [...]}}}`. Filen kan committes, så alle får samme forbindelser.",
-      "Godkendelse: første gang Claude Code ser en projektserver i en interaktiv session, spørger den, om du stoler på den. Valget kan nulstilles med `claude mcp reset-project-choices`.",
-      "Status: `/mcp` i sessionen viser, om serveren kører, og hvilke værktøjer den udstiller.",
-      "Kontekst: værktøjsdefinitioner indlæses først, når de bruges. Kun navnene fylder fra start."
-    ]},
-    { "type": "h3", "tekst": "Forbindelse eller indsat data" },
-    { "type": "tabel", "hoved": ["Situation", "Bedst", "Hvorfor"], "raekker": [
-      ["Data ændrer sig, fx takster eller status i et ticketsystem", "Forbindelse", "Indsat data er forældet, før sessionen er slut"],
-      ["Data er større end det, agenten skal bruge", "Forbindelse", "Den henter kun det, den spørger om. Just-in-time fra modul 03"],
-      ["Agenten skal spørge flere gange undervejs", "Forbindelse", "Hvert opslag er et tool call, ikke en ny prompt fra dig"],
-      ["Agenten skal handle i systemet, ikke kun læse", "Forbindelse, med omtanke", "Skrivende værktøjer kræver permissions og tillid"],
-      ["Ét lille, stabilt uddrag, du allerede har foran dig", "Indsæt det", "En server til fem linjer er overhead uden gevinst"]
-    ]},
-    { "type": "h3", "tekst": "En MCP-server er kode med adgang til dine ting" },
-    { "type": "advarsel", "tekst": "Serveren kører som en proces med dine rettigheder. Den kan læse det, du kan læse, og kalde det, du kan kalde. Dokumentationens regel er kort: bekræft, at du stoler på hver server, før du kobler den på. Servere, der henter eksternt indhold, udsætter dig for prompt injection, hvor tekst fra nettet forsøger at styre agenten." },
-    "To konsekvenser i praksis. Den første: en `.mcp.json` i et klonet repo er andres kode. I en interaktiv session bliver du spurgt, men en `claude -p`-kørsel starter serverne uden at spørge, også i en mappe du aldrig har godkendt. Kør ikke `claude -p` i et repo, du ikke har læst. Den anden: MCP-værktøjer er underlagt permissions som alt andet. I Manual-tilstand bliver du spurgt, før et MCP-værktøj kaldes, og du kan tillade eller nægte det enkelte værktøj permanent i `.claude/settings.json`.",
-    "Serveren i dette modul er 120 linjer Python uden afhængigheder, som du kan læse på to minutter: `kursus/mcp/takstserver.py`. Det er den standard, du bør holde fremmede servere op imod: kan du se, hvad den gør?"
+    {
+      "type": "h3",
+      "tekst": "Et billede fra hverdagen"
+    },
+    "En kunde vil have en pris til Fjernøsten. Du kan slå op i den printede prisliste fra i fjor, eller du kan logge på transportørens bookingsystem og se dagens tal. Prislisten er hurtig, og den er forkert i det øjeblik, nogen regulerer. Systemet svarer desuden på det, du ikke tænkte på at spørge om: at destinationen slet ikke betjenes med bil. En forbindelse er opslaget i systemet. Indsat data er prislisten fra skuffen.",
+    {
+      "type": "h3",
+      "tekst": "Et tool call"
+    },
+    "Modellen skriver ikke selv i din terminal. Den beder harnessen om ét værktøj til ét formål: læs den her fil, søg efter det her ord, kør den her kommando. Svaret kommer tilbage som tekst, agenten kan læse. Det er observationen fra modul 01. I transkriptet er det de korte linjer med et navn foran, fx Read, Grep eller Bash. Hvert værktøj koster plads: navnet ligger i vinduet hele tiden, og hvert svar lægges til.",
+    {
+      "type": "h3",
+      "tekst": "Hvad MCP løser"
+    },
+    {
+      "type": "citat",
+      "tekst": "MCP (Model Context Protocol) is an open-source standard for connecting AI applications to external systems.",
+      "kilde": "modelcontextprotocol.io, What is the Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+    },
+    "Standarden sammenligner sig selv med USB-C: ét stik, som mange systemer og mange programmer kan bruge. En MCP-server er et system, der stiller nogle værktøjer frem, og Claude Code bruger dem som sine egne. I transkriptet kender du dem på navnet: `mcp__takster__hent_takst` er værktøjet `hent_takst` på serveren `takster`.",
+    {
+      "type": "liste",
+      "punkter": [
+        "Tænd: en fil i projektets rod siger, hvilke servere projektet bruger. I øvelsen kopierer du en færdig fil ind.",
+        "Godkendelse: første gang Claude Code ser en projektserver, spørger den, om du stoler på den. Svaret huskes.",
+        "Status: skriv `/mcp` i sessionen. Den viser, om serveren kører, og hvilke værktøjer den har.",
+        "Plads: beskrivelserne af værktøjerne hentes først, når de bruges. Fra start fylder kun navnene."
+      ]
+    },
+    {
+      "type": "h3",
+      "tekst": "Forbindelse eller indsat data"
+    },
+    {
+      "type": "tabel",
+      "hoved": [
+        "Situation",
+        "Bedst",
+        "Hvorfor"
+      ],
+      "raekker": [
+        [
+          "Data ændrer sig, fx takster eller status på en sending",
+          "Forbindelse",
+          "Indsat data er forældet, før sessionen er slut"
+        ],
+        [
+          "Data er meget større end det, agenten skal bruge",
+          "Forbindelse",
+          "Den henter kun det, den spørger om"
+        ],
+        [
+          "Agenten skal slå op flere gange undervejs",
+          "Forbindelse",
+          "Hvert opslag er et tool call, ikke en ny besked fra dig"
+        ],
+        [
+          "Agenten skal handle i systemet, ikke kun læse",
+          "Forbindelse, med omtanke",
+          "Værktøjer, der ændrer noget, kræver tillid"
+        ],
+        [
+          "Ét lille, stabilt uddrag, du allerede har foran dig",
+          "Indsæt det",
+          "En server til fem linjer er besvær uden gevinst"
+        ]
+      ]
+    },
+    {
+      "type": "h3",
+      "tekst": "En server er kode med adgang til dine ting"
+    },
+    {
+      "type": "advarsel",
+      "tekst": "Serveren kører med dine rettigheder. Den kan læse det, du kan læse, og gøre det, du kan gøre. Dokumentationens regel er kort: bekræft, at du stoler på hver server, før du kobler den på. Servere, der henter indhold ude fra nettet, kan tage tekst med hjem, som forsøger at give agenten nye ordrer. Det kaldes prompt injection."
+    },
+    "En forbindelse, der ligger klar i et projekt, du har hentet fra andre, er andres kode, og godkendelsen er dit eneste stop. Værktøjer på en server er desuden underlagt de samme permissions som alt andet fra modul 02: du kan sige nej."
   ],
   "sidebar": {
-    "titel": "Under motorhjelmen",
+    "titel": "Kan du se, hvad den gør?",
     "afsnit": [
-      "Protokollen er tre beskeder. Klienten sender `initialize`, serveren svarer med sine evner. Klienten spørger `tools/list` og får navne, beskrivelser og inputskemaer. Derefter `tools/call` med navn og argumenter, og svaret er en liste af indholdsblokke, oftest tekst. Én JSON-linje per besked over stdin og stdout. Logning går til stderr, aldrig stdout.",
-      "Du kan tale med serveren uden Claude. Kommandoen står i `kursus/mcp/README.md` og sender de tre beskeder med `printf`."
+      "Du kan ikke læse koden i en fremmed server, og du skal ikke lære det. Du kan gøre noget andet, som er lige så nyttigt: bede agenten om at læse den og forklare den i fem linjer. Hvad kan den, hvad har den adgang til, kan den ændre noget på din maskine.",
+      "Svaret er ikke en garanti. Men lyder det som meget mere adgang, end opgaven kræver, er det grund nok til at lade være."
     ]
   },
   "simulation": {
     "id": "forbindelse-eller-indsat",
-    "beskrivelse": "Samme opgave løst med indsat data og med en forbindelse. Tæl trin, og se hvad der sker, når dataene ændrer sig midt i opgaven.",
+    "beskrivelse": "Samme opgave løst med indsat data og med en forbindelse. Tæl trin, og se hvad der sker, når taksten ændrer sig midt i opgaven.",
     "maksMinutter": 3
   },
   "startbranch": "start/modul-05",
-  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git checkout -B arbejde/modul-05 origin/start/modul-05 && git checkout -- .",
+  "nulstilKommando": "cd ~/Desktop/\"CLAUDE CODE\"/fragtvaegt-sandbox && git fetch origin && git stash push -u -q -m \"Gemt af nulstil, modul 05\" && git checkout -B arbejde/modul-05 origin/start/modul-05",
   "oevelse": {
     "forventetMinutter": 10,
     "intro": [
-      "Repoets `.mcp.json` er tom. Den forberedte konfiguration ligger i `kursus/mcp/mcp.aktiv.json` og peger på takstserveren. Du aktiverer den, og giver agenten en opgave, som kun kan løses gennem forbindelsen: zone 5 findes i takstsystemet, men ikke i repoet."
+      "Forbindelsen i repoet er slukket. Den færdige konfiguration ligger klar i mappen `kursus/mcp/`. Du læser serveren, før du tænder den, og giver derefter agenten en opgave, som kun kan løses gennem forbindelsen: zone 5 findes i takstsystemet, men ikke i repoet."
     ],
     "trin": [
-      { "tekst": "Stil repoet om til startpunktet, og læs serveren, før du aktiverer den. Det tager to minutter, og det er vanen, modulet handler om.", "kommando": "sed -n 1,40p kursus/mcp/takstserver.py" },
-      { "tekst": "Aktivér serveren ved at kopiere den forberedte konfiguration ind over den tomme `.mcp.json`. Det er hele aktiveringen: filen i roden, linje 3 til 6.", "kommando": "cp kursus/mcp/mcp.aktiv.json .mcp.json && cat .mcp.json" },
-      { "tekst": "Start Claude Code. Første gang spørger den, om du vil bruge projektserveren fra `.mcp.json`. Sig ja. Tjek derefter, at serveren kører.", "kommando": "claude", "note": "Skriv `/mcp` i sessionen. Serveren `takster` skal stå som forbundet med to værktøjer: `liste_zoner` og `hent_takst`." },
-      { "tekst": "Giv agenten opgaven. Sig ja, når den beder om lov til at kalde værktøjerne på takstserveren.", "prompt": "Repoet kender zone 1 til 4 i data/takster.json. Det eksterne takstsystem er tilgængeligt som MCP-serveren \"takster\". Brug den til at finde ud af, hvilke transportformer zone 5 tilbyder og til hvilke takster. Tilføj zone 5 til data/takster.json for præcis de transportformer, serveren oplyser, og ikke flere. Kør testene bagefter og vis mig, hvad du ændrede." },
-      { "tekst": "Læs transkriptet. Find de tool calls, der hedder `mcp__takster__...`. Der skal være mindst to: ét opslag af zoner og mindst ét opslag af takst. Notér, om agenten spurgte om vej for zone 5, og hvad serveren svarede." }
+      {
+        "tekst": "Stil repoet om til startpunktet med kommandoen ovenfor, og start Claude Code i mappen.",
+        "kommando": "claude"
+      },
+      {
+        "tekst": "Bed agenten forklare serveren, før du giver den adgang. Du skal ikke læse koden selv.",
+        "prompt": "Læs kursus/mcp/takstserver.py og forklar i fem linjer, hvad den kan, hvad den har adgang til, og om den kan ændre noget på min maskine. Ændr intet.",
+        "note": "Det er vanen, modulet handler om. Afslut derefter sessionen med `/exit`."
+      },
+      {
+        "tekst": "Tænd forbindelsen ved at kopiere den færdige konfiguration ind i projektets rod. Det er hele aktiveringen.",
+        "kommando": "cp kursus/mcp/mcp.aktiv.json .mcp.json"
+      },
+      {
+        "tekst": "Start Claude Code igen. Første gang spørger den, om du vil bruge projektserveren. Sig ja.",
+        "kommando": "claude",
+        "note": "Skriv `/mcp` i sessionen. Serveren `takster` skal stå som forbundet med to værktøjer: `liste_zoner` og `hent_takst`."
+      },
+      {
+        "tekst": "Giv bestillingen. Sig ja, når agenten beder om lov til at bruge værktøjerne på takstserveren.",
+        "prompt": "Repoet kender zone 1 til 4 i data/takster.json. Det eksterne takstsystem er tilgængeligt som MCP-serveren \"takster\". Brug den til at finde ud af, hvilke transportformer zone 5 tilbyder, og til hvilke takster. Tilføj zone 5 til data/takster.json for præcis de transportformer, serveren oplyser, og ikke flere. Kør testene bagefter, og vis mig hvad du ændrede."
+      },
+      {
+        "tekst": "Læs transkriptet. Find de tool calls, der begynder med `mcp__takster__`. Der skal være mindst to: ét opslag af zoner og mindst ét opslag af takst. Notér, om agenten spurgte om vej for zone 5, og hvad serveren svarede."
+      }
     ]
   },
   "verifikation": {
-    "intro": "Modulet er bestået, når transkriptet viser forbindelsen i brug, og repoet regner rigtigt med zone 5.",
+    "intro": "Modulet er bestået, når transkriptet viser forbindelsen i brug, og beregneren regner rigtigt med zone 5.",
     "kriterier": [
       "Transkriptet viser mindst to kald til værktøjer på serveren `takster`.",
-      "`data/takster.json` har zone 5 for fly og soe, og ikke for vej.",
-      "Kommandoen giver totalen for fly til zone 5, og vej til zone 5 afvises."
+      "Agenten skrev zone 5 ind for fly og soe, og ikke for vej, fordi serveren oplyste, at vej ikke tilbydes.",
+      "Kommandoen nedenfor giver en pris for fly til zone 5."
     ],
-    "kommando": "python3 -m fragtvaegt fly 5 60x40x50:12 | tail -1; python3 -m fragtvaegt vej 5 60x40x50:12",
-    "forventetOutput": "Total: 2810 DKK på første linje, og derefter fejl: ukendt zone 5 for vej.",
-    "hvisDetFejler": "Har agenten tilføjet vej til zone 5, fulgte den ikke \"præcis de transportformer, serveren oplyser\". Det er en briefingfejl fra modul 04, ikke en forbindelsesfejl. Kalder agenten slet ikke serveren, så tjek `/mcp` og se, om den er forbundet. Den typiske årsag er, at du svarede nej til godkendelsen. Nulstil med `claude mcp reset-project-choices`."
+    "kommando": "python3 -m fragtvaegt fly 5 60x40x50:12",
+    "forventetOutput": "fem linjer, hvor totalen er 2810 DKK. Regnestykket: 20 kg fragtpligtig vægt gange 128 kr for zone 5, plus 250 kr i gebyr.",
+    "hvisDetFejler": "Tog agenten vej med i zone 5, fulgte den ikke \"præcis de transportformer, serveren oplyser\". Det er en fejl i bestillingen fra modul 04, ikke i forbindelsen. Bruger agenten slet ikke serveren, så skriv `/mcp` og se, om den er forbundet. Den typiske årsag er, at du svarede nej til godkendelsen. Så luk sessionen, start forfra, og sig ja."
   },
   "quiz": [
     {
-      "spoergsmaal": "Hvad gør Claude Code, første gang den ser en projektserver i .mcp.json i en interaktiv session?",
+      "spoergsmaal": "Hvad gør Claude Code, første gang den ser en projektserver i en session?",
       "svar": [
-        "Starter den uden videre, fordi filen ligger i repoet.",
+        "Starter den uden videre, fordi konfigurationen ligger i projektet.",
         "Spørger, om du vil bruge den, og husker svaret for projektet.",
-        "Ignorerer den, indtil du kører claude mcp add."
+        "Ignorerer den, indtil du beder om det."
       ],
       "korrekt": 1,
       "forklaring": [
-        "Sådan er det kun i claude -p og cloud-sessioner, som ikke kan spørge. Derfor advarslen mod -p i fremmede repos.",
-        "Det er dokumentationens beskrivelse. Valget kan nulstilles med claude mcp reset-project-choices.",
-        "claude mcp add er til at tilføje en server. En eksisterende .mcp.json opdages automatisk."
+        "Den spørger først. Godkendelsen er dit eneste stop over for en server, andre har lagt ind.",
+        "Det er dokumentationens beskrivelse. Svarer du nej, kan du starte forfra og sige ja.",
+        "En forbindelse, der er sat op i projektet, bliver fundet af sig selv."
       ]
     },
     {
@@ -102,26 +177,26 @@
       "korrekt": 1,
       "forklaring": [
         "Der er forbindelsen bedst. Indsat data er forældet, før sessionen er slut.",
-        "En server til fem linjer er overhead uden gevinst. Indsæt dem.",
-        "Der er forbindelsen bedst. Hvert opslag er et tool call, ikke en ny prompt."
+        "En server til fem linjer er besvær uden gevinst. Indsæt dem.",
+        "Der er forbindelsen bedst. Hvert opslag er et tool call, ikke en ny besked fra dig."
       ]
     },
     {
-      "spoergsmaal": "Hvorfor er en fremmed MCP-server i et klonet repo en risiko?",
+      "spoergsmaal": "Hvorfor er en fremmed server en risiko?",
       "svar": [
         "Den kan gøre agenten langsommere.",
-        "Den kører med dine rettigheder, og henter den eksternt indhold, kan det indeholde prompt injection.",
+        "Den kører med dine rettigheder, og henter den indhold ude fra nettet, kan det indeholde prompt injection.",
         "Den kan ikke bruges uden betaling."
       ],
       "korrekt": 1,
       "forklaring": [
         "Hastighed er ikke risikoen. Adgang er.",
-        "Sådan formulerer dokumentationen det: bekræft tillid før tilkobling, og vær opmærksom på servere der henter fra nettet.",
+        "Sådan formulerer dokumentationen det: bekræft tillid, før du kobler på, og vær opmærksom på servere, der henter noget udefra.",
         "Betaling har intet med sikkerhed at gøre."
       ]
     },
     {
-      "spoergsmaal": "Hvad hedder værktøjet hent_takst fra serveren takster, når det optræder i permissions og transkripter?",
+      "spoergsmaal": "Hvad hedder værktøjet hent_takst fra serveren takster, når det står i transkriptet?",
       "svar": [
         "takster.hent_takst",
         "mcp__takster__hent_takst",
@@ -129,18 +204,48 @@
       ],
       "korrekt": 1,
       "forklaring": [
-        "Punktum-notation bruges ikke. Navnet sættes sammen med dobbelt understreg.",
-        "Servernavn og værktøjsnavn med mcp-præfiks. Det er sådan, du genkender forbindelsen i transkriptet.",
-        "Det bare navn er tvetydigt, hvis to servere har et værktøj med samme navn."
+        "Punktum bruges ikke. Navnet sættes sammen med dobbelt understreg.",
+        "Servernavn og værktøjsnavn med mcp foran. Det er sådan, du genkender forbindelsen, når du læser med.",
+        "Det bare navn er tvetydigt, hvis to servere har et værktøj, der hedder det samme."
       ]
     }
   ],
   "kilder": [
-    { "titel": "Connect Claude Code to tools via MCP", "url": "https://code.claude.com/docs/en/mcp", "note": "Formatet for .mcp.json, godkendelse af projektservere, /mcp, værktøjsnavne, udskudt indlæsning, sikkerhedsadvarslen om tillid og prompt injection", "hentet": "2026-09-06" },
-    { "titel": "What is the Model Context Protocol", "url": "https://modelcontextprotocol.io/docs/getting-started/intro", "note": "Definitionen og USB-C-sammenligningen", "hentet": "2026-09-06" },
-    { "titel": "MCP-specifikationen 2025-06-18: Tools", "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools", "note": "tools/list og tools/call, inputskema, indholdsblokke, isError", "hentet": "2026-09-06" },
-    { "titel": "MCP-specifikationen 2025-06-18: Transports", "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports", "note": "stdio: én besked per linje, stderr til logning, intet andet på stdout", "hentet": "2026-09-06" },
-    { "titel": "Run Claude Code programmatically", "url": "https://code.claude.com/docs/en/headless", "note": "claude -p starter projektets MCP-servere uden at spørge, også i mapper du aldrig har godkendt", "hentet": "2026-09-06" },
-    { "titel": "How Claude Code works", "url": "https://code.claude.com/docs/en/how-claude-code-works", "note": "Værktøjer som det, der gør Claude Code agentisk. Hvert tool call giver information tilbage i løkken", "hentet": "2026-09-06" }
+    {
+      "titel": "Connect Claude Code to tools via MCP",
+      "url": "https://code.claude.com/docs/en/mcp",
+      "note": "Formatet for .mcp.json, godkendelse af projektservere, /mcp, værktøjsnavne, udskudt indlæsning, sikkerhedsadvarslen om tillid og prompt injection",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "What is the Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/docs/getting-started/intro",
+      "note": "Definitionen og USB-C-sammenligningen",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "MCP-specifikationen 2025-06-18: Tools",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools",
+      "note": "tools/list og tools/call, inputskema, indholdsblokke, isError",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "MCP-specifikationen 2025-06-18: Transports",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports",
+      "note": "stdio: én besked per linje, stderr til logning, intet andet på stdout",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "Run Claude Code programmatically",
+      "url": "https://code.claude.com/docs/en/headless",
+      "note": "claude -p starter projektets MCP-servere uden at spørge, også i mapper du aldrig har godkendt",
+      "hentet": "2026-09-06"
+    },
+    {
+      "titel": "How Claude Code works",
+      "url": "https://code.claude.com/docs/en/how-claude-code-works",
+      "note": "Værktøjer som det, der gør Claude Code agentisk. Hvert tool call giver information tilbage i løkken",
+      "hentet": "2026-09-06"
+    }
   ]
 }

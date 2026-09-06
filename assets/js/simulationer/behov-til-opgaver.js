@@ -12,11 +12,11 @@
   var TRIN = [
     { etiket: "Behovet, som det blev sagt", tekst: "\"Eleverne skal kunne tage simulatoren med hjem og vise deres beregning til nogen.\"", k: "" },
     { etiket: "Skridt 1: hvad skal være sandt bagefter?", tekst: "Tre svar: en beregning kan deles som link. En beregning kan kopieres som tabel. Man kan se, hvilken transportform der vandt, uden at læse tallene. Tre svar, tre opgaver.", k: "" },
-    { etiket: "Opgave 1 med kriterium", tekst: "Del som link: feltværdierne i URL'en, læses ved indlæsning. Accept: åbn den delte adresse i et nyt vindue, og felterne viser samme værdier.", k: "ok" },
-    { etiket: "Opgave 2 med kriterium", tekst: "Kopiér tabel: en knap lægger tabellen i udklipsholderen. Accept: indsæt i et regneark, tre kolonner med TDC for fly, vej og sø.", k: "ok" },
+    { etiket: "Opgave 1 med kriterium", tekst: "Del som link: adressen i browseren skal huske de indtastede værdier. Accept: åbn den delte adresse i et nyt vindue, og felterne viser de samme værdier.", k: "ok" },
+    { etiket: "Opgave 2 med kriterium", tekst: "Kopiér tabel: en knap lægger tabellen i udklipsholderen. Accept: indsæt i et regneark, og der står tre kolonner med tallene for fly, vej og sø.", k: "ok" },
     { etiket: "Opgave 3, første forsøg", tekst: "Billigste transportform skal være tydelig. Accept: \"det ser tydeligt ud\".", k: "fejl" },
-    { etiket: "Skridt 3 igen: kan en fremmed afgøre det?", tekst: "Nej. Tydeligt er et skøn. Omskriv: rækken med lavest TDC får en markering, og under tabellen står \"Billigst: sø, 12.345 kr under fly\". Accept: ændr fragtprisen for sø, så sø bliver dyrest, og markeringen flytter.", k: "ok" },
-    { etiket: "Skridt 4: grænsen", tekst: "Alle tre: kun index.html, rør ikke compute(), rør aldrig main. Bevis: hent siden og vis ændringen. Nu kan agenten få dem, én ad gangen.", k: "ok" },
+    { etiket: "Skridt 3 igen: kan en fremmed afgøre det?", tekst: "Nej. Tydeligt er et skøn. Omskriv: rækken med det laveste tal får en markering, og under tabellen står \"Billigst: sø, 12.345 kr under fly\". Accept: sæt fragtprisen for sø så højt, at sø bliver dyrest, og se markeringen flytte.", k: "ok" },
+    { etiket: "Skridt 4: grænsen", tekst: "Alle tre: kun siden selv, rør ikke selve beregningen, rør aldrig branchen main. Bevis: vis mig linjerne, hvor ændringen står, og beskriv hvad jeg skal gøre i browseren. Nu kan agenten få dem, én ad gangen.", k: "ok" },
     { etiket: "Det, der blev afvist", tekst: "\"Simulatoren skal være mere overbevisende\" kom også med i behovet. Det er en beslutning, ikke en opgave. Den går tilbage til den, der sagde det, med spørgsmålet: hvad skal være sandt bagefter?", k: "fejl" }
   ];
   var i = 0;

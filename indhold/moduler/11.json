@@ -2,24 +2,29 @@
   "id": "11",
   "del": 4,
   "titel": "Fra forretningskontekst til agent-opgaver",
-  "undertitel": "Oversætte et virkeligt behov til opgaver, en agent kan løse og verificere, og se hvor grænsen går.",
+  "undertitel": "Oversætte et virkeligt behov til opgaver, en agent kan løse, og som en fremmed kan afgøre er løst.",
   "tidsestimat": 25,
   "sidstVerificeret": "2026-09-06",
   "laeringsmaal": [
     "Skære et løst formuleret behov til tre opgaver, hver med et acceptkriterium en anden kan afgøre.",
     "Genkende en opgave, der ikke egner sig til en agent, og sige hvorfor.",
-    "Køre én af opgaverne mod dit eget projekt på en arbejdsbranch og bedømme resultatet."
+    "Køre én af opgaverne mod dit eget projekt på en arbejdsbranch og bedømme resultatet ud fra bevis."
   ],
   "hvorfor": [
-    "Del 1 til 3 kørte i en sandbox, hvor opgaverne var skåret til på forhånd. I virkeligheden kommer behovet som en sætning fra en kollega eller dig selv: \"det ville være rart, hvis simulatoren kunne...\". Ingen agent kan gøre noget med den sætning, før nogen har oversat den.",
-    "Oversættelsen er dit arbejde, og den er sværere end prompten. Modulet giver dig en skabelon, dit eget projekt, og en arbejdsbranch, som agenten aldrig må forlade."
+    "Del 1 til 3 kørte i en sandbox, hvor opgaverne var skåret til på forhånd. I virkeligheden kommer behovet som en sætning fra en kollega eller dig selv: \"det ville være rart, hvis simulatoren kunne ...\". Ingen agent kan gøre noget med den sætning, før nogen har oversat den.",
+    "Oversættelsen er dit arbejde, og den er sværere end prompten. Du skal ikke kunne skrive løsningen. Du skal kunne sige, hvad der skal være sandt bagefter, og hvordan en anden afgør, om det er sandt."
   ],
   "kernen": [
     {
       "type": "h3",
+      "tekst": "Et billede fra hverdagen"
+    },
+    "En kunde siger: vi vil gerne have bedre overblik over vores forsendelser. Det kan ingen gå i gang med. Så spørger du, hvad der skal være sandt bagefter, som ikke er sandt nu, og der kommer tre ting frem. Kunden vil kunne se status på en sending uden at ringe. Kunden vil have en ugentlig liste over forsinkelser. Kunden vil se prisen per sending mod sidste kvartal. Tre konkrete ændringer, som en fremmed kan afgøre er lavet. Det er præcis den øvelse, du laver her, bare på dit eget projekt.",
+    {
+      "type": "h3",
       "tekst": "Dit projekt er forberedt"
     },
-    "Kurset har læst `tdc-simulator` og lagt to filer på branchen `agentkursus`: en `CLAUDE.md` med struktur, kørsel og regler, og `AGENTKURSUS.md` med briefing-skabelonen og tre kandidatopgaver, udledt af koden. Branchen `main` er ikke rørt, og reglen i CLAUDE.md siger, at agenten aldrig må røre den. Det er det første, du bør tjekke i øvelsen: står reglen der, og følger agenten den.",
+    "Kurset har læst `tdc-simulator` og lagt to filer på branchen `agentkursus`: en `CLAUDE.md` med struktur, kørsel og regler, og `AGENTKURSUS.md` med briefing-skabelonen og tre kandidatopgaver. Branchen `main` er ikke rørt, og reglen i CLAUDE.md siger, at agenten aldrig må røre den. Det er det første, du tjekker i øvelsen: står reglen der, og følger agenten den.",
     {
       "type": "h3",
       "tekst": "Fra behov til opgave i fire skridt"
@@ -31,7 +36,7 @@
         "Skriv behovet ned, som det blev sagt. Én sætning, uden at pynte.",
         "Spørg: hvad skal være sandt bagefter, som ikke er sandt nu? Det er målet. Er der flere svar, er der flere opgaver.",
         "For hver opgave: hvordan afgør en anden person, uden at spørge dig, om den er løst? Det er acceptkriteriet. Kan du ikke skrive det, er opgaven ikke klar, og det er et svar i sig selv.",
-        "Sæt grænsen: hvilke filer, hvad må ikke ændres, hvad skal vises som bevis. Skabelonen fra modul 04 gør resten."
+        "Sæt grænsen: hvad må ændres, hvad må ikke, og hvad skal vises som bevis. Skabelonen fra modul 04 gør resten."
       ]
     },
     {
@@ -48,32 +53,32 @@
       ],
       "raekker": [
         [
-          "Acceptkriteriet indeholder ordet \"pænt\" eller \"bedre\"",
+          "Kriteriet indeholder ordet \"pænt\" eller \"bedre\"",
           "Du har ikke besluttet, hvad godt ser ud som",
           "Beslut det først, eller bed agenten om tre forslag at vælge imellem"
         ],
         [
           "Opgaven kræver adgang, agenten ikke har",
-          "Data, systemer eller mennesker uden for repoet",
-          "Skaf adgangen (modul 05), eller giv agenten det, den skal bruge, som fil"
+          "Data, systemer eller mennesker uden for projektet",
+          "Skaf adgangen (modul 05), eller giv agenten det, den skal bruge, som en fil"
         ],
         [
-          "Det er ikke reversibelt",
+          "Det kan ikke fortrydes",
           "Deploy til kunder, sletning, en mail der sendes",
           "Et menneske i porten (modul 09). Agenten forbereder, du trykker"
         ]
       ]
     },
-    "Anthropics eget råd om agentsystemer gælder også her: find den simpleste løsning, og øg kun kompleksiteten, når det er nødvendigt. Nogle behov er et script, ikke en agent. Det er modul 14.",
+    "Anthropics eget råd gælder også her: find den simpleste løsning, og øg kun kompleksiteten, når det er nødvendigt. Nogle behov er slet ikke en agent-opgave. Det er modul 14.",
     {
       "type": "note",
-      "tekst": "Kursets egen prøvekørsel af kandidatopgave 3 på din branch (markér billigste transportform) tog 89 sekunder og 6 turns, uden at røre compute(), og agenten beviste resultatet med grep og en forklaring af, hvilken kode der opdaterer markeringen. Kørslen blev ikke pushet. Branchen er, som kurset efterlod den."
+      "tekst": "Kursets egen prøvekørsel af kandidatopgave 3 (markér billigste transportform) tog 89 sekunder og 6 turns uden at røre selve beregningen, og agenten viste linjerne i filen som bevis. Kørslen blev ikke pushet. Branchen er, som kurset efterlod den."
     }
   ],
   "sidebar": {
     "titel": "Ingen tests, så hvad er porten?",
     "afsnit": [
-      "Dit projekt er én HTML-fil uden tests. Det gør acceptkriterier vigtigere, ikke mindre. Porten bliver noget, en person kan gøre på et minut: åbn siden, gør X, se Y. Skriv det som en instruktion til en fremmed. Kan du ikke, er kriteriet ikke objektivt. Overvej bagefter, om det er værd at bede agenten skrive en lille test for det næste gang, så porten bliver automatisk."
+      "Dit projekt er én side uden tests. Det gør acceptkriterier vigtigere, ikke mindre. Porten bliver noget, en person kan gøre på et minut: åbn siden, gør X, se Y. Skriv det som en instruktion til en fremmed. Kan du ikke det, er kriteriet ikke objektivt. Overvej bagefter, om det er værd at bede agenten skrive et lille automatisk tjek for det næste gang."
     ]
   },
   "simulation": {
@@ -86,28 +91,32 @@
   "oevelse": {
     "forventetMinutter": 15,
     "intro": [
-      "Tre trin: skriv et rigtigt behov ind, skær det til tre opgaver med acceptkriterier, og kør den ene mod din arbejdsbranch. Har du ikke et behov klar, så brug et af de tre i `AGENTKURSUS.md` på branchen. Kommandoen ovenfor kloner projektet, hvis du ikke har det, og stiller om til branchen. Den sidste linje skal skrive `agentkursus`."
+      "Tre trin: skriv et rigtigt behov ind, skær det til tre opgaver med acceptkriterier, og kør den ene mod din arbejdsbranch. Har du ikke et behov klar, så brug et af de tre i `AGENTKURSUS.md` på branchen. Kommandoen ovenfor henter projektet, hvis du ikke har det, og stiller om til branchen. Den sidste linje skal skrive `agentkursus`."
     ],
     "trin": [
       {
-        "tekst": "Læs de to filer, kurset har lagt på branchen. CLAUDE.md er det, agenten ved fra start. Bekræft at reglen om main står der.",
+        "tekst": "Vis de to filer, kurset har lagt på branchen, i terminalen. CLAUDE.md er det, agenten ved fra start. Bekræft med dine egne øjne, at reglen om aldrig at røre main står der.",
         "kommando": "cat CLAUDE.md AGENTKURSUS.md"
       },
       {
         "tekst": "Skriv behovet i første række i skemaet nedenfor, som det blev sagt. Skær det derefter til tre opgaver, én per række, hver med et acceptkriterium, en anden kan afgøre. Er én af dem ikke egnet til en agent, så skriv det som kriterium: \"afvist, fordi ...\"."
       },
       {
-        "tekst": "Vælg den ene opgave, og skriv briefingen efter skabelonen. Kopiér den, start Claude Code på branchen, og kør den. Grib ikke ind.",
+        "tekst": "Vælg den ene opgave, og skriv bestillingen efter skabelonen. Start Claude Code på branchen, indsæt bestillingen, og lad agenten arbejde færdig uden at gribe ind.",
         "kommando": "claude",
-        "prompt": "Mål: <fra skemaet>\nKendt tilstand: siden virker, compute() beregner tdc per transportform. Mørk tilstand skal stadig virke.\nAfgrænsning: kun index.html. Rør ikke compute(). Rør aldrig branchen main.\nAcceptkriterium: <fra skemaet, som en instruktion til en fremmed>\nRækkefølge: gør det direkte, og verificér bagefter.\nBevis: vis mig med grep, at ændringen findes i index.html, og forklar præcis hvilken kode der opdaterer den ved hver ændring. Start ingen server. Beskriv, hvad jeg skal gøre i browseren for at se det."
+        "prompt": "Mål: <fra skemaet>\nKendt tilstand: siden virker og regner tallene ud per transportform. Mørk tilstand skal stadig virke bagefter.\nAfgrænsning: kun index.html. Rør ikke compute(). Rør aldrig branchen main.\nAcceptkriterium: <fra skemaet, skrevet som en instruktion til en fremmed>\nRækkefølge: gør det direkte, og verificér bagefter.\nBevis: søg i index.html og vis mig de linjer, hvor ændringen står, og forklar præcis hvad der opdaterer den ved hver ændring. Start ingen server. Beskriv til sidst, hvad jeg selv skal gøre i browseren for at se det."
       },
       {
-        "tekst": "Afgør acceptkriteriet selv, som en fremmed ville: åbn siden, gør X, se Y. Skriv resultatet i sidste kolonne: løst, afvist, eller uafgørligt. Uafgørligt betyder, at kriteriet var for vagt, og det er det vigtigste fund i modulet.",
+        "tekst": "Afgør acceptkriteriet selv, som en fremmed ville. Kommandoen starter en lille lokal server i projektmappen, så siden kan åbnes på http://localhost:8123/ i browseren. Gør det, agenten beskrev, og se efter, om du får det, kriteriet lover. Stop serveren bagefter med Ctrl+C.",
         "kommando": "python3 -m http.server 8123"
       },
       {
-        "tekst": "Bekræft til sidst, at agenten blev på branchen, og at main er urørt.",
-        "kommando": "git branch --show-current && git log --oneline -1 origin/main && git status --short"
+        "tekst": "Skriv resultatet i sidste kolonne: løst, afvist, eller uafgørligt. Uafgørligt betyder, at kriteriet var for vagt, og det er det vigtigste fund i modulet."
+      },
+      {
+        "tekst": "Sikkerhedstjek til sidst. Kommandoen skriver navnet på den branch, du står på. Der skal stå agentkursus. Bed derefter agenten om at bekræfte, at main er urørt.",
+        "kommando": "git branch --show-current",
+        "prompt": "Er der sket ændringer på branchen main, siden jeg begyndte? Sammenlign med den seneste commit på origin/main, og svar ja eller nej med en linjes begrundelse. Ændr intet."
       }
     ],
     "skema": {
@@ -160,11 +169,11 @@
     "kriterier": [
       "Tre opgaver har hver et acceptkriterium, der kan afgøres uden at spørge dig. Læs dem højt for dig selv som en fremmed.",
       "Den kørte opgave endte som løst eller afvist på et klart grundlag. Uafgørligt tæller også, hvis du kan sige, hvad der manglede i kriteriet.",
-      "Branchen er stadig agentkursus, og origin/main har samme commit som før."
+      "Du står stadig på branchen agentkursus, og agenten svarede nej til, at main er ændret."
     ],
-    "kommando": "git branch --show-current && git log --oneline -1 origin/main",
-    "forventetOutput": "agentkursus, og commit 8a1b954 på origin/main.",
-    "hvisDetFejler": "Står der main, så skift tilbage med git checkout agentkursus, og læs hvad agenten gjorde. Har origin/main en ny commit, er reglen brudt, og det skal med i modul 12 under tillid. Kurset har ikke rørt main, så enhver ændring der er sket i din session."
+    "kommando": "git branch --show-current",
+    "forventetOutput": "ét ord: agentkursus.",
+    "hvisDetFejler": "Står der main, så bed agenten om at stille dig tilbage på agentkursus og fortælle, hvad den nåede at gøre. Svarede agenten ja til, at main er ændret, er reglen brudt, og det skal med i modul 12 under tillid. Kurset har ikke rørt main, så enhver ændring der er sket i din session."
   },
   "quiz": [
     {
@@ -177,7 +186,7 @@
       "korrekt": 1,
       "forklaring": [
         "Ekspertise gør ikke kriteriet afgørligt. Formuleringen gør.",
-        "Det er testen fra planen: kan en fremmed afgøre det, er det objektivt.",
+        "Det er testen fra modulet: kan en fremmed afgøre det, er det objektivt.",
         "Korthed hjælper, men \"gør det pænt\" er kort og uafgørligt."
       ]
     },
@@ -191,7 +200,7 @@
       "korrekt": 1,
       "forklaring": [
         "Agenten kan ikke afgøre, hvad overbevisende betyder. Den gætter.",
-        "Det er skridt to i modulet. Overbevisende er et mål, ikke en tilstand. Beslut først, hvad det ser ud som.",
+        "Det er skridt to i modulet. Overbevisende er et ønske, ikke en tilstand. Beslut først, hvad det ser ud som.",
         "Sit bedste er ikke noget, du kan afgøre bagefter."
       ]
     },
@@ -199,7 +208,7 @@
       "spoergsmaal": "Hvorfor arbejder agenten kun på branchen agentkursus i dit projekt?",
       "svar": [
         "Fordi main er låst af GitHub.",
-        "Fordi arbejdet skal kunne kasseres uden spor, og fordi reglen om aldrig at røre main er en øvelse i grænser, agenten skal respektere.",
+        "Fordi arbejdet skal kunne kasseres uden spor, og fordi reglen om aldrig at røre main er en prøve på, om agenten respekterer en grænse.",
         "Fordi branches er hurtigere."
       ],
       "korrekt": 1,
@@ -218,9 +227,9 @@
       ],
       "korrekt": 1,
       "forklaring": [
-        "Tillid uden port er trust-then-verify-gabet fra modul 06.",
+        "Tillid uden port er præcis det gab, modul 06 handlede om.",
         "Manuel verifikation er stadig verifikation, hvis den er skrevet, så en fremmed kan gøre den.",
-        "En påstand er ikke bevis. Bed om at se det, eller se det selv."
+        "En påstand er ikke bevis. Bed om at få det vist, eller se det selv."
       ]
     }
   ],
