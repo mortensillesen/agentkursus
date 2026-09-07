@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/08-langtkoerende-agenter-og-hukommelse.png",
+      "alt": "Infografik: vagtskifte klokken 16, dagvagten giver aftenvagten en overdragelse, en taleboble forsvinder, og fire skuffer viser, hvad der overlever: instruks, auto memory, statusfil og git-historik.",
+      "tekst": "Modulet på ét billede: Kun det, der er skrevet ned, overlever vagtskiftet."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

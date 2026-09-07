@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/05-vaerktoejer-mcp-forbindelser.png",
+      "alt": "Infografik: en gammel printet prisliste med et ur mod en agent, der via et stik er forbundet til bookingsystemet og får svar nu, samt en advarsel om at en server er kode med adgang.",
+      "tekst": "Modulet på ét billede: En forbindelse svarer på det, du spørger om nu."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

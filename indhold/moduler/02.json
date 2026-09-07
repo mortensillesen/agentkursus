@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/02-opsaetning-af-miljoe.png",
+      "alt": "Infografik: en stiplet ramme kaldet harness omkring en lille model-chip, med instruks, permissions, værktøjer og systemer omkring den, og den nye elev udenfor.",
+      "tekst": "Modulet på ét billede: Modellen er lille. Alt udenom bestemmer, hvad den kan."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

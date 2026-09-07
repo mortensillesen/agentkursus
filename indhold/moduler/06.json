@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/06-verifikation-og-kvalitetsporte.png",
+      "alt": "Infografik: en lastbil bag en bom på rampen, fire porte i bestillingen, før commit, i harnessen og på GitHub, samt en taleboble med en påstand mod et stempel med bevis.",
+      "tekst": "Modulet på ét billede: Bevis, ikke påstand. Porten siger nej uden dig."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

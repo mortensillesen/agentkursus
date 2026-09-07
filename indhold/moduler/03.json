@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/03-kontekst-engineering.png",
+      "alt": "Infografik: et skrivebord fyldt med mapper mod et skrivebord med ét dokument peget ud, og en måler for kontekstvinduet med kommandoerne /clear, /compact og /context.",
+      "tekst": "Modulet på ét billede: Peg på det rigtige. Hæld ikke skabet ud."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

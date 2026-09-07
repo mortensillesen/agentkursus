@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/07-subagenter-og-parallelitet.png",
+      "alt": "Infografik: én disponent fordeler fire sager til fire kolleger ved hver sit skrivebord, resultaterne samles, og en rød boks viser kollisionen, når to skriver i samme fil.",
+      "tekst": "Modulet på ét billede: Hver sin sag, hvert sit skrivebord."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

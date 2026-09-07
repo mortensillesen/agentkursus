@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/01-den-agentiske-loekke.png",
+      "alt": "Infografik: løkken med seks trin, mål, kontekst, handling, observation, vurdering og gentag, i midten spørgsmålet om målet er nået, og fire røde brudpunkter.",
+      "tekst": "Modulet på ét billede: Gentag, til målet er nået, og bevis det."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

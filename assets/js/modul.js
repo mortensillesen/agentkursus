@@ -38,6 +38,15 @@
     return el("div", { class: "kopi" }, [el("span", { class: "etiket", text: etiket || "" }), pre, knap]);
   }
 
+  /* Billede med billedtekst. Stien i JSON er relativ til repoets rod; praefiks flytter den til siden. */
+  function figur(b, praefiks) {
+    var sti = (praefiks || "") + b.fil;
+    var img = el("img", { src: sti, alt: b.alt || "", loading: "lazy", width: b.bredde || 1600, height: b.hoejde || 900 });
+    var tekst = null;
+    if (b.tekst) { tekst = el("figcaption"); tekst.appendChild(inline(b.tekst)); }
+    return el("figure", { class: "figur" }, [el("a", { href: sti, target: "_blank", rel: "noopener", "aria-label": "Åbn billedet i fuld størrelse" }, [img]), tekst]);
+  }
+
   /* En blok er en streng (afsnit) eller et objekt med type. */
   function blok(b) {
     if (typeof b === "string") return p(b, "brod");
@@ -48,6 +57,7 @@
       case "kode": return kopiBlok(b.tekst, b.etiket || "kommando");
       case "note": return el("div", { class: "note" }, [p(b.tekst)]);
       case "advarsel": return el("div", { class: "advarsel" }, [p(b.tekst)]);
+      case "billede": return figur(b, "../../");
       case "tabel": return el("div", { class: "tabel-wrap" }, [el("table", null, [
         el("thead", null, [el("tr", null, (b.hoved || []).map(function (h) { return el("th", { text: h }); }))]),
         el("tbody", null, (b.raekker || []).map(function (r) { return el("tr", null, r.map(function (c) { var td = el("td"); td.appendChild(inline(c)); return td; })); }))

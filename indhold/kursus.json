@@ -1,7 +1,7 @@
 {
   "titel": "Agent Engineering",
   "undertitel": "Interaktivt træningsforløb i 14 moduler over to dage",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "sidstVerificeret": "2026-09-06",
   "fremdriftNoegle": "agentkursus.fremdrift.v1",
   "dage": [
@@ -58,7 +58,12 @@
         "tekst": " undervejs og i modul 13."
       }
     ],
-    "fremdriftTekst": "Fremdrift, skemaer og quizresultater gemmes kun i din browser under nøglen {noegle}. Browseren kan slette dem uden varsel, så eksportér ved dagens slutning. Import fletter filens moduler ind over det, der ligger her."
+    "fremdriftTekst": "Fremdrift, skemaer og quizresultater gemmes kun i din browser under nøglen {noegle}. Browseren kan slette dem uden varsel, så eksportér ved dagens slutning. Import fletter filens moduler ind over det, der ligger her.",
+    "billede": {
+      "fil": "assets/img/infografik/00-hvad-er-agentic-engineering.png",
+      "alt": "Infografik: du afgiver en bestilling, agenten kører løkken mål, kontekst, handling, observation og vurdering, resultatet passerer en port med bevis, og du dømmer. Nedenunder de 14 moduler fordelt på fire dele og to dage.",
+      "tekst": "Kurset på ét billede: du bestiller, agenten arbejder, du dømmer på bevis."
+    }
   },
   "dele": [
     {

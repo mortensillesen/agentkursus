@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/09-produktions-workflows.png",
+      "alt": "Infografik: tre kasser i en pipeline, udløser med push, port med vægt og grønt eller rødt lys, og deploy med bilen der frigives, samt et menneske ved review-porten.",
+      "tekst": "Modulet på ét billede: Samme kontrol hver gang. Grønt før bilen kører."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

@@ -48,6 +48,13 @@
       main.appendChild(el("ol", null, (fs.trin || []).map(function (t) {
         return el("li", null, [t.link ? el("a", { href: t.link, text: t.linkTekst }) : null, t.tekst]);
       })));
+      if (fs.billede && fs.billede.fil) {
+        var b = fs.billede;
+        main.appendChild(el("figure", { class: "figur" }, [
+          el("a", { href: b.fil, target: "_blank", rel: "noopener", "aria-label": "Åbn billedet i fuld størrelse" }, [el("img", { src: b.fil, alt: b.alt || "", width: b.bredde || 1600, height: b.hoejde || 900 })]),
+          b.tekst ? el("figcaption", { text: b.tekst }) : null
+        ]));
+      }
 
       main.appendChild(el("div", { class: "kort-raekke" }, [
         el("div", { class: "kort" }, [el("div", { class: "tal", text: gennemfoert.length + " af " + k.moduler.length }), el("div", { class: "tekst", text: "moduler gennemført" })]),

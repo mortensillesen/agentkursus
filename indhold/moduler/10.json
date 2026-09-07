@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/10-byg-dit-eget-agent-system.png",
+      "alt": "Infografik: fem cirkler i det lille speditionskontor, instruks, procedure, opslag, automatisk kontrol og en kollega der regner efter, forbundet med pile fra din bestilling til én oversigt.",
+      "tekst": "Modulet på ét billede: Fem dele, én bestilling, ét system."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

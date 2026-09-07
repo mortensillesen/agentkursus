@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/14-atomare-agenter.png",
+      "alt": "Infografik: systemet fra modul 10 kørt hundrede gange går gennem en tragt og bliver til et script for rutinen og én atomar agent for skønnet.",
+      "tekst": "Modulet på ét billede: Rutine bliver script. Skønnet bliver hos den erfarne."
+    },
+    {
       "type": "advarsel",
       "tekst": "Forbehold: \"software-distillation\" og \"atomare agenter\" er ikke etablerede fagtermer. Det følgende er kursets tolkning, aftalt med kursets ejer og bygget på Anthropics Building effective agents og Claude Codes dokumentation. Læs det som en arbejdsmetode, ikke som et begreb med kilde."
     },

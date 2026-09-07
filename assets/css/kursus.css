@@ -158,7 +158,7 @@ footer .inder { max-width: var(--maks); margin: 0 auto; padding: 1rem; display: 
   a { color: inherit; text-decoration: none; }
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; color: #555; }
   h2 { break-after: avoid; }
-  pre, blockquote, aside, fieldset, .kort { break-inside: avoid; }
+  pre, blockquote, aside, fieldset, .kort, .figur { break-inside: avoid; }
   .kopi pre { padding-right: 1rem; }
 }
 
@@ -205,3 +205,9 @@ footer .inder { max-width: var(--maks); margin: 0 auto; padding: 1rem; display: 
 .sim .sammenlign { margin-top: 1rem; }
 .sim table td, .sim table th { font-size: .9rem; }
 @media print { .sim button { display: none; } .sim .kolonne li.skjult { display: list-item; } }
+
+/* Infografik: ét billede per modul og ét for hele kurset. Kilden ligger i infografik/, eksporten fra Canva i assets/img/infografik/. */
+.figur { margin: 1rem 0 1.5rem; }
+.figur a { display: block; }
+.figur img { display: block; width: 100%; height: auto; border: 1px solid var(--linje); border-radius: var(--radius); background: var(--flade); }
+.figur figcaption { color: var(--daempet); font-size: .88rem; margin-top: .45rem; }

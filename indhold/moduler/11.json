@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/11-fra-forretningskontekst-til-opgaver.png",
+      "alt": "Infografik: en sky med ønsket bedre overblik, fire nummererede skridt behov, opgave, acceptkriterium og bevis, tre kort med flueben, og en stiplet grænse hvor skøn bliver hos mennesker.",
+      "tekst": "Modulet på ét billede: Fra ønske til opgave, en fremmed kan efterprøve."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

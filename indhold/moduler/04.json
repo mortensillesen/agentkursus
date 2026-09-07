@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/04-effektiv-prompting.png",
+      "alt": "Infografik: en gul seddel med teksten send det til Tyskland og et rødt kryds mod en udfyldt fragtordre med fem felter og et grønt flueben.",
+      "tekst": "Modulet på ét billede: En opgave, ikke en instruks. Med et færdig-signal."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },

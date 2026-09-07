@@ -15,6 +15,7 @@
     "Modulet lader dig læse dine egne tal først. Så ved du, hvad en måling er, før du vælger en til drift."
   ],
   "kernen": [
+    { "type": "billede", "fil": "assets/img/infografik/13-observability-og-livscyklus.png", "alt": "Infografik: en KPI-tavle med fire kurver uge for uge, en enkelt god dag som udsving, kilderne /usage, /context, transkript og repo, og en arkivkasse for det, der skal pensioneres.", "tekst": "Modulet på ét billede: Tal over tid, ikke én god dag." },
     { "type": "h3", "tekst": "Et billede fra hverdagen" },
     "På kontoret hænger tavlen med leveringspræcision, reklamationer og pris per sending. Ingen af tallene fortæller, hvad man skal gøre. De fortæller, hvor man skal kigge. En enkelt dårlig dag er støj. Fire uger, hvor reklamationerne stiger, er et spørgsmål, nogen skal stille. Sådan er det også her: du måler ikke for at have ret, du måler for at vide, hvornår du skal se efter.",
     { "type": "h3", "tekst": "Hvor tallene kommer fra" },

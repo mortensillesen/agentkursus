@@ -16,6 +16,12 @@
   ],
   "kernen": [
     {
+      "type": "billede",
+      "fil": "assets/img/infografik/12-enterprise-adoption.png",
+      "alt": "Infografik: hele afdelingen mandag med et lyn og rødt kryds mod tre disponenter i seks uger med grønt flueben, og fem felter: permissions, data, godkendelse, kompetence og tillid.",
+      "tekst": "Modulet på ét billede: Tre disponenter i seks uger slår hele afdelingen mandag."
+    },
+    {
       "type": "h3",
       "tekst": "Et billede fra hverdagen"
     },
